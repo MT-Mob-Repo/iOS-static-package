@@ -15,16 +15,20 @@ public struct StaticPackageConfiguration: Sendable {
     public var brand: String?
     /// Sent as the `device-id` header when provided.
     public var deviceId: String?
+    /// Serve bundled mock data through `NetworkClient` instead of calling the backend (until the API is ready).
+    public var useMockData: Bool
 
     public init(
         baseURL: String,
         language: AppLanguage = .english,
         brand: String? = nil,
-        deviceId: String? = nil
+        deviceId: String? = nil,
+        useMockData: Bool = false
     ) {
         self.baseURL = baseURL
         self.language = language
         self.brand = brand
         self.deviceId = deviceId
+        self.useMockData = useMockData
     }
 }

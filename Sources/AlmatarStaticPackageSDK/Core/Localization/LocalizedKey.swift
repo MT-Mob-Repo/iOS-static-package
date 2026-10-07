@@ -7,8 +7,12 @@ import Foundation
 
 /// Keys in `Localizable.xcstrings` (en / ar).
 enum LocalizedKey: String {
-    // MARK: Static Packages
-    case goToPayment = "static_packages.go_to_payment"
+    // MARK: Static Package Details
+    case goToPayment = "static_package_details.go_to_payment"
+
+    // MARK: Common
+    case genericError = "common.generic_error"
+    case retry = "common.retry"
 
     /// Localized value in the given SDK language, independent of the device language.
     func localized(_ language: AppLanguage) -> String {

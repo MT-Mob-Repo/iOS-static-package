@@ -55,8 +55,8 @@ final class NetworkClient: @unchecked Sendable {
     private var tokenProvider: TokenProvider?
     private var headersProvider: HeadersProvider?
 
-    private init() {
-        let config = URLSessionConfiguration.default
+    init(configuration: URLSessionConfiguration = .default) {
+        let config = configuration
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 60
         self.session = URLSession(configuration: config)

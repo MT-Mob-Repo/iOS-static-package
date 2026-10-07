@@ -14,5 +14,7 @@ enum Spacing {
 }
 
 enum Typography {
+    static let title = Font.system(size: 18, weight: .semibold)
+    static let body = Font.system(size: 15, weight: .regular)
     static let button = Font.system(size: 16, weight: .semibold)
 }

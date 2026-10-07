@@ -20,6 +20,10 @@ public final class AlmatarStaticPackageSDK {
     /// The host app is responsible for dismissing the presented flow.
     public var onDismiss: (() -> Void)?
 
+    /// Called when the user taps "Go to payment".
+    /// The host app handles the payment using its existing payment flow.
+    public var onGoToPayment: (() -> Void)?
+
     private init() {}
 
     // MARK: - Configuration
@@ -50,6 +54,18 @@ public final class AlmatarStaticPackageSDK {
     /// They override SDK default headers with the same name.
     public func setHeadersProvider(_ provider: HeadersProvider?) {
         NetworkClient.shared.setHeadersProvider(provider)
+    }
+
+    // MARK: - Views
+
+    /// Returns the Static Packages screen in the configured language.
+    public func getStaticPackagesView() -> some View {
+        let language = configuration.language
+        let viewModel = StaticPackagesViewModel(language: language) { [weak self] in
+            self?.onGoToPayment?()
+        }
+        return StaticPackagesView(viewModel: viewModel)
+            .environment(\.layoutDirection, language.layoutDirection)
     }
 
     // MARK: - Flow

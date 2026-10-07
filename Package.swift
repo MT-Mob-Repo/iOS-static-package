@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "AlmatarStaticPackageSDK",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v16)
     ],
@@ -17,7 +18,10 @@ let package = Package(
     targets: [
         .target(
             name: "AlmatarStaticPackageSDK",
-            path: "Sources/AlmatarStaticPackageSDK"
+            path: "Sources/AlmatarStaticPackageSDK",
+            resources: [
+                .process("Resources")
+            ]
         ),
     ]
 )

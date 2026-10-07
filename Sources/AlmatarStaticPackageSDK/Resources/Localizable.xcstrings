@@ -1,0 +1,24 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "static_packages.go_to_payment" : {
+      "comment" : "Static Packages screen: primary button that opens payment",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الانتقال إلى الدفع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to payment"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

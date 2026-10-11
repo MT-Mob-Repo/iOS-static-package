@@ -14,6 +14,7 @@ struct PackageDetails: Codable, Sendable, Identifiable {
     let destination: String?
     let durationNights: Int?
     let price: PackagePrice
+    let journeySnapshot: [JourneySnapshotItem]?
     let components: [PackageComponent]
 
     var mandatoryComponents: [PackageComponent] { components.filter(\.isMandatory) }

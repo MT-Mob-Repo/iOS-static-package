@@ -54,6 +54,24 @@
           }
         }
       }
+    },
+    "static_package_details.journey_snapshot" : {
+      "comment" : "Static Package Details: title of the package highlights card",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لمحة عن الرحلة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Journey Snapshot"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

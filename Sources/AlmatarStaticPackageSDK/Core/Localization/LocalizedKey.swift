@@ -9,14 +9,17 @@ import Foundation
 enum LocalizedKey: String {
     // MARK: Static Package Details
     case goToPayment = "static_package_details.go_to_payment"
+    case journeySnapshot = "static_package_details.journey_snapshot"
 
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
 
-    /// Localized value in the given SDK language, independent of the device language.
-    func localized(_ language: AppLanguage) -> String {
-        NSLocalizedString(rawValue, bundle: language.bundle, comment: "")
+    /// Localized value in the language currently configured in the SDK, independent of the device language.
+    @MainActor
+    func localized() -> String {
+        let language = AlmatarStaticPackageSDK.shared.configuration.language
+        return NSLocalizedString(rawValue, bundle: language.bundle, comment: "")
     }
 }
 

@@ -36,10 +36,15 @@ struct StaticPackageDetailsView: View {
         case .idle, .loading:
             ProgressView()
         case .loaded(let details):
-            Text(details.title)
-                .font(Typography.TextStyle.body)
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            ScrollView {
+                VStack(spacing: Spacing.medium) {
+                    if let snapshot = details.journeySnapshot, !snapshot.isEmpty {
+                        JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: snapshot)
+                    }
+                }
                 .padding(.horizontal, Spacing.screenHorizontal)
+                .padding(.top, Spacing.screenTop)
+            }
         case .failed(let message):
             VStack(spacing: Spacing.xSmall) {
                 Text(message)
@@ -58,18 +63,18 @@ struct StaticPackageDetailsView: View {
 }
 
 #Preview("English") {
+    let _ = AlmatarStaticPackageSDK.shared.setLanguage(.english)
     StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
         packageId: "pkg-001",
-        language: .english,
         repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
         onGoToPayment: {}
     ))
 }
 
 #Preview("Arabic") {
+    let _ = AlmatarStaticPackageSDK.shared.setLanguage(.arabic)
     StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
         packageId: "pkg-001",
-        language: .arabic,
         repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
         onGoToPayment: {}
     ))

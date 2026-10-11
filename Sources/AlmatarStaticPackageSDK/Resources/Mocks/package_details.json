@@ -1,0 +1,51 @@
+{
+  "status": 200,
+  "data": {
+    "id": "pkg-001",
+    "title": "Qiddiya Adventure",
+    "description": "A full day of thrills at Qiddiya City with transfers and a meal included.",
+    "imageUrl": "https://images.almatar.com/packages/qiddiya-adventure.jpg",
+    "destination": "Qiddiya City",
+    "durationNights": 0,
+    "price": {
+      "amount": 899.00,
+      "currency": "SAR"
+    },
+    "journeySnapshot": [
+      { "id": "location", "icon": "map", "title": "Qiddiya City, SA", "isFullWidth": true },
+      { "id": "duration", "icon": "moon", "title": "1 Day Pass" },
+      { "id": "pass", "icon": "star", "title": "1 Day Pass" },
+      { "id": "group", "icon": "person.2", "title": "Group: 4-6" },
+      { "id": "thrill", "icon": "clock.arrow.circlepath", "title": "Thrill Level: Max" }
+    ],
+    "components": [
+      {
+        "id": "cmp-ticket-001",
+        "type": "experience",
+        "title": "Six Flags Qiddiya day pass",
+        "description": "Unlimited rides, 1 day",
+        "isMandatory": true,
+        "price": null
+      },
+      {
+        "id": "cmp-car-001",
+        "type": "car",
+        "title": "Return transfer from Riyadh",
+        "description": "Private van for up to 6 guests",
+        "isMandatory": true,
+        "price": null
+      },
+      {
+        "id": "cmp-addon-001",
+        "type": "add_on",
+        "title": "Fast pass",
+        "description": "Skip the regular queues",
+        "isMandatory": false,
+        "price": {
+          "amount": 150.00,
+          "currency": "SAR"
+        }
+      }
+    ]
+  }
+}

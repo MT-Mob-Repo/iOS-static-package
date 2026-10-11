@@ -10,6 +10,7 @@ enum LocalizedKey: String {
     // MARK: Static Package Details
     case goToPayment = "static_package_details.go_to_payment"
     case journeySnapshot = "static_package_details.journey_snapshot"
+    case parkHighlights = "static_package_details.park_highlights"
 
     // MARK: Common
     case genericError = "common.generic_error"

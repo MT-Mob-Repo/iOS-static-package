@@ -19,6 +19,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     // MARK: - Strings
     var goToPaymentTitle: String { LocalizedKey.goToPayment.localized() }
     var journeySnapshotTitle: String { LocalizedKey.journeySnapshot.localized() }
+    var parkHighlightsTitle: String { LocalizedKey.parkHighlights.localized() }
     var retryTitle: String { LocalizedKey.retry.localized() }
     private var genericErrorMessage: String { LocalizedKey.genericError.localized() }
 

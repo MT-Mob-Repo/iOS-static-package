@@ -72,6 +72,24 @@
           }
         }
       }
+    },
+    "static_package_details.park_highlights" : {
+      "comment" : "Static Package Details: title of the park highlights section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أبرز معالم المنتزه"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Park Highlights"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

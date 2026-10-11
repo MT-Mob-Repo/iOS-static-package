@@ -41,6 +41,9 @@ struct StaticPackageDetailsView: View {
                     if let snapshot = details.journeySnapshot, !snapshot.isEmpty {
                         JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: snapshot)
                     }
+                    if let highlights = details.parkHighlights, !highlights.isEmpty {
+                        ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: highlights)
+                    }
                 }
                 .padding(.horizontal, Spacing.screenHorizontal)
                 .padding(.top, Spacing.screenTop)

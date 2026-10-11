@@ -8,15 +8,74 @@
     "destination": "Qiddiya City",
     "durationNights": 0,
     "price": {
-      "amount": 899.00,
+      "amount": 899.0,
       "currency": "SAR"
     },
     "journeySnapshot": [
-      { "id": "location", "icon": "map", "title": "Qiddiya City, SA", "isFullWidth": true },
-      { "id": "duration", "icon": "moon", "title": "1 Day Pass" },
-      { "id": "pass", "icon": "star", "title": "1 Day Pass" },
-      { "id": "group", "icon": "person.2", "title": "Group: 4-6" },
-      { "id": "thrill", "icon": "clock.arrow.circlepath", "title": "Thrill Level: Max" }
+      {
+        "id": "location",
+        "icon": "map",
+        "title": "Qiddiya City, SA",
+        "isFullWidth": true
+      },
+      {
+        "id": "duration",
+        "icon": "moon",
+        "title": "1 Day Pass"
+      },
+      {
+        "id": "pass",
+        "icon": "star",
+        "title": "1 Day Pass"
+      },
+      {
+        "id": "group",
+        "icon": "person.2",
+        "title": "Group: 4-6"
+      },
+      {
+        "id": "thrill",
+        "icon": "clock.arrow.circlepath",
+        "title": "Thrill Level: Max"
+      }
+    ],
+    "parkHighlights": [
+      {
+        "id": "thrills",
+        "icon": "bag",
+        "category": "Thrills",
+        "title": "Record-breaking coasters"
+      },
+      {
+        "id": "water",
+        "icon": "doc.on.doc",
+        "category": "Water Fun",
+        "title": "Splash Island water park"
+      },
+      {
+        "id": "dining",
+        "icon": "fork.knife",
+        "category": "Dining",
+        "title": "Themed restaurants"
+      },
+      {
+        "id": "shows",
+        "icon": "percent",
+        "category": "Shows",
+        "title": "Live entertainment"
+      },
+      {
+        "id": "family",
+        "icon": "car",
+        "category": "Family",
+        "title": "Kids' play zones"
+      },
+      {
+        "id": "night",
+        "icon": "clock",
+        "category": "Night",
+        "title": "Fireworks display"
+      }
     ],
     "components": [
       {
@@ -42,7 +101,7 @@
         "description": "Skip the regular queues",
         "isMandatory": false,
         "price": {
-          "amount": 150.00,
+          "amount": 150.0,
           "currency": "SAR"
         }
       }

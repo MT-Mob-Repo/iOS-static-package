@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "ios-almatar-system-design-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MT-Mob-Repo/iOS-Almatar-System-Design-SDK",
+      "state" : {
+        "revision" : "a8deccd3805ff8d916b1b18b8a8b827ecc355108",
+        "version" : "1.0.5"
+      }
+    }
+  ],
+  "version" : 2
+}

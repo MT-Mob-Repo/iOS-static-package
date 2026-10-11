@@ -15,9 +15,15 @@ let package = Package(
             targets: ["AlmatarStaticPackageSDK"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/MT-Mob-Repo/iOS-Almatar-System-Design-SDK", .upToNextMajor(from: "1.0.5"))
+    ],
     targets: [
         .target(
             name: "AlmatarStaticPackageSDK",
+            dependencies: [
+                .product(name: "AlmatarSystemDesignSDK", package: "iOS-Almatar-System-Design-SDK")
+            ],
             path: "Sources/AlmatarStaticPackageSDK",
             resources: [
                 .process("Resources")

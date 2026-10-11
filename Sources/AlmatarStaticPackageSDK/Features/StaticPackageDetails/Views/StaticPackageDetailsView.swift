@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import AlmatarSystemDesignSDK
 
 struct StaticPackageDetailsView: View {
     @StateObject private var viewModel: StaticPackageDetailsViewModel
@@ -36,19 +37,19 @@ struct StaticPackageDetailsView: View {
             ProgressView()
         case .loaded(let details):
             Text(details.title)
-                .font(Typography.title)
+                .font(Typography.TextStyle.body)
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .padding(.horizontal, Spacing.screenHorizontal)
         case .failed(let message):
             VStack(spacing: Spacing.xSmall) {
                 Text(message)
-                    .font(Typography.body)
+                    .font(Typography.TextStyle.body)
                     .foregroundStyle(AlmatarColors.textSecondaryStatic)
                     .multilineTextAlignment(.center)
                 Button(viewModel.retryTitle) {
                     Task { await viewModel.loadPackageDetails() }
                 }
-                .font(Typography.body)
+                .font(Typography.TextStyle.body)
                 .foregroundStyle(AlmatarColors.textPrimaryInteractive)
             }
             .padding(.horizontal, Spacing.screenHorizontal)

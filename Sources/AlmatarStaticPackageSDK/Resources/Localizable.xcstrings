@@ -19,6 +19,42 @@
         }
       }
     },
+    "common.read_less" : {
+      "comment" : "Collapses an expanded text",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عرض أقل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read less"
+          }
+        }
+      }
+    },
+    "common.read_more" : {
+      "comment" : "Expands a truncated text",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اقرأ المزيد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read more"
+          }
+        }
+      }
+    },
     "common.retry" : {
       "comment" : "Button to retry a failed request",
       "extractionState" : "manual",
@@ -69,6 +105,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Journey Snapshot"
+          }
+        }
+      }
+    },
+    "static_package_details.package_schedule" : {
+      "comment" : "Static Package Details: title of the package schedule timeline",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جدول الباقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Package Schedule"
           }
         }
       }

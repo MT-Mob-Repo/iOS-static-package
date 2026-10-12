@@ -11,10 +11,13 @@ enum LocalizedKey: String {
     case goToPayment = "static_package_details.go_to_payment"
     case journeySnapshot = "static_package_details.journey_snapshot"
     case parkHighlights = "static_package_details.park_highlights"
+    case packageSchedule = "static_package_details.package_schedule"
 
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
+    case readMore = "common.read_more"
+    case readLess = "common.read_less"
 
     /// Localized value in the language currently configured in the SDK, independent of the device language.
     @MainActor

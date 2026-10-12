@@ -44,6 +44,13 @@ struct StaticPackageDetailsView: View {
                     if let highlights = details.parkHighlights, !highlights.isEmpty {
                         ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: highlights)
                     }
+                    if let schedule = details.packageSchedule, !schedule.isEmpty {
+                        PackageScheduleView(
+                            title: viewModel.packageScheduleTitle,
+                            subTitle: viewModel.packageScheduleTitle,
+                            items: schedule
+                        )
+                    }
                 }
                 .padding(.horizontal, Spacing.screenHorizontal)
                 .padding(.top, Spacing.screenTop)

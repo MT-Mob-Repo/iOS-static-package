@@ -55,6 +55,60 @@
         }
       }
     },
+    "static_package_details.included_in_your_pass" : {
+      "comment" : "Static Package Details: header above the services included in the package",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشمول في تذكرتك"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Included in Your Pass"
+          }
+        }
+      }
+    },
+    "static_package_details.included_services" : {
+      "comment" : "Static Package Details: title of the included services section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الخدمات المشمولة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Included Services"
+          }
+        }
+      }
+    },
+    "static_package_details.included_services_subtitle" : {
+      "comment" : "Static Package Details: subtitle of the included services section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أكّد اختياراتك أو خصّصها أدناه"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm or customize your configuration below"
+          }
+        }
+      }
+    },
     "static_package_details.journey_snapshot" : {
       "comment" : "Static Package Details: title of the package highlights card",
       "extractionState" : "manual",

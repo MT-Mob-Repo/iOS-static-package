@@ -11,6 +11,9 @@ enum LocalizedKey: String {
     case goToPayment = "static_package_details.go_to_payment"
     case journeySnapshot = "static_package_details.journey_snapshot"
     case parkHighlights = "static_package_details.park_highlights"
+    case includedServices = "static_package_details.included_services"
+    case includedServicesSubtitle = "static_package_details.included_services_subtitle"
+    case includedInYourPass = "static_package_details.included_in_your_pass"
 
     // MARK: Common
     case genericError = "common.generic_error"

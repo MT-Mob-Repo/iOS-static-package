@@ -60,16 +60,14 @@ public final class AlmatarStaticPackageSDK {
 
     /// Returns the Static Package Details screen for the given package, in the configured language.
     public func getStaticPackageDetailsView(packageId: String) -> some View {
-        let language = configuration.language
         let viewModel = StaticPackageDetailsViewModel(
             packageId: packageId,
-            language: language,
             repository: makeStaticPackagesRepository()
         ) { [weak self] in
             self?.onGoToPayment?()
         }
         return StaticPackageDetailsView(viewModel: viewModel)
-            .environment(\.layoutDirection, language.layoutDirection)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
 
     // MARK: - Repositories

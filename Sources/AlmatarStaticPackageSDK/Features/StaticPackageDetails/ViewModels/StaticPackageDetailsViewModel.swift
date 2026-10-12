@@ -16,9 +16,12 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     @Published private(set) var state: State = .idle
 
-    let goToPaymentTitle: String
-    let retryTitle: String
-    private let genericErrorMessage: String
+    // MARK: - Strings
+    var goToPaymentTitle: String { LocalizedKey.goToPayment.localized() }
+    var journeySnapshotTitle: String { LocalizedKey.journeySnapshot.localized() }
+    var parkHighlightsTitle: String { LocalizedKey.parkHighlights.localized() }
+    var retryTitle: String { LocalizedKey.retry.localized() }
+    private var genericErrorMessage: String { LocalizedKey.genericError.localized() }
 
     var packageDetails: PackageDetails? {
         if case .loaded(let details) = state { return details }
@@ -31,16 +34,12 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     init(
         packageId: String,
-        language: AppLanguage,
         repository: StaticPackagesRepositoryProtocol,
         onGoToPayment: @escaping () -> Void
     ) {
         self.packageId = packageId
         self.repository = repository
         self.onGoToPayment = onGoToPayment
-        self.goToPaymentTitle = LocalizedKey.goToPayment.localized(language)
-        self.retryTitle = LocalizedKey.retry.localized(language)
-        self.genericErrorMessage = LocalizedKey.genericError.localized(language)
     }
 
     func loadPackageDetails() async {

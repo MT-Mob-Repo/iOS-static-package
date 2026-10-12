@@ -109,7 +109,7 @@
         "title": "The Ritz-Carlton, Riyadh",
         "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
         "tag": {
-          "icon": "building.2",
+          "icon": "building.1",
           "title": "Stay"
         },
         "statusLabel": "Included",
@@ -149,32 +149,6 @@
           "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
           "statusLabel": "Included"
         }
-      },
-      {
-        "id": "jeddah",
-        "title": "Jeddah Hilton",
-        "tag": {
-          "icon": "building.2",
-          "title": "Stay"
-        },
-        "card": {
-          "title": "Jeddah Hilton",
-          "details": [
-            {
-              "icon": "mappin.and.ellipse",
-              "text": "Corniche • Jeddah"
-            }
-          ],
-          "room": {
-            "title": "Room • Sea View"
-          }
-        }
-      },
-      {
-        "id": "free-time",
-        "title": "Free time in Riyadh",
-        "description": "Explore the city at your own pace.",
-        "statusLabel": "Optional"
       }
     ],
     "components": [

@@ -16,8 +16,8 @@ struct PackageScheduleView: View {
         static let markerBorderWidth: CGFloat = 1.5
         /// Aligns the marker with the first line of the step title.
         static let markerTopInset: CGFloat = 2
-        static let connectorDotSize: CGFloat = 5
-        static let connectorDotSpacing: CGFloat = 16
+        static let connectorDotSize: CGFloat = 6
+        static let connectorDotSpacing: CGFloat = 20
         static let descriptionLineLimit = 3
         static let imageHeight: CGFloat = 120
         static let smallIconSize: CGFloat = 14
@@ -27,7 +27,7 @@ struct PackageScheduleView: View {
         static let ratingFractionDigits = 1
         // TODO: Replace with the design-system success color once available.
         static let ratingTint = AlmatarColors.iconComplementaryGreen
-        static let ratingBackgroundOpacity: Double = 0.1
+        static let ratingBackgroundOpacity: Double = 0.05
     }
 
     let title: String
@@ -237,8 +237,8 @@ struct PackageScheduleView: View {
                 .modifier(AppTextModifier(size: Typography.Size.regular))
                 .foregroundStyle(Layout.ratingTint)
         }
-        .padding(.horizontal, Spacing.small)
-        .padding(.vertical, Spacing.xSmall)
+        .padding(.horizontal, Spacing.xSmall)
+        .padding(.vertical, Spacing.xxxSmall)
         .background(Layout.ratingTint.opacity(Layout.ratingBackgroundOpacity))
         .clipShape(Capsule())
     }

@@ -179,6 +179,150 @@
         }
       }
     },
+    "static_package_details.itinerary" : {
+      "comment" : "Itinerary section title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "البرنامج"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itinerary"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_activities" : {
+      "comment" : "Itinerary: label above a day's activities",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الأنشطة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ACTIVITIES"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_add" : {
+      "comment" : "Itinerary: button to add an optional activity",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_added" : {
+      "comment" : "Itinerary: state of an optional activity after it was added",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمت الإضافة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_day" : {
+      "comment" : "Itinerary day badge; %d is the day number",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اليوم %d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DAY %d"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_included" : {
+      "comment" : "Itinerary: activity included in the package price",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشمول"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Included"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_optional" : {
+      "comment" : "Itinerary: activity that can be added for an extra price",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختياري"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_subtitle" : {
+      "comment" : "Itinerary section subtitle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دليلك خطوة بخطوة لرحلة لا تُنسى"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your step-by-step guide to an unforgettable trip"
+          }
+        }
+      }
+    },
     "static_package_details.journey_snapshot" : {
       "comment" : "Static Package Details: title of the package highlights card",
       "extractionState" : "manual",

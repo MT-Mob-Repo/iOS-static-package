@@ -79,8 +79,19 @@ struct StaticPackageDetailsView: View {
                                 items: services
                             )
                         }
+                        
+                        if let itinerary = details.itinerary, !itinerary.isEmpty {
+                            ItineraryView(
+                                strings: viewModel.itineraryStrings,
+                                days: itinerary,
+                                activitySubtitle: viewModel.activitySubtitle,
+                                isActivityAdded: viewModel.isActivityAdded,
+                                onToggleActivity: viewModel.toggleActivity
+                            )
+                        }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
+                   
                 }
                 .padding(.bottom, Spacing.screenBottom)
             }

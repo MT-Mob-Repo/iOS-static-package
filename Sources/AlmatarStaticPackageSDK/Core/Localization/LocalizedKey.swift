@@ -18,6 +18,14 @@ enum LocalizedKey: String {
     case includedServices = "static_package_details.included_services"
     case includedServicesSubtitle = "static_package_details.included_services_subtitle"
     case includedInYourPass = "static_package_details.included_in_your_pass"
+    case itinerary = "static_package_details.itinerary"
+    case itinerarySubtitle = "static_package_details.itinerary_subtitle"
+    case itineraryDay = "static_package_details.itinerary_day"
+    case itineraryActivities = "static_package_details.itinerary_activities"
+    case itineraryIncluded = "static_package_details.itinerary_included"
+    case itineraryOptional = "static_package_details.itinerary_optional"
+    case itineraryAdd = "static_package_details.itinerary_add"
+    case itineraryAdded = "static_package_details.itinerary_added"
 
     // MARK: Common
     case genericError = "common.generic_error"

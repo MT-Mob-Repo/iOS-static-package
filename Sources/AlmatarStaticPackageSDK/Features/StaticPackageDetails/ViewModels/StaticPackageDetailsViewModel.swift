@@ -15,7 +15,9 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
-    @Published private(set) var isFavorite = false
+
+    /// Product ids of the optional itinerary activities the customer added.
+    @Published private(set) var addedActivityIds: Set<Int> = []
 
     // MARK: - Strings
     var goToPaymentTitle: String { LocalizedKey.goToPayment.localized() }
@@ -26,6 +28,19 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     var includedServicesSubtitle: String { LocalizedKey.includedServicesSubtitle.localized() }
     var includedInYourPassTitle: String { LocalizedKey.includedInYourPass.localized() }
     var retryTitle: String { LocalizedKey.retry.localized() }
+    var itineraryStrings: ItineraryStrings {
+        ItineraryStrings(
+            title: LocalizedKey.itinerary.localized(),
+            subtitle: LocalizedKey.itinerarySubtitle.localized(),
+            activities: LocalizedKey.itineraryActivities.localized(),
+            included: LocalizedKey.itineraryIncluded.localized(),
+            add: LocalizedKey.itineraryAdd.localized(),
+            added: LocalizedKey.itineraryAdded.localized(),
+            readMore: LocalizedKey.readMore.localized(),
+            readLess: LocalizedKey.readLess.localized(),
+            dayLabel: { String(format: LocalizedKey.itineraryDay.localized(), $0) }
+        )
+    }
     private var genericErrorMessage: String { LocalizedKey.genericError.localized() }
     private var dynamicPackageTag: String { LocalizedKey.dynamicPackageTag.localized() }
 
@@ -96,11 +111,40 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         onGoToPayment()
     }
 
-    func shareTapped() {
-        // Host can wire sharing later; reserved for toolbar action.
+    // MARK: - Itinerary
+    /// e.g. "Included • 45 min" or "Optional • all day • + SAR 150".
+    func activitySubtitle(_ activity: ItineraryActivity) -> String {
+        let status = activity.isOptional
+            ? LocalizedKey.itineraryOptional.localized()
+            : LocalizedKey.itineraryIncluded.localized()
+        var parts = [status]
+        if let duration = activity.duration.nonEmpty {
+            parts.append(duration)
+        }
+        if activity.isOptional, let price = activity.price {
+            parts.append("+ \(price.currency) \(Self.formattedAmount(price.amount))")
+        }
+        return parts.joined(separator: " • ")
     }
 
-    func favoriteTapped() {
-        isFavorite.toggle()
+    func isActivityAdded(_ activity: ItineraryActivity) -> Bool {
+        addedActivityIds.contains(activity.productId)
+    }
+
+    func toggleActivity(_ activity: ItineraryActivity) {
+        guard activity.isOptional else { return }
+        if addedActivityIds.contains(activity.productId) {
+            addedActivityIds.remove(activity.productId)
+        } else {
+            addedActivityIds.insert(activity.productId)
+        }
+    }
+
+    private static func formattedAmount(_ amount: Decimal) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter.string(from: amount as NSDecimalNumber) ?? "\(amount)"
     }
 }

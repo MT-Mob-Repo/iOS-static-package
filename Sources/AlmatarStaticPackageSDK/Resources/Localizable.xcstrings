@@ -1,6 +1,19 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "Collapse" : {
+
+    },
     "common.generic_error" : {
       "comment" : "Shown when a request fails without a server message",
       "extractionState" : "manual",
@@ -37,6 +50,27 @@
         }
       }
     },
+    "Expand" : {
+
+    },
+    "static_package_details.dynamic_package_tag" : {
+      "comment" : "Static Package Details header: package type chip",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باقة ديناميكية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dynamic Package"
+          }
+        }
+      }
+    },
     "static_package_details.go_to_payment" : {
       "comment" : "Static Package Details screen: primary button that opens payment",
       "extractionState" : "manual",
@@ -69,6 +103,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Journey Snapshot"
+          }
+        }
+      }
+    },
+    "static_package_details.nights_meta" : {
+      "comment" : "Static Package Details header: expanded meta line. %1$lld = nights, %2$@ = destination/detail",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld ليالٍ • %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld Nights • %2$@"
+          }
+        }
+      }
+    },
+    "static_package_details.nights_tag" : {
+      "comment" : "Static Package Details header: duration chip. %lld = number of nights",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ليالٍ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Nights"
           }
         }
       }

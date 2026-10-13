@@ -361,6 +361,15 @@
                     }
                 ]
             }
-        ]
+        ],
+    "cancellationPolicy": {
+      "isRefundable": true,
+      "policies": [
+        { "minRemainingHours": 48, "refundableAmountPercentage": 100,
+          "window": "More than 48 hours before departure", "note": "Cancel for a full refund." },
+        { "minRemainingHours": 0, "refundableAmountPercentage": 50,
+          "window": "Less than 48 hours", "note": "Half the amount is refunded." }
+      ]
+    }
     }
 }

@@ -48,7 +48,7 @@ struct StaticPackageDetailsView: View {
             ProgressView()
         case .loaded(let details):
             ScrollView {
-                VStack(spacing: Spacing.medium) {
+                VStack(spacing: Spacing.xLarge) {
                     PackageDetailsHeaderView(
                         title: viewModel.headerTitle,
                         description: viewModel.headerDescription,
@@ -57,7 +57,7 @@ struct StaticPackageDetailsView: View {
                         imageNames: viewModel.headerImageNames
                     )
 
-                    VStack(spacing: Spacing.medium) {
+                    VStack(spacing: Spacing.xLarge) {
                         if let snapshot = details.journeySnapshot, !snapshot.isEmpty {
                             JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: snapshot)
                         }
@@ -71,6 +71,15 @@ struct StaticPackageDetailsView: View {
                                 items: schedule
                             )
                         }
+                        if let itinerary = details.itinerary, !itinerary.isEmpty {
+                            ItineraryView(
+                                strings: viewModel.itineraryStrings,
+                                days: itinerary,
+                                activitySubtitle: viewModel.activitySubtitle,
+                                isActivityAdded: viewModel.isActivityAdded,
+                                onToggleActivity: viewModel.toggleActivity
+                            )
+                        }
                         if let services = details.includedServices, !services.isEmpty {
                             IncludedServicesView(
                                 title: viewModel.includedServicesTitle,
@@ -79,14 +88,10 @@ struct StaticPackageDetailsView: View {
                                 items: services
                             )
                         }
-                        
-                        if let itinerary = details.itinerary, !itinerary.isEmpty {
-                            ItineraryView(
-                                strings: viewModel.itineraryStrings,
-                                days: itinerary,
-                                activitySubtitle: viewModel.activitySubtitle,
-                                isActivityAdded: viewModel.isActivityAdded,
-                                onToggleActivity: viewModel.toggleActivity
+                        if let policy = details.cancellationPolicy {
+                            CancellationPolicyView(
+                                title: viewModel.cancellationPolicyTitle,
+                                tiers: viewModel.cancellationTiers(policy)
                             )
                         }
                     }

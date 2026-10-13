@@ -26,6 +26,10 @@ enum LocalizedKey: String {
     case itineraryOptional = "static_package_details.itinerary_optional"
     case itineraryAdd = "static_package_details.itinerary_add"
     case itineraryAdded = "static_package_details.itinerary_added"
+    case cancellationPolicy = "static_package_details.cancellation_policy"
+    case cancellationFree = "static_package_details.cancellation_free"
+    case cancellationPartialRefund = "static_package_details.cancellation_partial_refund"
+    case cancellationNonRefundable = "static_package_details.cancellation_non_refundable"
 
     // MARK: Common
     case genericError = "common.generic_error"

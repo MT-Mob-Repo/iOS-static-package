@@ -28,6 +28,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     var includedServicesSubtitle: String { LocalizedKey.includedServicesSubtitle.localized() }
     var includedInYourPassTitle: String { LocalizedKey.includedInYourPass.localized() }
     var retryTitle: String { LocalizedKey.retry.localized() }
+    var cancellationPolicyTitle: String { LocalizedKey.cancellationPolicy.localized() }
     var itineraryStrings: ItineraryStrings {
         ItineraryStrings(
             title: LocalizedKey.itinerary.localized(),
@@ -125,6 +126,46 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             parts.append("+ \(price.currency) \(Self.formattedAmount(price.amount))")
         }
         return parts.joined(separator: " • ")
+    }
+
+    // MARK: - Cancellation Policy
+
+    /// Tiers ordered from the earliest cancellation window; a single "Non-refundable" tier
+    /// when the package cannot be refunded.
+    func cancellationTiers(_ policy: CancellationPolicy) -> [CancellationPolicyTier] {
+        let rules = (policy.policies ?? []).sorted { $0.minRemainingHours > $1.minRemainingHours }
+        guard policy.isRefundable, !rules.isEmpty else {
+            return [CancellationPolicyTier(
+                id: 0,
+                title: LocalizedKey.cancellationNonRefundable.localized(),
+                window: nil,
+                note: nil,
+                tone: .noRefund
+            )]
+        }
+        return rules.enumerated().map { index, rule in
+            let percentage = min(max(rule.refundableAmountPercentage, 0), 100)
+            let title: String
+            let tone: CancellationPolicyTier.Tone
+            switch percentage {
+            case 100:
+                title = LocalizedKey.cancellationFree.localized()
+                tone = .fullRefund
+            case 0:
+                title = LocalizedKey.cancellationNonRefundable.localized()
+                tone = .noRefund
+            default:
+                title = String(format: LocalizedKey.cancellationPartialRefund.localized(), percentage)
+                tone = .partialRefund
+            }
+            return CancellationPolicyTier(
+                id: index,
+                title: title,
+                window: rule.window.nonEmpty,
+                note: rule.note.nonEmpty,
+                tone: tone
+            )
+        }
     }
 
     func isActivityAdded(_ activity: ItineraryActivity) -> Bool {

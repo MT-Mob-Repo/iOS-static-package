@@ -16,10 +16,12 @@ struct PackageDetails: Codable, Sendable, Identifiable {
     let price: PackagePrice
     let journeySnapshot: [JourneySnapshotItem]?
     let parkHighlights: [ParkHighlightItem]?
-    let components: [PackageComponent]
+    let packageSchedule: [PackageScheduleItem]?
+    let includedServices: [IncludedServiceItem]?
+    let components: [PackageComponent]?
 
-    var mandatoryComponents: [PackageComponent] { components.filter(\.isMandatory) }
-    var optionalComponents: [PackageComponent] { components.filter { !$0.isMandatory } }
+    var mandatoryComponents: [PackageComponent] { components?.filter(\.isMandatory) ?? [] }
+    var optionalComponents: [PackageComponent] { components?.filter { !$0.isMandatory } ?? [] }
 }
 
 struct PackagePrice: Codable, Sendable, Hashable {

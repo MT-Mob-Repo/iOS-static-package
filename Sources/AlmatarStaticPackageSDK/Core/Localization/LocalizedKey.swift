@@ -14,10 +14,16 @@ enum LocalizedKey: String {
     case dynamicPackageTag = "static_package_details.dynamic_package_tag"
     case nightsTag = "static_package_details.nights_tag"
     case nightsMeta = "static_package_details.nights_meta"
+    case packageSchedule = "static_package_details.package_schedule"
+    case includedServices = "static_package_details.included_services"
+    case includedServicesSubtitle = "static_package_details.included_services_subtitle"
+    case includedInYourPass = "static_package_details.included_in_your_pass"
 
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
+    case readMore = "common.read_more"
+    case readLess = "common.read_less"
 
     /// Localized value in the language currently configured in the SDK, independent of the device language.
     @MainActor

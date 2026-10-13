@@ -57,6 +57,21 @@ struct StaticPackageDetailsView: View {
                         if let highlights = details.parkHighlights, !highlights.isEmpty {
                             ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: highlights)
                         }
+                        if let schedule = details.packageSchedule, !schedule.isEmpty {
+                            PackageScheduleView(
+                                title: viewModel.packageScheduleTitle,
+                                subTitle: viewModel.packageScheduleTitle,
+                                items: schedule
+                            )
+                        }
+                        if let services = details.includedServices, !services.isEmpty {
+                            IncludedServicesView(
+                                title: viewModel.includedServicesTitle,
+                                subtitle: viewModel.includedServicesSubtitle,
+                                includedTitle: viewModel.includedInYourPassTitle,
+                                items: services
+                            )
+                        }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
                 }

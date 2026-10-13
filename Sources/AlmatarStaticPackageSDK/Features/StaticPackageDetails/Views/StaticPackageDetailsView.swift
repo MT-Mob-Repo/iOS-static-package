@@ -15,8 +15,15 @@ struct StaticPackageDetailsView: View {
 
     var body: some View {
         VStack(spacing: Spacing.zero) {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if #available(iOS 26.0, *) {
+                content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .scrollEdgeEffectHidden(true, for: .top)
+            } else {
+                content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+               
 
             if viewModel.packageDetails != nil {
                 PrimaryButton(viewModel.goToPaymentTitle, isDisabled: false) {
@@ -78,6 +85,7 @@ struct StaticPackageDetailsView: View {
                 .padding(.bottom, Spacing.screenBottom)
             }
             .ignoresSafeArea(edges: .top)
+            .toolbarBackground(.hidden, for: .navigationBar)
         case .failed(let message):
             VStack(spacing: Spacing.xSmall) {
                 Text(message)

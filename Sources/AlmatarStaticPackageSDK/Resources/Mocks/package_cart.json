@@ -1,0 +1,77 @@
+{
+    "cartId": "68d7f1c4a9e2b30f5c1a77de",
+    "expiresAt": "2026-09-28T14:32:00.000Z",
+    "name": "Makkah Essentials",
+    "tier": "Premium",
+    "duration": "5 days, 4 nights",
+    "destination": "Makkah",
+    "description": "Transport, hotel and guided visits.",
+    "price": { "finalAmount": 2900, "currency": "SAR" },
+    "heroImageUrl": "https://cdn.almatar.com/pkg/9eed7-hero.jpg",
+    "journeySnapshot": [
+        { "icon": "hotel", "label": "4 nights in Makkah" },
+        { "icon": "transfer", "label": "Airport transfers included" }
+    ],
+    "products": [
+        {
+            "title": "Transfers",
+            "type": "addon",
+            "mandatory": true,
+            "status": "allocated",
+            "addonInfo": {
+                "id": 812, "key": "makkah-transfer",
+                "title": "Private airport transfer",
+                "subtitle": "Jeddah to Makkah, one way",
+                "price": 450, "currency": "SAR", "quantity": 1,
+                "imageUrl": "https://cdn.almatar.com/addons/812.jpg"
+            }
+        }
+    ],
+    "itinerary": [
+        {
+            "day": 1,
+            "image": "https://cdn.almatar.com/pkg/day1.jpg",
+            "title": "Arrival",
+            "description": "Meet your driver and travel to the hotel.",
+            "activities": [{ "name": "Airport pickup", "duration": "1h 30m", "productId": 812 }]
+        }
+    ],
+    "dynamicForm": {
+        "sections": [
+            {
+                "section": "passenger",
+                "fields": [
+                    { "field": "firstName", "label": "First name", "required": true,
+                      "dataType": "string", "options": [], "dateConfigs": null },
+                    { "field": "iqamaNumber", "label": "Iqama number", "required": false,
+                      "dataType": "string", "options": [], "dateConfigs": null }
+                ]
+            },
+            {
+                "section": "departureDate",
+                "fields": [
+                    { "field": "departureDate", "label": "Departure date", "required": true,
+                      "dataType": "date", "options": [],
+                      "dateConfigs": { "type": "range", "from": "2026-10-01", "to": "2027-03-31", "options": [] } }
+                ]
+            },
+            {
+                "section": "departureCity",
+                "fields": [
+                    { "field": "departureCity", "label": "Departure city", "required": true,
+                      "dataType": "string", "dateConfigs": null,
+                      "options": [{ "code": "RUH", "name": "Riyadh" }, { "code": "JED", "name": "Jeddah" }] }
+                ]
+            }
+        ]
+    },
+    "cancellationPolicy": {
+        "isRefundable": true,
+        "policies": [
+            { "minRemainingHours": 48, "refundableAmountPercentage": 100,
+              "window": "More than 48 hours before departure", "note": "Cancel for a full refund." },
+            { "minRemainingHours": 0, "refundableAmountPercentage": 50,
+              "window": "Less than 48 hours", "note": "Half the amount is refunded." }
+        ]
+    }
+}

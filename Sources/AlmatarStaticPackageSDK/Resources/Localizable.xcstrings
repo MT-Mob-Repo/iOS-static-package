@@ -73,6 +73,330 @@
         }
       }
     },
+    "package_booking_confirmation.back_to_home" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العودة إلى الرئيسية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Home"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.booking_id" : {
+      "comment" : "Label before the booking reference",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رقم الحجز"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Booking ID"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.cancellation_policy" : {
+      "comment" : "Section title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سياسة الإلغاء"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancellation Policy"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.copy_booking_id" : {
+      "comment" : "Accessibility label of the copy button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نسخ رقم الحجز"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy booking ID"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.destination" : {
+      "comment" : "Summary row label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوجهة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destination"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.duration" : {
+      "comment" : "Summary row label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المدة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.free_cancellation" : {
+      "comment" : "Cancellation status when refundable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إلغاء مجاني"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free cancellation"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.go_to_my_trips" : {
+      "comment" : "Primary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الذهاب إلى رحلاتي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to My Trips"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.non_refundable" : {
+      "comment" : "Cancellation status when not refundable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير قابل للاسترداد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non-refundable"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.package" : {
+      "comment" : "Summary row label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الباقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Package"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.package_includes" : {
+      "comment" : "Title of the included items list",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تشمل الباقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Package includes"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.package_summary" : {
+      "comment" : "Section title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ملخص الباقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Package Summary"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.payment_details" : {
+      "comment" : "Section title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تفاصيل الدفع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payment Details"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.refund_percentage" : {
+      "comment" : "Refund badge; argument is a percentage such as 100%",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استرداد %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ refund"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.subtitle" : {
+      "comment" : "Confirmation screen subtitle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تفاصيل رحلتك جاهزة. استعد لتجربة مميزة مليئة بالمرح والترفيه."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your journey details are ready. Get ready for an exciting experience filled with fun and entertainment."
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.tier" : {
+      "comment" : "Summary row label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الفئة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tier"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.title" : {
+      "comment" : "Confirmation screen title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم تأكيد الحجز"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Booking Confirmed"
+          }
+        }
+      }
+    },
+    "package_booking_confirmation.total_paid" : {
+      "comment" : "Total row label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إجمالي المدفوع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Paid"
+          }
+        }
+      }
+    },
     "static_package_details.go_to_payment" : {
       "comment" : "Static Package Details screen: primary button that opens payment",
       "extractionState" : "manual",

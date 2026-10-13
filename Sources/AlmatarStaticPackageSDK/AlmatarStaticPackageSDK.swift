@@ -24,6 +24,12 @@ public final class AlmatarStaticPackageSDK {
     /// The host app handles the payment using its existing payment flow.
     public var onGoToPayment: (() -> Void)?
 
+    /// Called when the user taps "Go to My Trips" on the booking confirmation screen.
+    public var onGoToMyTrips: (() -> Void)?
+
+    /// Called when the user taps "Back to Home" on the booking confirmation screen.
+    public var onBackToHome: (() -> Void)?
+
     private init() {}
 
     // MARK: - Configuration
@@ -67,6 +73,18 @@ public final class AlmatarStaticPackageSDK {
             self?.onGoToPayment?()
         }
         return StaticPackageDetailsView(viewModel: viewModel)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
+    /// Returns the Package Booking Confirmation screen for the given cart, in the configured language.
+    public func getPackageBookingConfirmationView(cartId: String) -> some View {
+        let viewModel = PackageBookingConfimrationViewModel(
+            cartId: cartId,
+            repository: makeStaticPackagesRepository(),
+            onGoToMyTrips: { [weak self] in self?.onGoToMyTrips?() },
+            onBackToHome: { [weak self] in self?.onBackToHome?() }
+        )
+        return PackageBookingConfimrationView(viewModel: viewModel)
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
 

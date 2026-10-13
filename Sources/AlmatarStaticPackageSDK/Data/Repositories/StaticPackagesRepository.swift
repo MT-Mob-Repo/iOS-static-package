@@ -7,6 +7,7 @@ import Foundation
 
 protocol StaticPackagesRepositoryProtocol: Sendable {
     func fetchPackageDetails(packageId: String) async throws -> PackageDetails
+    func fetchCart(cartId: String) async throws -> PackageCart
 }
 
 enum StaticPackagesEndpoint {
@@ -14,6 +15,10 @@ enum StaticPackagesEndpoint {
     static let packageDetailsPrefix = "api/v1/static-packages/"
 
     static func packageDetails(id: String) -> String { packageDetailsPrefix + id }
+
+    static let cartPrefix = "v1/partner/packages/carts/"
+
+    static func cart(id: String) -> String { cartPrefix + id }
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -34,5 +39,13 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
             throw NetworkError.noData
         }
         return details
+    }
+
+    func fetchCart(cartId: String) async throws -> PackageCart {
+        // The carts endpoint returns the cart at the top level, without a `data` wrapper.
+        try await networkClient.get(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.cart(id: cartId)
+        )
     }
 }

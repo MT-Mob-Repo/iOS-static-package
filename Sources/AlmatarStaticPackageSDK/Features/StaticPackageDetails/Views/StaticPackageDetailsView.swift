@@ -48,7 +48,8 @@ struct StaticPackageDetailsView: View {
                         PackageScheduleView(
                             title: viewModel.packageScheduleTitle,
                             subTitle: viewModel.packageScheduleTitle,
-                            items: schedule
+                            items: schedule)
+                    }
                     if let services = details.includedServices, !services.isEmpty {
                         IncludedServicesView(
                             title: viewModel.includedServicesTitle,

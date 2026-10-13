@@ -1,202 +1,204 @@
 {
-  "status": 200,
-  "data": {
-    "id": "pkg-001",
-    "title": "Qiddiya Adventure",
-    "description": "A full day of thrills at Qiddiya City with transfers and a meal included.",
-    "imageUrl": "https://images.almatar.com/packages/qiddiya-adventure.jpg",
-    "destination": "Qiddiya City",
-    "durationNights": 0,
-    "price": {
-      "amount": 899.0,
-      "currency": "SAR"
-    },
-    "journeySnapshot": [
-      {
-        "id": "location",
-        "icon": "map",
-        "title": "Qiddiya City, SA",
-        "isFullWidth": true
-      },
-      {
-        "id": "duration",
-        "icon": "moon",
-        "title": "1 Day Pass"
-      },
-      {
-        "id": "pass",
-        "icon": "star",
-        "title": "1 Day Pass"
-      },
-      {
-        "id": "group",
-        "icon": "person.2",
-        "title": "Group: 4-6"
-      },
-      {
-        "id": "thrill",
-        "icon": "clock.arrow.circlepath",
-        "title": "Thrill Level: Max"
-      }
-    ],
-    "parkHighlights": [
-      {
-        "id": "thrills",
-        "icon": "bag",
-        "category": "Thrills",
-        "title": "Record-breaking coasters"
-      },
-      {
-        "id": "water",
-        "icon": "doc.on.doc",
-        "category": "Water Fun",
-        "title": "Splash Island water park"
-      },
-      {
-        "id": "dining",
-        "icon": "fork.knife",
-        "category": "Dining",
-        "title": "Themed restaurants"
-      },
-      {
-        "id": "shows",
-        "icon": "percent",
-        "category": "Shows",
-        "title": "Live entertainment"
-      },
-      {
-        "id": "family",
-        "icon": "car",
-        "category": "Family",
-        "title": "Kids' play zones"
-      },
-      {
-        "id": "night",
-        "icon": "clock",
-        "category": "Night",
-        "title": "Fireworks display"
-      }
-    ],
-    "packageSchedule": [
-      {
-        "id": "transfer",
-        "title": "Airport to Hotel Transfer",
-        "description": "Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah.",
-        "tag": {
-          "icon": "ticket",
-          "title": "Ticket"
+    "status": 200,
+    "data": {
+        "id": "pkg-001",
+        "title": "Qiddiya Adventure",
+        "description": "A full day of thrills at Qiddiya City with transfers and a meal included.",
+        "imageUrl": "https://images.almatar.com/packages/qiddiya-adventure.jpg",
+        "destination": "Qiddiya City",
+        "durationNights": 0,
+        "price": {
+            "amount": 899.0,
+            "currency": "SAR"
         },
-        "statusLabel": "Included",
-        "card": {
-          "title": "Airport to Hotel Transfer",
-          "description": "Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah.",
-          "statusLabel": "Included"
-        }
-      },
-      {
-        "id": "splash",
-        "title": "Splash Island & Kids' Play",
-        "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-        "card": {
-          "imageUrl": "https://images.almatar.com/packages/splash-island.jpg",
-          "title": "Splash Island & Kids' Play",
-          "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-          "statusLabel": "Included"
-        }
-      },
-      {
-        "id": "ritz",
-        "title": "The Ritz-Carlton, Riyadh",
-        "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-        "tag": {
-          "icon": "building.1",
-          "title": "Stay"
-        },
-        "statusLabel": "Included",
-        "card": {
-          "imageUrl": "https://images.almatar.com/packages/ritz-riyadh.jpg",
-          "title": "The Ritz-Carlton, Riyadh",
-          "rating": 4.9,
-          "details": [
+        "journeySnapshot": [
             {
-              "icon": "mappin.and.ellipse",
-              "text": "Palace-style luxury • Riyadh"
+                "id": "location",
+                "icon": "map",
+                "title": "Qiddiya City, SA",
+                "isFullWidth": true
             },
             {
-              "icon": "calendar",
-              "text": "16–24 Jul • 5 nights"
+                "id": "duration",
+                "icon": "moon",
+                "title": "1 Day Pass"
+            },
+            {
+                "id": "pass",
+                "icon": "star",
+                "title": "1 Day Pass"
+            },
+            {
+                "id": "group",
+                "icon": "person.2",
+                "title": "Group: 4-6"
+            },
+            {
+                "id": "thrill",
+                "icon": "clock.arrow.circlepath",
+                "title": "Thrill Level: Max"
             }
-          ],
-          "room": {
-            "title": "Room • Deluxe City View",
-            "subtitle": "1 king bed • sleeps 2"
-          },
-          "statusLabel": "Included"
-        }
-      },
-      {
-        "id": "makkah",
-        "title": "Makkah hotels",
-        "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
-        "tag": {
-          "icon": "ticket",
-          "title": "Ticket"
-        },
-        "statusLabel": "Included",
-        "card": {
-          "imageUrl": "https://images.almatar.com/packages/makkah-hotels.jpg",
-          "title": "Makkah hotels",
-          "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
-          "statusLabel": "Included"
-        }
-    "includedServices": [
-      {
-        "id": "rides",
-        "icon": "car",
-        "title": "All-Day Ride Access",
-        "description": "Unlimited access to all roller coasters and attractions."
-      },
-      {
-        "id": "seating",
-        "icon": "calendar",
-        "title": "Reserved Show Seating",
-        "description": "Priority seating for all live shows and entertainment."
-      },
-      {
-        "id": "guide",
-        "icon": "map",
-        "title": "Park Map & Guide",
-        "description": "Digital and physical guide to help you plan your day."
-      }
-    ],
-    "components": [
-      {
-        "id": "cmp-ticket-001",
-        "type": "experience",
-        "title": "Six Flags Qiddiya day pass",
-        "description": "Unlimited rides, 1 day",
-        "isMandatory": true,
-        "price": null
-      },
-      {
-        "id": "cmp-car-001",
-        "type": "car",
-        "title": "Return transfer from Riyadh",
-        "description": "Private van for up to 6 guests",
-        "isMandatory": true,
-        "price": null
-      },
-      {
-        "id": "cmp-addon-001",
-        "type": "add_on",
-        "title": "Fast pass",
-        "description": "Skip the regular queues",
-        "isMandatory": false,
-        "price": {
-          "amount": 150.0,
-          "currency": "SAR"
-        }
-      }
-    ]
-  }
+        ],
+        "parkHighlights": [
+            {
+                "id": "thrills",
+                "icon": "bag",
+                "category": "Thrills",
+                "title": "Record-breaking coasters"
+            },
+            {
+                "id": "water",
+                "icon": "doc.on.doc",
+                "category": "Water Fun",
+                "title": "Splash Island water park"
+            },
+            {
+                "id": "dining",
+                "icon": "fork.knife",
+                "category": "Dining",
+                "title": "Themed restaurants"
+            },
+            {
+                "id": "shows",
+                "icon": "percent",
+                "category": "Shows",
+                "title": "Live entertainment"
+            },
+            {
+                "id": "family",
+                "icon": "car",
+                "category": "Family",
+                "title": "Kids' play zones"
+            },
+            {
+                "id": "night",
+                "icon": "clock",
+                "category": "Night",
+                "title": "Fireworks display"
+            }
+        ],
+        "includedServices": [
+            {
+                "id": "rides",
+                "icon": "car",
+                "title": "All-Day Ride Access",
+                "description": "Unlimited access to all roller coasters and attractions."
+            },
+            {
+                "id": "seating",
+                "icon": "calendar",
+                "title": "Reserved Show Seating",
+                "description": "Priority seating for all live shows and entertainment."
+            },
+            {
+                "id": "guide",
+                "icon": "map",
+                "title": "Park Map & Guide",
+                "description": "Digital and physical guide to help you plan your day."
+            }
+        ],
+        "components": [
+            {
+                "id": "cmp-ticket-001",
+                "type": "experience",
+                "title": "Six Flags Qiddiya day pass",
+                "description": "Unlimited rides, 1 day",
+                "isMandatory": true,
+                "price": null
+            },
+            {
+                "id": "cmp-car-001",
+                "type": "car",
+                "title": "Return transfer from Riyadh",
+                "description": "Private van for up to 6 guests",
+                "isMandatory": true,
+                "price": null
+            },
+            {
+                "id": "cmp-addon-001",
+                "type": "add_on",
+                "title": "Fast pass",
+                "description": "Skip the regular queues",
+                "isMandatory": false,
+                "price": {
+                    "amount": 150.0,
+                    "currency": "SAR"
+                }
+            }
+        ],
+        "packageSchedule": [
+            {
+                "id": "transfer",
+                "title": "Airport to Hotel Transfer",
+                "description": "Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah.",
+                "tag": {
+                    "icon": "ticket",
+                    "title": "Ticket"
+                },
+                "statusLabel": "Included",
+                "card": {
+                    "title": "Airport to Hotel Transfer",
+                    "description": "Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah.",
+                    "statusLabel": "Included"
+                }
+            },
+            {
+                "id": "splash",
+                "title": "Splash Island & Kids' Play",
+                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+                "card": {
+                    "imageUrl": "https://images.almatar.com/packages/splash-island.jpg",
+                    "title": "Splash Island & Kids' Play",
+                    "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+                    "statusLabel": "Included"
+                }
+            },
+            {
+                "id": "ritz",
+                "title": "The Ritz-Carlton, Riyadh",
+                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+                "tag": {
+                    "icon": "building.1",
+                    "title": "Stay"
+                },
+                "statusLabel": "Included",
+                "card": {
+                    "imageUrl": "https://images.almatar.com/packages/ritz-riyadh.jpg",
+                    "title": "The Ritz-Carlton, Riyadh",
+                    "rating": 4.9,
+                    "details": [
+                        {
+                            "icon": "mappin.and.ellipse",
+                            "text": "Palace-style luxury • Riyadh"
+                        },
+                        {
+                            "icon": "calendar",
+                            "text": "16–24 Jul • 5 nights"
+                        }
+                    ],
+                    "room": {
+                        "title": "Room • Deluxe City View",
+                        "subtitle": "1 king bed • sleeps 2"
+                    },
+                    "statusLabel": "Included"
+                }
+            },
+            {
+                "id": "makkah",
+                "title": "Makkah hotels",
+                "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
+                "tag": {
+                    "icon": "ticket",
+                    "title": "Ticket"
+                },
+                "statusLabel": "Included",
+                "card": {
+                    "imageUrl": "https://images.almatar.com/packages/makkah-hotels.jpg",
+                    "title": "Makkah hotels",
+                    "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
+                    "statusLabel": "Included"
+                }
+            }
+        ]
+    }
 }

@@ -149,6 +149,24 @@
           "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
           "statusLabel": "Included"
         }
+    "includedServices": [
+      {
+        "id": "rides",
+        "icon": "car",
+        "title": "All-Day Ride Access",
+        "description": "Unlimited access to all roller coasters and attractions."
+      },
+      {
+        "id": "seating",
+        "icon": "calendar",
+        "title": "Reserved Show Seating",
+        "description": "Priority seating for all live shows and entertainment."
+      },
+      {
+        "id": "guide",
+        "icon": "map",
+        "title": "Park Map & Guide",
+        "description": "Digital and physical guide to help you plan your day."
       }
     ],
     "components": [

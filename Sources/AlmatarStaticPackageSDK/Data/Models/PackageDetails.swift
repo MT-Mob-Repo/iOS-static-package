@@ -17,6 +17,7 @@ struct PackageDetails: Codable, Sendable, Identifiable {
     let journeySnapshot: [JourneySnapshotItem]?
     let parkHighlights: [ParkHighlightItem]?
     let packageSchedule: [PackageScheduleItem]?
+    let includedServices: [IncludedServiceItem]?
     let components: [PackageComponent]
 
     var mandatoryComponents: [PackageComponent] { components.filter(\.isMandatory) }

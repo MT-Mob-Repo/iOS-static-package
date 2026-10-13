@@ -11,6 +11,9 @@ enum LocalizedKey: String {
     case goToPayment = "static_package_details.go_to_payment"
     case journeySnapshot = "static_package_details.journey_snapshot"
     case parkHighlights = "static_package_details.park_highlights"
+    case dynamicPackageTag = "static_package_details.dynamic_package_tag"
+    case nightsTag = "static_package_details.nights_tag"
+    case nightsMeta = "static_package_details.nights_meta"
     case packageSchedule = "static_package_details.package_schedule"
     case includedServices = "static_package_details.included_services"
     case includedServicesSubtitle = "static_package_details.included_services_subtitle"
@@ -27,6 +30,12 @@ enum LocalizedKey: String {
     func localized() -> String {
         let language = AlmatarStaticPackageSDK.shared.configuration.language
         return NSLocalizedString(rawValue, bundle: language.bundle, comment: "")
+    }
+
+    /// Localized format string filled with the given arguments.
+    @MainActor
+    func localized(with arguments: CVarArg...) -> String {
+        String(format: localized(), locale: nil, arguments: arguments)
     }
 }
 

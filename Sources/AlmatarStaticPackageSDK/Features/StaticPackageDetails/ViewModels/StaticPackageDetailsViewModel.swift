@@ -15,6 +15,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
+    @Published private(set) var isFavorite = false
 
     // MARK: - Strings
     var goToPaymentTitle: String { LocalizedKey.goToPayment.localized() }
@@ -26,11 +27,42 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     var includedInYourPassTitle: String { LocalizedKey.includedInYourPass.localized() }
     var retryTitle: String { LocalizedKey.retry.localized() }
     private var genericErrorMessage: String { LocalizedKey.genericError.localized() }
+    private var dynamicPackageTag: String { LocalizedKey.dynamicPackageTag.localized() }
 
     var packageDetails: PackageDetails? {
         if case .loaded(let details) = state { return details }
         return nil
     }
+
+    var headerTitle: String {
+        packageDetails?.title ?? ""
+    }
+
+    var headerDescription: String? {
+        packageDetails?.description
+    }
+
+    var headerTags: [String] {
+        var tags = [dynamicPackageTag]
+        if let nights = packageDetails?.durationNights, nights > 0 {
+            tags.append(LocalizedKey.nightsTag.localized(with: nights))
+        }
+        return tags
+    }
+
+    var headerMetaLine: String? {
+        guard let details = packageDetails,
+              let nights = details.durationNights,
+              nights > 0 else { return nil }
+        let detail = details.destination?.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let detail, !detail.isEmpty else {
+            return LocalizedKey.nightsTag.localized(with: nights)
+        }
+        return LocalizedKey.nightsMeta.localized(with: nights, detail)
+    }
+
+    /// Asset names for the header carousel (`Assets.xcassets`).
+    var headerImageNames: [String] { PackageAsset.carouselImageNames }
 
     private let packageId: String
     private let repository: StaticPackagesRepositoryProtocol
@@ -62,5 +94,13 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     func goToPaymentTapped() {
         guard packageDetails != nil else { return }
         onGoToPayment()
+    }
+
+    func shareTapped() {
+        // Host can wire sharing later; reserved for toolbar action.
+    }
+
+    func favoriteTapped() {
+        isFavorite.toggle()
     }
 }

@@ -77,6 +77,78 @@
         "title": "Fireworks display"
       }
     ],
+    "packageSchedule": [
+      {
+        "id": "transfer",
+        "title": "Airport to Hotel Transfer",
+        "description": "Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah. Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah.",
+        "tag": {
+          "icon": "ticket",
+          "title": "Ticket"
+        },
+        "statusLabel": "Included",
+        "card": {
+          "title": "Airport to Hotel Transfer",
+          "description": "Arrive at King Abdulaziz International Airport in Jeddah. Our dedicated shuttle service will transport you to your hotel near the Haram in Makkah.",
+          "statusLabel": "Included"
+        }
+      },
+      {
+        "id": "splash",
+        "title": "Splash Island & Kids' Play",
+        "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+        "card": {
+          "imageUrl": "https://images.almatar.com/packages/splash-island.jpg",
+          "title": "Splash Island & Kids' Play",
+          "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+          "statusLabel": "Included"
+        }
+      },
+      {
+        "id": "ritz",
+        "title": "The Ritz-Carlton, Riyadh",
+        "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+        "tag": {
+          "icon": "building.1",
+          "title": "Stay"
+        },
+        "statusLabel": "Included",
+        "card": {
+          "imageUrl": "https://images.almatar.com/packages/ritz-riyadh.jpg",
+          "title": "The Ritz-Carlton, Riyadh",
+          "rating": 4.9,
+          "details": [
+            {
+              "icon": "mappin.and.ellipse",
+              "text": "Palace-style luxury • Riyadh"
+            },
+            {
+              "icon": "calendar",
+              "text": "16–24 Jul • 5 nights"
+            }
+          ],
+          "room": {
+            "title": "Room • Deluxe City View",
+            "subtitle": "1 king bed • sleeps 2"
+          },
+          "statusLabel": "Included"
+        }
+      },
+      {
+        "id": "makkah",
+        "title": "Makkah hotels",
+        "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
+        "tag": {
+          "icon": "ticket",
+          "title": "Ticket"
+        },
+        "statusLabel": "Included",
+        "card": {
+          "imageUrl": "https://images.almatar.com/packages/makkah-hotels.jpg",
+          "title": "Makkah hotels",
+          "description": "Enjoy breathtaking views of the Kaaba directly from your room. Located just 200m from the holy courtyard.",
+          "statusLabel": "Included"
+        }
     "includedServices": [
       {
         "id": "rides",

@@ -378,13 +378,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تحميل"
+            "value" : "تحميل البرنامج"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Download"
+            "value" : "Download Itinerary"
           }
         }
       }

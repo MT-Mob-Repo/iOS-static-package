@@ -19,7 +19,7 @@ struct ItineraryView: View {
         static let chevronDownIcon = "chevron.down"
         static let addIcon = "plus"
         static let addedIcon = "checkmark"
-        static let downloadIcon = "arrow.down.circle"
+        static let downloadIcon = "square.and.arrow.down"
     }
 
     let strings: ItineraryStrings
@@ -58,6 +58,10 @@ struct ItineraryView: View {
             VStack(spacing: Spacing.small) {
                 ForEach(days) { dayCard($0) }
             }
+
+            if let downloadURL {
+                downloadButton(downloadURL)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -66,33 +70,14 @@ struct ItineraryView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Spacing.xSmall) {
-            HStack(spacing: Spacing.small) {
-                Text(strings.title)
-                    .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
-                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                if let downloadURL {
-                    downloadButton(downloadURL)
-                }
-            }
+            Text(strings.title)
+                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                .foregroundStyle(AlmatarColors.textPrimaryStatic)
 
             Text(strings.subtitle)
                 .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
                 .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private func downloadButton(_ url: URL) -> some View {
-        Link(destination: url) {
-            HStack(spacing: Spacing.xSmall) {
-                Image(systemName: Layout.downloadIcon)
-                    .font(.system(size: Layout.actionIconSize, weight: Typography.Weight.semibold))
-                Text(strings.download)
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
-            }
-            .foregroundStyle(AlmatarColors.textPrimaryInteractive)
         }
     }
 
@@ -160,18 +145,6 @@ struct ItineraryView: View {
                 readLessTitle: strings.readLess,
                 actionColor: AlmatarColors.textPrimaryInteractive
             )
-        }
-
-        if let activities = day.activities, !activities.isEmpty {
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                Text(strings.activities)
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
-                    // Letter spacing breaks Arabic letter joining, so it is applied to LTR only.
-                    .kerning(layoutDirection == .rightToLeft ? .zero : Layout.sectionLabelKerning)
-                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
-
-                ForEach(activities) { activityRow($0) }
-            }
         }
     }
 
@@ -256,6 +229,26 @@ struct ItineraryView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Download
+
+    /// Pill under the days that opens the itinerary PDF; title first, icon trailing.
+    private func downloadButton(_ url: URL) -> some View {
+        Link(destination: url) {
+            HStack(spacing: Spacing.xSmall) {
+                Text(strings.download)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
+                Image(systemName: Layout.downloadIcon, fontWeight: Typography.Weight.light)
+                    .font(.system(size: Layout.actionIconSize))
+            }
+            .foregroundStyle(AlmatarColors.textPrimaryInteractive)
+            .padding(.horizontal, Spacing.medium)
+            .padding(.vertical, Spacing.xxSmall)
+            .background(AlmatarColors.surfaceSecondaryBase)
+            .clipShape(Capsule())
+        }
+        .padding(.top, Spacing.small)
+    }
+
     private func toggle(_ day: ItineraryDay) {
         if expandedDays.contains(day.id) {
             expandedDays.remove(day.id)
@@ -289,7 +282,7 @@ struct ItineraryStrings {
                 included: "Included",
                 add: "Add",
                 added: "Added",
-                download: "Download",
+                download: "Download Itinerary",
                 readMore: "Read more",
                 readLess: "Read less",
                 dayLabel: { "DAY \($0)" }

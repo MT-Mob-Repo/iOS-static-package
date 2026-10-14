@@ -7,12 +7,11 @@ import SwiftUI
 import UIKit
 import AlmatarSystemDesignSDK
 
-/// Full-bleed image carousel with an expandable summary card that overlays the header.
 struct PackageDetailsHeaderView: View {
     private enum Layout {
         static let headerHeight: CGFloat = 420
         /// How far the card sits up over the carousel image.
-        static let cardOverlap: CGFloat = 64
+        static let cardOverlap: CGFloat = 45
         static let cardHorizontalInset: CGFloat = 16
         static let cardCornerRadius: CGFloat = CornerRadius.xxxLarge
         static let borderWidth: CGFloat = 1
@@ -23,23 +22,23 @@ struct PackageDetailsHeaderView: View {
     }
 
     let title: String
-    let description: String?
     let tags: [String]
     let metaLine: String?
+    /// Remote carousel images; when empty, `imageNames` are shown instead.
+    var imageURLs: [URL] = []
     /// Asset catalog names from `Assets.xcassets` (loaded via `Bundle.module`).
     let imageNames: [String]
 
     @State private var currentPage = 0
-    @State private var isExpanded = false
 
     private var slides: [String] {
         imageNames.isEmpty ? PackageAsset.carouselImageNames : imageNames
     }
 
     private var slideCount: Int {
-        max(slides.count, 1)
+        imageURLs.isEmpty ? max(slides.count, 1) : imageURLs.count
     }
-
+    
     var body: some View {
         // Carousel layout height is shortened so the card can sit in the remaining
         // space while the image still paints underneath (overlay). Avoids TabView
@@ -82,6 +81,31 @@ struct PackageDetailsHeaderView: View {
 
     @ViewBuilder
     private func slide(at index: Int) -> some View {
+        if !imageURLs.isEmpty {
+            remoteSlide(at: index)
+        } else {
+            assetSlide(at: index)
+        }
+    }
+
+    private func remoteSlide(at index: Int) -> some View {
+        AsyncImage(url: imageURLs[index]) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+            default:
+                // Loading and failure share the same placeholder.
+                AlmatarColors.surfaceCardSecondary
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
+    }
+
+    @ViewBuilder
+    private func assetSlide(at index: Int) -> some View {
         let name = slides[index % slides.count]
         if UIImage(named: name, in: .module, compatibleWith: nil) != nil {
             Image(name, bundle: .module)
@@ -129,24 +153,14 @@ struct PackageDetailsHeaderView: View {
     }
 
     // MARK: - Expandable summary card
-
     private var summaryCard: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            HStack(alignment: .center, spacing: Spacing.xSmall) {
-                tagsRow
-                Spacer(minLength: Spacing.xSmall)
-                expandToggle
-            }
+            tagsRow
 
             Text(title)
                 .modifier(AppTextModifier(size: Typography.Size.xLarge, fontWeight: Typography.Weight.bold))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .fixedSize(horizontal: false, vertical: true)
-
-            if isExpanded {
-                expandedContent
-                    .transition(.opacity.combined(with: .move(edge: .top)))
-            }
         }
         .padding(Spacing.medium)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -158,7 +172,6 @@ struct PackageDetailsHeaderView: View {
         )
         .shadow(color: Layout.shadowColor, radius: 5, x: 0, y: 2)
         .shadow(color: Layout.shadowColor, radius: 10, x: 0, y: 3)
-        .animation(.easeInOut(duration: 0.25), value: isExpanded)
     }
 
     private var tagsRow: some View {
@@ -177,61 +190,5 @@ struct PackageDetailsHeaderView: View {
                     .clipShape(Capsule())
             }
         }
-    }
-
-    private var expandToggle: some View {
-        Button {
-            withAnimation(.easeInOut(duration: 0.25)) {
-                isExpanded.toggle()
-            }
-        } label: {
-            Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
-                .frame(width: 28, height: 28)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Text(isExpanded ? "Collapse" : "Expand"))
-    }
-
-    @ViewBuilder
-    private var expandedContent: some View {
-        if let description, !description.isEmpty {
-            Text(description)
-                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
-                .foregroundStyle(AlmatarColors.textSecondaryStatic)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-
-        if let metaLine, !metaLine.isEmpty {
-            Text(metaLine)
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
-                .foregroundStyle(AlmatarColors.textSecondaryStatic)
-        }
-    }
-}
-
-#Preview("Collapsed") {
-    ScrollView {
-        PackageDetailsHeaderView(
-            title: "Six Flags Qiddiya City",
-            description: "Our exclusive 7-night Al-Safwa Premium Umrah package marries physical comfort with deep spiritual focus in Makkah & Madinah.",
-            tags: ["Dynamic Package", "7 Nights"],
-            metaLine: "7 Nights • Private Escort",
-            imageNames: PackageAsset.carouselImageNames
-        )
-    }
-}
-
-#Preview("Expanded") {
-    ScrollView {
-        PackageDetailsHeaderView(
-            title: "Falcon’s Adventure",
-            description: "Our exclusive 7-night Al-Safwa Premium Umrah package marries physical comfort with deep spiritual focus in Makkah & Madinah.",
-            tags: ["DYNAMIC PACKAGE", "7 NIGHTS"],
-            metaLine: "7 Nights • Private Escort",
-            imageNames: PackageAsset.carouselImageNames
-        )
     }
 }

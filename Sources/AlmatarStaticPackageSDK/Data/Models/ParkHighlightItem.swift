@@ -5,24 +5,31 @@
 
 import Foundation
 
-/// One card in the package "Park Highlights" (e.g. Thrills — Record-breaking coasters).
+/// The package "Park Highlights" section.
+struct ParkHighlights: Codable, Sendable, Hashable {
+    let title: String?
+    let items: [ParkHighlightItem]?
+}
+
+/// One card in "Park Highlights" (e.g. Thrills — Record-breaking coasters).
 struct ParkHighlightItem: Codable, Sendable, Identifiable, Hashable {
-    let id: String
-    /// Remote image URL, or an SF Symbol name.
+    /// Icon key, remote image URL or SF Symbol name.
     let icon: String
-    /// Short label shown above the title, e.g. "Thrills".
-    let category: String
-    let title: String
+    /// Short label shown above the value, e.g. "Thrills".
+    let label: String
+    let value: String
+
+    var id: String { "\(icon)-\(label)" }
 }
 
 extension ParkHighlightItem {
     /// Sample items for previews.
     static let mockItems: [ParkHighlightItem] = [
-        ParkHighlightItem(id: "thrills", icon: "bag", category: "Thrills", title: "Record-breaking coasters"),
-        ParkHighlightItem(id: "water", icon: "doc.on.doc", category: "Water Fun", title: "Splash Island water park"),
-        ParkHighlightItem(id: "dining", icon: "fork.knife", category: "Dining", title: "Themed restaurants"),
-        ParkHighlightItem(id: "shows", icon: "percent", category: "Shows", title: "Live entertainment"),
-        ParkHighlightItem(id: "family", icon: "car", category: "Family", title: "Kids' play zones"),
-        ParkHighlightItem(id: "night", icon: "clock", category: "Night", title: "Fireworks display")
+        ParkHighlightItem(icon: "thrills", label: "Thrills", value: "Record-breaking coasters"),
+        ParkHighlightItem(icon: "water", label: "Water Fun", value: "Splash Island water park"),
+        ParkHighlightItem(icon: "dining", label: "Dining", value: "Themed restaurants"),
+        ParkHighlightItem(icon: "shows", label: "Shows", value: "Live entertainment"),
+        ParkHighlightItem(icon: "family", label: "Family", value: "Kids' play zones"),
+        ParkHighlightItem(icon: "night", label: "Night", value: "Fireworks display")
     ]
 }

@@ -6,14 +6,14 @@
 import Foundation
 
 protocol StaticPackagesRepositoryProtocol: Sendable {
-    func fetchPackageDetails(packageId: String) async throws -> PackageDetails
+    func fetchPackageDetails(cartId: String) async throws -> PackageDetails
 }
 
 enum StaticPackagesEndpoint {
-    // TODO: Confirm the path with the backend team.
-    static let packageDetailsPrefix = "api/v1/static-packages/"
+    static let packageCartPrefix = "v1/packages/carts/"
 
-    static func packageDetails(id: String) -> String { packageDetailsPrefix + id }
+    /// `GET v1/packages/carts/{id}`
+    static func packageCart(id: String) -> String { packageCartPrefix + id }
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -25,14 +25,11 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
         self.networkClient = networkClient
     }
 
-    func fetchPackageDetails(packageId: String) async throws -> PackageDetails {
-        let response: BaseNetworkResponse<PackageDetails> = try await networkClient.get(
+    func fetchPackageDetails(cartId: String) async throws -> PackageDetails {
+        // The cart is returned at the root of the body, without a `data` envelope.
+        try await networkClient.get(
             baseURL: baseURL,
-            path: StaticPackagesEndpoint.packageDetails(id: packageId)
+            path: StaticPackagesEndpoint.packageCart(id: cartId)
         )
-        guard let details = response.data else {
-            throw NetworkError.noData
-        }
-        return details
     }
 }

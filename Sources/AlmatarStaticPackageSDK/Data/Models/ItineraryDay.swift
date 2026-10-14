@@ -5,6 +5,15 @@
 
 import Foundation
 
+/// The package "Itinerary" section.
+struct PackageItinerary: Codable, Sendable, Hashable {
+    let title: String?
+    let subtitle: String?
+    /// PDF version of the itinerary.
+    let downloadUrl: String?
+    let days: [ItineraryDay]?
+}
+
 /// One day in the package "Itinerary".
 struct ItineraryDay: Codable, Sendable, Identifiable, Hashable {
     let day: Int

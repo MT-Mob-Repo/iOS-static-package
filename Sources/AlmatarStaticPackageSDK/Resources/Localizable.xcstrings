@@ -11,9 +11,6 @@
         }
       }
     },
-    "Collapse" : {
-
-    },
     "common.generic_error" : {
       "comment" : "Shown when a request fails without a server message",
       "extractionState" : "manual",
@@ -85,9 +82,6 @@
           }
         }
       }
-    },
-    "Expand" : {
-
     },
     "static_package_details.cancellation_free" : {
       "comment" : "Cancellation tier with a 100% refund",
@@ -193,6 +187,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go to payment"
+          }
+        }
+      }
+    },
+    "static_package_details.hotel_room" : {
+      "comment" : "Package schedule hotel card: room line. %@ = room name",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الغرفة • %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room • %@"
+          }
+        }
+      }
+    },
+    "static_package_details.hotel_sleeps" : {
+      "comment" : "Package schedule hotel card: room capacity. %lld = number of guests",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تتسع لـ %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sleeps %lld"
           }
         }
       }
@@ -337,6 +367,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "DAY %d"
+          }
+        }
+      }
+    },
+    "static_package_details.itinerary_download" : {
+      "comment" : "Itinerary: button that opens the itinerary PDF",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحميل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download"
           }
         }
       }

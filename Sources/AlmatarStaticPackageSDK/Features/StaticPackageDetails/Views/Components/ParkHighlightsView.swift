@@ -50,15 +50,15 @@ struct ParkHighlightsView: View {
 
     private func card(_ item: ParkHighlightItem) -> some View {
         VStack(alignment: .leading, spacing: Spacing.zero) {
-            RemoteIconView(icon: item.icon, size: Layout.iconSize, tint: AlmatarColors.iconPrimaryStatic)
+            RemoteIconView(icon: item.icon, size: Layout.iconSize)
 
             Spacer(minLength: Spacing.xSmall)
 
-            Text(item.category)
+            Text(item.label)
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
-            Text(item.title)
+            Text(item.value)
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .lineLimit(Layout.titleLineLimit)

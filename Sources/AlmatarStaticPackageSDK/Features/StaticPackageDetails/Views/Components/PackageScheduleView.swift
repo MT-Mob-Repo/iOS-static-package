@@ -31,7 +31,7 @@ struct PackageScheduleView: View {
     }
 
     let title: String
-    let subTitle: String
+    let subTitle: String?
     let items: [PackageScheduleItem]
     let readMoreTitle = LocalizedKey.readMore.localized()
     let readLessTitle = LocalizedKey.readLess.localized()
@@ -42,10 +42,12 @@ struct PackageScheduleView: View {
                 .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
 
-            Text(subTitle)
-                .modifier(AppTextModifier(size: Typography.Size.regular))
-                .foregroundStyle(AlmatarColors.textSecondaryStatic)
-            
+            if let subTitle = subTitle.nonEmpty {
+                Text(subTitle)
+                    .modifier(AppTextModifier(size: Typography.Size.regular))
+                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+            }
+
             VStack(alignment: .leading, spacing: Spacing.zero) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     stepRow(item, isLast: index == items.count - 1)

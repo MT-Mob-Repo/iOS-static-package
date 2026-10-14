@@ -5,40 +5,24 @@
 
 import Foundation
 
-/// Refund rules for the package, ordered from the earliest cancellation window.
+/// One refund tier of the package cancellation policy.
 struct CancellationPolicy: Codable, Sendable, Hashable {
-    let isRefundable: Bool
-    let policies: [CancellationPolicyRule]?
-}
-
-struct CancellationPolicyRule: Codable, Sendable, Hashable {
-    /// The rule applies when at least this many hours remain before departure.
-    let minRemainingHours: Int
+    /// e.g. "Free cancellation".
+    let title: String?
+    /// e.g. "30+ days before departure".
+    let window: String?
+    /// Last day the tier applies, "yyyy-MM-dd".
+    let until: String?
+    /// e.g. "Full refund, except visa fee".
+    let note: String?
     /// 100 is a full refund, 0 is no refund.
     let refundableAmountPercentage: Int
-    /// e.g. "More than 48 hours before departure".
-    let window: String?
-    /// e.g. "Cancel for a full refund."
-    let note: String?
 }
 
 extension CancellationPolicy {
-    /// Sample policy for previews.
-    static let mock = CancellationPolicy(
-        isRefundable: true,
-        policies: [
-            CancellationPolicyRule(
-                minRemainingHours: 48,
-                refundableAmountPercentage: 100,
-                window: "More than 48 hours before departure",
-                note: "Cancel for a full refund."
-            ),
-            CancellationPolicyRule(
-                minRemainingHours: 0,
-                refundableAmountPercentage: 50,
-                window: "Less than 48 hours",
-                note: "Half the amount is refunded."
-            )
-        ]
-    )
+    /// Sample tiers for previews.
+    static let mockItems: [CancellationPolicy] = [
+        CancellationPolicy(title: "Free cancellation", window: "30+ days before departure", until: "2026-04-17", note: "Full refund, except visa fee", refundableAmountPercentage: 100),
+        CancellationPolicy(title: nil, window: "Less than 30 days", until: nil, note: "Half the amount is refunded.", refundableAmountPercentage: 50)
+    ]
 }

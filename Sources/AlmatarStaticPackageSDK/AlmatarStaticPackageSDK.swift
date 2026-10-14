@@ -58,10 +58,11 @@ public final class AlmatarStaticPackageSDK {
 
     // MARK: - Views
 
-    /// Returns the Static Package Details screen for the given package, in the configured language.
-    public func getStaticPackageDetailsView(packageId: String) -> some View {
+    /// Returns the Static Package Details screen for the given package cart, in the configured language.
+    /// - Parameter cartId: Id of the cart loaded from `GET v1/packages/carts/{id}`.
+    public func getStaticPackageDetailsView(cartId: String) -> some View {
         let viewModel = StaticPackageDetailsViewModel(
-            packageId: packageId,
+            cartId: cartId,
             repository: makeStaticPackagesRepository()
         ) { [weak self] in
             self?.onGoToPayment?()

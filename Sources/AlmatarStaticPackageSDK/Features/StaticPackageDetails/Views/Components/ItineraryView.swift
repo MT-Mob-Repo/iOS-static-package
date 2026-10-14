@@ -19,10 +19,13 @@ struct ItineraryView: View {
         static let chevronDownIcon = "chevron.down"
         static let addIcon = "plus"
         static let addedIcon = "checkmark"
+        static let downloadIcon = "arrow.down.circle"
     }
 
     let strings: ItineraryStrings
     let days: [ItineraryDay]
+    /// PDF version of the itinerary; hides the download button when `nil`.
+    let downloadURL: URL?
     let activitySubtitle: (ItineraryActivity) -> String
     let isActivityAdded: (ItineraryActivity) -> Bool
     let onToggleActivity: (ItineraryActivity) -> Void
@@ -34,12 +37,14 @@ struct ItineraryView: View {
     init(
         strings: ItineraryStrings,
         days: [ItineraryDay],
+        downloadURL: URL? = nil,
         activitySubtitle: @escaping (ItineraryActivity) -> String,
         isActivityAdded: @escaping (ItineraryActivity) -> Bool,
         onToggleActivity: @escaping (ItineraryActivity) -> Void
     ) {
         self.strings = strings
         self.days = days
+        self.downloadURL = downloadURL
         self.activitySubtitle = activitySubtitle
         self.isActivityAdded = isActivityAdded
         self.onToggleActivity = onToggleActivity
@@ -61,14 +66,33 @@ struct ItineraryView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Spacing.xSmall) {
-            Text(strings.title)
-                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            HStack(spacing: Spacing.small) {
+                Text(strings.title)
+                    .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                if let downloadURL {
+                    downloadButton(downloadURL)
+                }
+            }
 
             Text(strings.subtitle)
                 .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func downloadButton(_ url: URL) -> some View {
+        Link(destination: url) {
+            HStack(spacing: Spacing.xSmall) {
+                Image(systemName: Layout.downloadIcon)
+                    .font(.system(size: Layout.actionIconSize, weight: Typography.Weight.semibold))
+                Text(strings.download)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+            }
+            .foregroundStyle(AlmatarColors.textPrimaryInteractive)
         }
     }
 
@@ -249,6 +273,7 @@ struct ItineraryStrings {
     let included: String
     let add: String
     let added: String
+    let download: String
     let readMore: String
     let readLess: String
     let dayLabel: (Int) -> String
@@ -264,11 +289,13 @@ struct ItineraryStrings {
                 included: "Included",
                 add: "Add",
                 added: "Added",
+                download: "Download",
                 readMore: "Read more",
                 readLess: "Read less",
                 dayLabel: { "DAY \($0)" }
             ),
             days: ItineraryDay.mockItems,
+            downloadURL: URL(string: "https://cdn.almatar.com/packages/six-flags-qiddiya/itinerary.pdf"),
             activitySubtitle: { $0.duration ?? "" },
             isActivityAdded: { _ in false },
             onToggleActivity: { _ in }

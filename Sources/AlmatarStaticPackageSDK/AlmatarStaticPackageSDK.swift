@@ -70,9 +70,18 @@ public final class AlmatarStaticPackageSDK {
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
 
+    /// Returns the list of package cards for a section provided by the host app.
+    /// "Book" creates a cart for the package, then pushes its details screen,
+    /// so the view must be shown inside a `NavigationStack`.
+    /// - Parameter section: The title and packages to show, e.g. decoded from the host app's API.
+    public func getPackagesListView(section: PackagesSection) -> some View {
+        PackagesListView(section: section)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
     // MARK: - Repositories
 
-    private func makeStaticPackagesRepository() -> StaticPackagesRepositoryProtocol {
+    func makeStaticPackagesRepository() -> StaticPackagesRepositoryProtocol {
         StaticPackagesRepository(
             baseURL: configuration.baseURL,
             networkClient: configuration.useMockData ? .mock : .shared

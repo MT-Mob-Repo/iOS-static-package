@@ -32,6 +32,24 @@
         }
       }
     },
+    "common.ok" : {
+      "comment" : "Button to dismiss an alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسناً"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "common.read_less" : {
       "comment" : "Collapses an expanded text",
       "extractionState" : "manual",
@@ -88,6 +106,60 @@
     },
     "Expand" : {
 
+    },
+    "packages_list.book" : {
+      "comment" : "Packages list: button to book a package",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "احجز"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Book"
+          }
+        }
+      }
+    },
+    "packages_list.per_ticket" : {
+      "comment" : "Packages list: unit after the starting price",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "/ تذكرة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "/ ticket"
+          }
+        }
+      }
+    },
+    "packages_list.starting_from" : {
+      "comment" : "Packages list: label above the starting price",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يبدأ من"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting from"
+          }
+        }
+      }
     },
     "static_package_details.cancellation_free" : {
       "comment" : "Cancellation tier with a 100% refund",

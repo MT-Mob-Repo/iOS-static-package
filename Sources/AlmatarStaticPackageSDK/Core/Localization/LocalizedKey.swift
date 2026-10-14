@@ -31,9 +31,15 @@ enum LocalizedKey: String {
     case cancellationPartialRefund = "static_package_details.cancellation_partial_refund"
     case cancellationNonRefundable = "static_package_details.cancellation_non_refundable"
 
+    // MARK: Packages List
+    case startingFrom = "packages_list.starting_from"
+    case perTicket = "packages_list.per_ticket"
+    case book = "packages_list.book"
+
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
+    case ok = "common.ok"
     case readMore = "common.read_more"
     case readLess = "common.read_less"
 

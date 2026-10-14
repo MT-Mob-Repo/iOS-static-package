@@ -7,6 +7,7 @@ import Foundation
 
 protocol StaticPackagesRepositoryProtocol: Sendable {
     func fetchPackageDetails(packageId: String) async throws -> PackageDetails
+    func bookPackage(packageId: String) async throws -> PackageBooking
 }
 
 enum StaticPackagesEndpoint {
@@ -14,6 +15,8 @@ enum StaticPackagesEndpoint {
     static let packageDetailsPrefix = "api/v1/static-packages/"
 
     static func packageDetails(id: String) -> String { packageDetailsPrefix + id }
+
+    static let bookPackage = "v1/packages/book"
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -34,5 +37,13 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
             throw NetworkError.noData
         }
         return details
+    }
+
+    func bookPackage(packageId: String) async throws -> PackageBooking {
+        try await networkClient.post(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.bookPackage,
+            body: BookPackageRequest(packageId: packageId)
+        )
     }
 }

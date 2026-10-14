@@ -79,7 +79,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     var parkHighlightsTitle: String {
-        packageInfo?.highlights?.title.nonEmpty ?? LocalizedKey.parkHighlights.localized()
+        packageInfo?.highlights?.title.nonEmpty ?? ""
     }
 
     var parkHighlightItems: [ParkHighlightItem] {
@@ -87,7 +87,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     var packageScheduleTitle: String {
-        packageInfo?.products?.title.nonEmpty ?? LocalizedKey.packageSchedule.localized()
+        packageInfo?.products?.title.nonEmpty ?? ""
     }
 
     var packageScheduleSubtitle: String? {
@@ -124,15 +124,15 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     var includedServicesTitle: String {
-        packageInfo?.includedServices?.title.nonEmpty ?? LocalizedKey.includedServices.localized()
+        packageInfo?.includedServices?.title.nonEmpty ?? ""
     }
 
     var includedServicesSubtitle: String {
-        packageInfo?.includedServices?.description.nonEmpty ?? LocalizedKey.includedServicesSubtitle.localized()
+        packageInfo?.includedServices?.description.nonEmpty ?? ""
     }
 
     var includedInYourPassTitle: String {
-        packageInfo?.includedServices?.subtitle.nonEmpty ?? LocalizedKey.includedInYourPass.localized()
+        packageInfo?.includedServices?.subtitle.nonEmpty ?? ""
     }
 
     var includedServiceItems: [IncludedServiceItem] {

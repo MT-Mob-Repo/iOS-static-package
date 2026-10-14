@@ -237,12 +237,12 @@ struct ItineraryView: View {
             HStack(spacing: Spacing.xSmall) {
                 Text(strings.download)
                     .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
-                Image(systemName: Layout.downloadIcon, fontWeight: Typography.Weight.light)
-                    .font(.system(size: Layout.actionIconSize))
+                Image(systemName: Layout.downloadIcon)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.light))
             }
             .foregroundStyle(AlmatarColors.textPrimaryInteractive)
             .padding(.horizontal, Spacing.medium)
-            .padding(.vertical, Spacing.xxSmall)
+            .padding(.vertical, Spacing.xSmall)
             .background(AlmatarColors.surfaceSecondaryBase)
             .clipShape(Capsule())
         }

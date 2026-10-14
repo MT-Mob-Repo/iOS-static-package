@@ -21,13 +21,10 @@ struct PackageSummaryView: View {
         static let includeIconSize: CGFloat = 18
         static let includeIconContainerSize: CGFloat = 32
         static let borderWidth: CGFloat = 1
-        // TODO: Replace with the design-system success color once available.
-        static let badgeTint = AlmatarColors.iconComplementaryGreen
         static let badgeBackgroundOpacity: Double = 0.08
     }
 
     let title: String
-    let imageUrl: String?
     let rows: [PackageSummaryRow]
     let includesTitle: String
     let includes: [CartSnapshotItem]
@@ -35,10 +32,6 @@ struct PackageSummaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
             ConfirmationSectionTitle(title: title)
-
-            if let url = imageUrl.flatMap(URL.init(string:)) {
-                heroImage(url)
-            }
 
             VStack(spacing: Spacing.small) {
                 ForEach(rows, id: \.self) { rowView($0) }
@@ -79,7 +72,7 @@ struct PackageSummaryView: View {
     private func rowView(_ row: PackageSummaryRow) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
             Text(row.label)
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
             Spacer(minLength: Spacing.small)
@@ -88,7 +81,7 @@ struct PackageSummaryView: View {
                 badge(row.value)
             } else {
                 Text(row.value)
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .multilineTextAlignment(.trailing)
                     .fixedSize(horizontal: false, vertical: true)
@@ -97,53 +90,34 @@ struct PackageSummaryView: View {
     }
 
     private func badge(_ value: String) -> some View {
-        Text(value.uppercased())
-            .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
-            .foregroundStyle(Layout.badgeTint)
+        Text(""value.uppercased())
+            .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.medium))
+            .foregroundStyle(AlmatarColors.textComplementaryGreen)
             .padding(.horizontal, Spacing.small)
             .padding(.vertical, Spacing.xxxSmall)
-            .background(Layout.badgeTint.opacity(Layout.badgeBackgroundOpacity))
+            .background(AlmatarColors.surfaceSuccessLight)
             .clipShape(Capsule())
     }
 
     private var includesList: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text(includesTitle)
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
+                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
             ForEach(includes, id: \.self) { item in
                 HStack(spacing: Spacing.small) {
-                    RemoteIconView(icon: item.iconName, size: Layout.includeIconSize, tint: AlmatarColors.iconPrimaryStatic)
+                    RemoteIconView(icon: item.iconName, size: Layout.includeIconSize, tint: AlmatarColors.iconPrimaryInteractive)
                         .frame(width: Layout.includeIconContainerSize, height: Layout.includeIconContainerSize)
-                        .background(AlmatarColors.surfaceCardSecondary)
+                        .background(AlmatarColors.surfaceBrandSecondary)
                         .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
 
                     Text(item.label)
-                        .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
+                        .modifier(AppTextModifier(size: Typography.Size.regular))
                         .foregroundStyle(AlmatarColors.textPrimaryStatic)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
     }
-}
-
-#Preview {
-    PackageSummaryView(
-        title: "Package Summary",
-        imageUrl: "https://cdn.almatar.com/pkg/9eed7-hero.jpg",
-        rows: [
-            PackageSummaryRow(label: "Package", value: "Makkah Essentials"),
-            PackageSummaryRow(label: "Destination", value: "Makkah"),
-            PackageSummaryRow(label: "Duration", value: "5 days, 4 nights"),
-            PackageSummaryRow(label: "Tier", value: "Premium", isBadge: true)
-        ],
-        includesTitle: "Package includes",
-        includes: [
-            CartSnapshotItem(icon: "hotel", label: "4 nights in Makkah"),
-            CartSnapshotItem(icon: "transfer", label: "Airport transfers included")
-        ]
-    )
-    .padding(Spacing.screenHorizontal)
 }

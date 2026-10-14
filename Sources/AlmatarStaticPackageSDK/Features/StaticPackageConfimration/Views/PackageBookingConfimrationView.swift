@@ -51,7 +51,6 @@ struct PackageBookingConfimrationView: View {
 
                     PackageSummaryView(
                         title: viewModel.packageSummaryTitle,
-                        imageUrl: cart.heroImageUrl,
                         rows: viewModel.summaryRows(for: cart),
                         includesTitle: viewModel.packageIncludesTitle,
                         includes: cart.journeySnapshot ?? []

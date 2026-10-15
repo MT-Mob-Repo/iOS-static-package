@@ -5,6 +5,12 @@
 
 import Foundation
 
+/// A package whose cart was created, ready to show its details.
+struct BookedPackage: Hashable {
+    let packageId: String
+    let cartId: String
+}
+
 @MainActor
 final class PackagesListViewModel: ObservableObject {
     let section: PackagesSection
@@ -12,7 +18,7 @@ final class PackagesListViewModel: ObservableObject {
     /// The package whose booking request is in flight; its "Book" button shows a loader.
     @Published private(set) var bookingPackageId: String?
     /// Set after a successful booking to show that package's details.
-    @Published var bookedPackageId: String?
+    @Published var bookedPackage: BookedPackage?
     /// Set when booking fails; shown as an alert.
     @Published var bookingErrorMessage: String?
 
@@ -70,8 +76,8 @@ final class PackagesListViewModel: ObservableObject {
         defer { bookingPackageId = nil }
 
         do {
-            _ = try await repository.bookPackage(packageId: package.packageId)
-            bookedPackageId = package.packageId
+            let booking = try await repository.bookPackage(packageId: package.packageId)
+            bookedPackage = BookedPackage(packageId: package.packageId, cartId: booking.cartId)
         } catch is CancellationError {
             return
         } catch {

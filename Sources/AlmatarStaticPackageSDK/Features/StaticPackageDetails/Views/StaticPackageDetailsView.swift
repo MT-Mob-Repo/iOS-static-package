@@ -26,8 +26,8 @@ struct StaticPackageDetailsView: View {
                
 
             if viewModel.packageDetails != nil {
-                PrimaryButton(viewModel.goToPaymentTitle, isDisabled: false) {
-                    viewModel.goToPaymentTapped()
+                PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
+                    Task { await viewModel.goToPaymentTapped() }
                 }
                 .padding(.horizontal, Spacing.screenHorizontal)
                 .padding(.bottom, Spacing.screenBottom)
@@ -39,6 +39,16 @@ struct StaticPackageDetailsView: View {
         .task {
             await viewModel.loadPackageDetails()
         }
+        .alert(viewModel.paymentErrorMessage ?? "", isPresented: isShowingPaymentError) {
+            Button(viewModel.okTitle, role: .cancel) {}
+        }
+    }
+
+    private var isShowingPaymentError: Binding<Bool> {
+        Binding(
+            get: { viewModel.paymentErrorMessage != nil },
+            set: { if !$0 { viewModel.paymentErrorMessage = nil } }
+        )
     }
 
     @ViewBuilder
@@ -125,7 +135,8 @@ struct StaticPackageDetailsView: View {
         StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
             packageId: "pkg-001",
             repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
-            onGoToPayment: {}
+            startPayment: { _ in .success(.success) },
+            onPaymentFinished: {}
         ))
     }
 }
@@ -136,7 +147,8 @@ struct StaticPackageDetailsView: View {
         StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
             packageId: "pkg-001",
             repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
-            onGoToPayment: {}
+            startPayment: { _ in .success(.success) },
+            onPaymentFinished: {}
         ))
     }
     .environment(\.layoutDirection, .rightToLeft)

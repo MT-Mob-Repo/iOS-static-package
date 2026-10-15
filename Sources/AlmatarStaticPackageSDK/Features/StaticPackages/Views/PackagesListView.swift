@@ -45,8 +45,11 @@ public struct PackagesListView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .navigationDestination(isPresented: isShowingDetails) {
-            if let packageId = viewModel.bookedPackageId {
-                AlmatarStaticPackageSDK.shared.getStaticPackageDetailsView(packageId: packageId)
+            if let booked = viewModel.bookedPackage {
+                AlmatarStaticPackageSDK.shared.getStaticPackageDetailsView(
+                    packageId: booked.packageId,
+                    cartId: booked.cartId
+                )
             }
         }
         .alert(
@@ -59,8 +62,8 @@ public struct PackagesListView: View {
 
     private var isShowingDetails: Binding<Bool> {
         Binding(
-            get: { viewModel.bookedPackageId != nil },
-            set: { if !$0 { viewModel.bookedPackageId = nil } }
+            get: { viewModel.bookedPackage != nil },
+            set: { if !$0 { viewModel.bookedPackage = nil } }
         )
     }
 

@@ -8,17 +8,10 @@ import AlmatarSystemDesignSDK
 
 /// One row in the cancellation policy, ready for display.
 struct CancellationPolicyTier: Identifiable, Hashable {
-    enum Tone {
-        case fullRefund
-        case partialRefund
-        case noRefund
-    }
-
     let id: Int
     let title: String
     let window: String?
     let note: String?
-    let tone: Tone
 }
 
 /// Collapsible card listing the refund tiers on a timeline.
@@ -49,9 +42,10 @@ struct CancellationPolicyView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             header
-
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                ForEach(visibleTiers) { tierRow($0) }
+            if !visibleTiers.isEmpty {
+                VStack(alignment: .leading, spacing: Spacing.small) {
+                    ForEach(visibleTiers) { tierRow($0) }
+                }
             }
         }
         .padding(Spacing.medium)
@@ -64,10 +58,10 @@ struct CancellationPolicyView: View {
         )
     }
 
-    private var isExpandable: Bool { tiers.count > 1 }
+    private var isExpandable: Bool { return true }
 
     private var visibleTiers: [CancellationPolicyTier] {
-        isExpanded ? tiers : Array(tiers.prefix(1))
+        isExpanded ? tiers : []
     }
 
     // MARK: - Header
@@ -98,7 +92,7 @@ struct CancellationPolicyView: View {
 
     private func tierRow(_ tier: CancellationPolicyTier) -> some View {
         HStack(alignment: .top, spacing: Spacing.small) {
-            timelineMarker(color: dotColor(tier.tone))
+            timelineMarker(color: AlmatarColors.textComplementaryGreen)
 
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 Text(tier.title)
@@ -115,7 +109,7 @@ struct CancellationPolicyView: View {
                 if let note = tier.note {
                     Text(note)
                         .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
-                        .foregroundStyle(noteColor(tier.tone))
+                        .foregroundStyle(AlmatarColors.textComplementaryGreen)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -140,31 +134,4 @@ struct CancellationPolicyView: View {
         .frame(width: Layout.dotSize)
         .accessibilityHidden(true)
     }
-
-    private func dotColor(_ tone: CancellationPolicyTier.Tone) -> Color {
-        switch tone {
-        case .fullRefund: return AlmatarColors.iconComplementaryGreen
-        case .partialRefund: return AlmatarColors.iconComplementaryYellow
-        case .noRefund: return AlmatarColors.textComplementaryRed
-        }
-    }
-
-    private func noteColor(_ tone: CancellationPolicyTier.Tone) -> Color {
-        switch tone {
-        case .fullRefund: return AlmatarColors.textComplementaryGreen
-        case .partialRefund: return AlmatarColors.textComplementaryYellow
-        case .noRefund: return AlmatarColors.textComplementaryRed
-        }
-    }
-}
-
-#Preview {
-    CancellationPolicyView(
-        title: "Cancellation Policy",
-        tiers: [
-            CancellationPolicyTier(id: 0, title: "Free cancellation", window: "More than 48 hours before departure", note: "Cancel for a full refund.", tone: .fullRefund),
-            CancellationPolicyTier(id: 1, title: "50% refund", window: "Less than 48 hours", note: "Half the amount is refunded.", tone: .partialRefund)
-        ]
-    )
-    .padding(Spacing.screenHorizontal)
 }

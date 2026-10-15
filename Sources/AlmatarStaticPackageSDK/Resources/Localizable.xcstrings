@@ -83,60 +83,6 @@
         }
       }
     },
-    "static_package_details.cancellation_free" : {
-      "comment" : "Cancellation tier with a 100% refund",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إلغاء مجاني"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Free cancellation"
-          }
-        }
-      }
-    },
-    "static_package_details.cancellation_non_refundable" : {
-      "comment" : "Cancellation tier with no refund",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "غير قابل للاسترداد"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Non-refundable"
-          }
-        }
-      }
-    },
-    "static_package_details.cancellation_partial_refund" : {
-      "comment" : "Cancellation tier with a partial refund; %d is the refund percentage",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "استرداد %d%%"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d%% refund"
-          }
-        }
-      }
-    },
     "static_package_details.cancellation_policy" : {
       "comment" : "Cancellation policy section title",
       "extractionState" : "manual",
@@ -529,6 +475,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Park Highlights"
+          }
+        }
+      }
+    },
+    "static_package_details.until" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حتي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "until"
           }
         }
       }

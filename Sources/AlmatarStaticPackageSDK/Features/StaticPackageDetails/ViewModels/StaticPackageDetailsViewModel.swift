@@ -143,26 +143,11 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     var cancellationTiers: [CancellationPolicyTier] {
         let policies = packageInfo?.cancellationPolicies ?? []
         return policies.enumerated().map { index, policy in
-            let percentage = min(max(policy.refundableAmountPercentage, 0), 100)
-            let defaultTitle: String
-            let tone: CancellationPolicyTier.Tone
-            switch percentage {
-            case 100:
-                defaultTitle = LocalizedKey.cancellationFree.localized()
-                tone = .fullRefund
-            case 0:
-                defaultTitle = LocalizedKey.cancellationNonRefundable.localized()
-                tone = .noRefund
-            default:
-                defaultTitle = String(format: LocalizedKey.cancellationPartialRefund.localized(), percentage)
-                tone = .partialRefund
-            }
             return CancellationPolicyTier(
                 id: index,
-                title: policy.title.nonEmpty ?? defaultTitle,
-                window: policy.window.nonEmpty,
-                note: policy.note.nonEmpty,
-                tone: tone
+                title: policy.title.nonEmpty ?? "",
+                window: "\(policy.window.nonEmpty ?? "") \(LocalizedKey.until.localized()) \(policy.until.nonEmpty ?? "")",
+                note: policy.note.nonEmpty
             )
         }
     }

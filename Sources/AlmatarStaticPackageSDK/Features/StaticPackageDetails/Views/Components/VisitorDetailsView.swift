@@ -99,7 +99,7 @@ struct VisitorDetailsView: View {
                     .accessibilityHidden(true)
 
                 Text(form.selectionRowTitle(section, field))
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)

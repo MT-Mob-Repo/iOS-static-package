@@ -95,14 +95,19 @@ struct StaticPackageDetailsView: View {
                                 tiers: viewModel.cancellationTiers
                             )
                         }
-                        
-                        if viewModel.visitorForm.hasContent {
-                            VisitorDetailsView(form: viewModel.visitorForm)
-                        }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
+
+                    if viewModel.visitorForm.hasContent {
+                        // Full-width band on the secondary background, reaching the bottom of the scroll content.
+                        VisitorDetailsView(form: viewModel.visitorForm)
+                            .padding(.horizontal, Spacing.screenHorizontal)
+                            .padding(.top, Spacing.xLarge)
+                            .padding(.bottom, Spacing.screenBottom)
+                            .background(AlmatarColors.backgroundSecondary)
+                    }
                 }
-                .padding(.bottom, Spacing.screenBottom)
+                .padding(.bottom, viewModel.visitorForm.hasContent ? Spacing.zero : Spacing.screenBottom)
             }
             .ignoresSafeArea(edges: .top)
             .toolbarBackground(.hidden, for: .navigationBar)

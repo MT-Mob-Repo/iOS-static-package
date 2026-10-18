@@ -36,12 +36,23 @@ enum LocalizedKey: String {
     case flightOneStop = "static_package_details.flight_one_stop"
     case flightStops = "static_package_details.flight_stops"
     case flightChangeUpgrade = "static_package_details.flight_change_upgrade"
+    case visitorDetails = "static_package_details.visitor_details"
+    case groupDetails = "static_package_details.group_details"
+    case leadGuestDetails = "static_package_details.lead_guest_details"
+    case adults = "static_package_details.adults"
+    case children = "static_package_details.children"
+    case infants = "static_package_details.infants"
+    case adultsAgeHint = "static_package_details.adults_age_hint"
+    case childrenAgeHint = "static_package_details.children_age_hint"
+    case infantsAgeHint = "static_package_details.infants_age_hint"
 
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
     case readMore = "common.read_more"
     case readLess = "common.read_less"
+    case select = "common.select"
+    case done = "common.done"
 
     /// Localized value in the language currently configured in the SDK, independent of the device language.
     @MainActor

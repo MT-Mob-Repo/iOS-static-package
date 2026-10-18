@@ -260,7 +260,6 @@
           },
           { "field": "firstName", "label": "Name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
           { "field": "lastName", "label": "Last Name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
-          { "field": "email", "label": "Email", "required": true, "dataType": "email", "options": [], "dateConfigs": null },
           { "field": "phoneNumber", "label": "Phone", "required": true, "dataType": "phone", "options": [], "dateConfigs": null },
           {
             "field": "nationality",

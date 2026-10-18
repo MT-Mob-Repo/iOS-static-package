@@ -32,6 +32,9 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// Product ids of the optional itinerary activities the customer added.
     @Published private(set) var addedActivityIds: Set<Int> = []
 
+    /// State of the "Visitor Details" form; observed directly by its view.
+    let visitorForm = VisitorDetailsFormModel()
+
     // MARK: - Strings
     var goToPaymentTitle: String { LocalizedKey.goToPayment.localized() }
     var journeySnapshotTitle: String { LocalizedKey.journeySnapshot.localized() }
@@ -172,6 +175,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         state = .loading
         do {
             let details = try await repository.fetchPackageDetails(cartId: cartId)
+            visitorForm.configure(with: details.dynamicForm)
             state = .loaded(details)
         } catch is CancellationError {
             state = .idle

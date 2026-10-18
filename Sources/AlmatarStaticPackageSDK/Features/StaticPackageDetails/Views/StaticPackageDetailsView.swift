@@ -95,6 +95,10 @@ struct StaticPackageDetailsView: View {
                                 tiers: viewModel.cancellationTiers
                             )
                         }
+                        
+                        if viewModel.visitorForm.hasContent {
+                            VisitorDetailsView(form: viewModel.visitorForm)
+                        }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
                 }

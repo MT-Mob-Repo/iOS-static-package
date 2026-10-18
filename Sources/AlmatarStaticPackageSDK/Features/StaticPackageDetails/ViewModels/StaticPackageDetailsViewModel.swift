@@ -31,6 +31,10 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     /// Product ids of the optional itinerary activities the customer added.
     @Published private(set) var addedActivityIds: Set<Int> = []
+    /// `true` while booking or while the host app's payment flow is open.
+    @Published private(set) var isStartingPayment = false
+    /// Set when payment cannot start or fails; shown as an alert.
+    @Published var paymentErrorMessage: String?
 
     /// State of the "Visitor Details" form; observed directly by its view.
     let visitorForm = VisitorDetailsFormModel()
@@ -157,18 +161,27 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     // MARK: - Init
 
-    private let cartId: String
+    typealias PaymentResult = AlmatarStaticPackageSDK.PaymentResult
+
+    private let packageId: String
+    /// Cart from `POST v1/packages/book`; created on "Go to payment" when missing.
+    private var cartId: String
     private let repository: StaticPackagesRepositoryProtocol
-    private let onGoToPayment: () -> Void
+    private let startPayment: (PackagePaymentRequest) async -> PaymentResult
+    private let onPaymentFinished: () -> Void
 
     init(
+        packageId: String,
         cartId: String,
         repository: StaticPackagesRepositoryProtocol,
-        onGoToPayment: @escaping () -> Void
+        startPayment: @escaping (PackagePaymentRequest) async -> PaymentResult,
+        onPaymentFinished: @escaping () -> Void
     ) {
+        self.packageId = packageId
         self.cartId = cartId
         self.repository = repository
-        self.onGoToPayment = onGoToPayment
+        self.startPayment = startPayment
+        self.onPaymentFinished = onPaymentFinished
     }
 
     func loadPackageDetails() async {
@@ -185,9 +198,59 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
-    func goToPaymentTapped() {
-        guard packageDetails != nil else { return }
-        onGoToPayment()
+    var okTitle: String { LocalizedKey.ok.localized() }
+
+    /// Package price plus the optional itinerary activities the customer added, in SAR.
+    var paymentAmount: Decimal? {
+        guard let details = packageDetails else { return nil }
+        let activities = details.itinerary?.flatMap { $0.activities ?? [] } ?? []
+        let extras = activities
+            .filter { addedActivityIds.contains($0.productId) }
+            .compactMap { $0.price?.amount }
+            .reduce(Decimal.zero, +)
+        return details.price.amount + extras
+    }
+
+    /// Books the package if needed, then opens the host app's payment flow.
+    func goToPaymentTapped() async {
+        guard !isStartingPayment, let amount = paymentAmount else { return }
+        isStartingPayment = true
+        defer { isStartingPayment = false }
+
+        do {
+            let cartId = try await currentCartId()
+            // TODO: Confirm bookingId / bookingKey mapping with the payment team; the book API returns only `cartId`.
+            let request = PackagePaymentRequest(
+                bookingId: cartId,
+                bookingKey: cartId,
+                amountInSar: NSDecimalNumber(decimal: amount).floatValue,
+                productType: PackagePaymentRequest.productType
+            )
+            handlePaymentResult(await startPayment(request))
+        } catch is CancellationError {
+            return
+        } catch {
+            let apiMessages = (error as? NetworkError)?.apiMessages ?? []
+            paymentErrorMessage = apiMessages.isEmpty ? genericErrorMessage : apiMessages.joined(separator: "\n")
+        }
+    }
+
+    private func currentCartId() async throws -> String {
+        if let cartId { return cartId }
+        let booking = try await repository.bookPackage(packageId: packageId)
+        cartId = booking.cartId
+        return booking.cartId
+    }
+
+    private func handlePaymentResult(_ result: PaymentResult) {
+        switch result {
+        case .success(.success), .success(.pending):
+            onPaymentFinished()
+        case .success(.failed):
+            paymentErrorMessage = genericErrorMessage
+        case .failure(.paymentFailed(let reason)), .failure(.validation(let reason)):
+            paymentErrorMessage = reason.isEmpty ? genericErrorMessage : reason
+        }
     }
 
     // MARK: - Itinerary

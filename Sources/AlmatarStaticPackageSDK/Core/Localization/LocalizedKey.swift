@@ -46,9 +46,15 @@ enum LocalizedKey: String {
     case childrenAgeHint = "static_package_details.children_age_hint"
     case infantsAgeHint = "static_package_details.infants_age_hint"
 
+    // MARK: Packages List
+    case startingFrom = "packages_list.starting_from"
+    case perTicket = "packages_list.per_ticket"
+    case book = "packages_list.book"
+
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
+    case ok = "common.ok"
     case readMore = "common.read_more"
     case readLess = "common.read_less"
     case select = "common.select"
@@ -58,7 +64,7 @@ enum LocalizedKey: String {
     @MainActor
     func localized() -> String {
         let language = AlmatarStaticPackageSDK.shared.configuration.language
-        return NSLocalizedString(rawValue, bundle: language.bundle, comment: "")
+        return SDKStringsTable.value(for: rawValue, language: language)
     }
 
     /// Localized format string filled with the given arguments.
@@ -68,13 +74,47 @@ enum LocalizedKey: String {
     }
 }
 
-private extension AppLanguage {
-    /// The `.lproj` bundle for this language inside the SDK, falling back to the SDK bundle.
-    var bundle: Bundle {
-        guard let path = Bundle.module.path(forResource: rawValue, ofType: "lproj"),
-              let bundle = Bundle(path: path) else {
-            return .module
+/// Reads the SDK's compiled `Localizable.strings` files directly.
+///
+/// Host apps may swizzle `Bundle.localizedString(forKey:value:table:)` to force their own
+/// language, which redirects every lookup to `Bundle.main` and breaks `NSLocalizedString`,
+/// `String(localized:)` and `LocalizedStringKey` for SDK keys. Loading the tables as
+/// property lists avoids that method entirely.
+@MainActor
+private enum SDKStringsTable {
+    private enum Constants {
+        static let tableName = "Localizable"
+        static let fileExtension = "strings"
+        static let fallbackLanguage = AppLanguage.english
+    }
+
+    private static var cache: [AppLanguage: [String: String]] = [:]
+
+    /// The value in the given language, then in English, then the key itself.
+    static func value(for key: String, language: AppLanguage) -> String {
+        table(for: language)[key]
+            ?? table(for: Constants.fallbackLanguage)[key]
+            ?? key
+    }
+
+    private static func table(for language: AppLanguage) -> [String: String] {
+        if let cached = cache[language] { return cached }
+        let table = loadTable(for: language)
+        cache[language] = table
+        return table
+    }
+
+    private static func loadTable(for language: AppLanguage) -> [String: String] {
+        guard let url = Bundle.module.url(
+                forResource: Constants.tableName,
+                withExtension: Constants.fileExtension,
+                subdirectory: nil,
+                localization: language.rawValue
+              ),
+              let data = try? Data(contentsOf: url),
+              let table = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: String] else {
+            return [:]
         }
-        return bundle
+        return table
     }
 }

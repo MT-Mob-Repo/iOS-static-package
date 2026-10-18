@@ -54,6 +54,24 @@
         }
       }
     },
+    "common.ok" : {
+      "comment" : "Button to dismiss an alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسناً"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "common.read_less" : {
       "comment" : "Collapses an expanded text",
       "extractionState" : "manual",

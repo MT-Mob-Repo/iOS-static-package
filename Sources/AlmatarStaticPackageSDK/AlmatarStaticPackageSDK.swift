@@ -20,9 +20,9 @@ public final class AlmatarStaticPackageSDK {
     /// The host app is responsible for dismissing the presented flow.
     public var onDismiss: (() -> Void)?
 
-    /// Called when the user taps "Go to payment".
-    /// The host app handles the payment using its existing payment flow.
-    public var onGoToPayment: (() -> Void)?
+    /// Runs the host app's payment flow when the user taps "Go to payment".
+    /// Held weakly, so the host app must keep a strong reference to it.
+    public weak var delegate: AlmatarStaticPackageSDKProtocol?
 
     private init() {}
 
@@ -58,26 +58,64 @@ public final class AlmatarStaticPackageSDK {
 
     // MARK: - Views
 
-    /// Returns the Static Package Details screen for the given package cart, in the configured language.
-    /// - Parameter cartId: Id of the cart loaded from `GET v1/packages/carts/{id}`.
-    public func getStaticPackageDetailsView(cartId: String) -> some View {
+    /// Returns the Static Package Details screen for the given package, in the configured language.
+    /// - Parameters:
+    ///   - packageId: The package to show.
+    ///   - cartId: The cart from `POST v1/packages/book`, if the package was already booked.
+    ///     When `nil`, the package is booked when the user taps "Go to payment".
+    public func getStaticPackageDetailsView(packageId: String, cartId: String? = nil) -> some View {
         let viewModel = StaticPackageDetailsViewModel(
+            packageId: packageId,
             cartId: cartId,
-            repository: makeStaticPackagesRepository()
-        ) { [weak self] in
-            self?.onGoToPayment?()
-        }
+            repository: makeStaticPackagesRepository(),
+            startPayment: { [weak self] request in
+                guard let self else { return .failure(.validation(message: "")) }
+                return await self.startPayment(request)
+            },
+            onPaymentFinished: { [weak self] in
+                self?.dismissFlow()
+            }
+        )
         return StaticPackageDetailsView(viewModel: viewModel)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
+    /// Returns the list of package cards for a section provided by the host app.
+    /// "Book" creates a cart for the package, then pushes its details screen,
+    /// so the view must be shown inside a `NavigationStack`.
+    /// - Parameter section: The title and packages to show, e.g. decoded from the host app's API.
+    public func getPackagesListView(section: PackagesSection) -> some View {
+        PackagesListView(section: section)
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
 
     // MARK: - Repositories
 
-    private func makeStaticPackagesRepository() -> StaticPackagesRepositoryProtocol {
+    func makeStaticPackagesRepository() -> StaticPackagesRepositoryProtocol {
         StaticPackagesRepository(
             baseURL: configuration.baseURL,
             networkClient: configuration.useMockData ? .mock : .shared
         )
+    }
+
+    // MARK: - Payment
+
+    /// Hands the payment to the host app and waits for its result.
+    func startPayment(_ request: PackagePaymentRequest) async -> PaymentResult {
+        guard let delegate else {
+            assertionFailure("Set AlmatarStaticPackageSDK.shared.delegate to handle payments.")
+            return .failure(.validation(message: LocalizedKey.genericError.localized()))
+        }
+        return await withCheckedContinuation { continuation in
+            delegate.startPayment(
+                bookingId: request.bookingId,
+                bookingKey: request.bookingKey,
+                amountInSar: request.amountInSar,
+                productType: request.productType
+            ) { result in
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     // MARK: - Flow

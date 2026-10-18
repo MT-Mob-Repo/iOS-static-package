@@ -7,13 +7,14 @@ import Foundation
 
 protocol StaticPackagesRepositoryProtocol: Sendable {
     func fetchPackageDetails(cartId: String) async throws -> PackageDetails
+    func bookPackage(packageId: String) async throws -> PackageBooking
 }
 
 enum StaticPackagesEndpoint {
     static let packageCartPrefix = "v1/packages/carts/"
-
     /// `GET v1/packages/carts/{id}`
-    static func packageCart(id: String) -> String { packageCartPrefix + id }
+     static func packageCart(id: String) -> String { packageCartPrefix + id }
+    static let bookPackage = "v1/packages/book"
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -30,6 +31,14 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
         try await networkClient.get(
             baseURL: baseURL,
             path: StaticPackagesEndpoint.packageCart(id: cartId)
+        )
+    }
+
+    func bookPackage(packageId: String) async throws -> PackageBooking {
+        try await networkClient.post(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.bookPackage,
+            body: BookPackageRequest(packageId: packageId)
         )
     }
 }

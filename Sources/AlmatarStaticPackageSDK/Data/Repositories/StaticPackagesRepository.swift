@@ -11,10 +11,10 @@ protocol StaticPackagesRepositoryProtocol: Sendable {
 }
 
 enum StaticPackagesEndpoint {
+    static let bookPackage = "v1/packages/book"
     static let packageCartPrefix = "v1/packages/carts/"
     /// `GET v1/packages/carts/{id}`
-     static func packageCart(id: String) -> String { packageCartPrefix + id }
-    static let bookPackage = "v1/packages/book"
+    static func packageCart(id: String) -> String { packageCartPrefix + id }
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {

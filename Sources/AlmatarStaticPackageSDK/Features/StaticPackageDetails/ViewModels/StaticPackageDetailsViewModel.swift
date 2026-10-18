@@ -203,12 +203,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// Package price plus the optional itinerary activities the customer added, in SAR.
     var paymentAmount: Decimal? {
         guard let details = packageDetails else { return nil }
-        let activities = details.itinerary?.flatMap { $0.activities ?? [] } ?? []
-        let extras = activities
-            .filter { addedActivityIds.contains($0.productId) }
-            .compactMap { $0.price?.amount }
-            .reduce(Decimal.zero, +)
-        return details.price.amount + extras
+        return details.price?.finalAmount ?? 0.0
     }
 
     /// Books the package if needed, then opens the host app's payment flow.
@@ -236,7 +231,6 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     private func currentCartId() async throws -> String {
-        if let cartId { return cartId }
         let booking = try await repository.bookPackage(packageId: packageId)
         cartId = booking.cartId
         return booking.cartId

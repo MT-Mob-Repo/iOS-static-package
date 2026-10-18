@@ -5,13 +5,21 @@
 
 import Foundation
 
+/// The package "Itinerary" section.
+struct PackageItinerary: Codable, Sendable, Hashable {
+    let title: String?
+    let subtitle: String?
+    /// PDF version of the itinerary.
+    let downloadUrl: String?
+    let days: [ItineraryDay]?
+}
+
 /// One day in the package "Itinerary".
 struct ItineraryDay: Codable, Sendable, Identifiable, Hashable {
     let day: Int
     let image: String?
     let title: String
     let description: String?
-    let activities: [ItineraryActivity]?
 
     var id: Int { day }
 }
@@ -58,12 +66,7 @@ extension ItineraryDay {
             image: "https://cdn.almatar.com/pkg/day1.jpg",
             title: "Morning – Arrival & First Rides",
             description: "Start your day at Six Flags Qiddiya City with early access to the park's headline rides. Beat the crowds on Falcon's Flight — the world's fastest coaster — before the queues build. Then head to the water park for an afternoon of slides and lazy rivers.",
-            activities: [
-                ItineraryActivity(name: "Falcon's Flight Coaster", duration: "45 min", productId: 812),
-                ItineraryActivity(name: "Fast Pass — Skip the Line", duration: "all day", productId: 813, isOptional: true, price: PackagePrice(amount: 150, currency: "SAR")),
-                ItineraryActivity(name: "Character Breakfast", duration: "1h", productId: 814, isOptional: true, price: PackagePrice(amount: 90, currency: "SAR"))
-            ]
         ),
-        ItineraryDay(day: 2, image: nil, title: "Morning – Arrival & First Rides", description: "Meet your driver and travel to the hotel.", activities: nil)
+        ItineraryDay(day: 2, image: nil, title: "Morning – Arrival & First Rides", description: "Meet your driver and travel to the hotel.")
     ]
 }

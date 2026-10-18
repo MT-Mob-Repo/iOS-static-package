@@ -5,53 +5,65 @@
 
 import Foundation
 
-/// A predefined combination of two or more travel components sold as one package.
+/// Cart returned by `GET v1/packages/carts/{id}`: the selected package,
+/// its price and the form the customer fills in to book it.
 struct PackageDetails: Codable, Sendable, Identifiable {
-    let id: String
-    let title: String
-    let description: String?
-    let imageUrl: String?
-    let destination: String?
-    let durationNights: Int?
-    let price: PackagePrice
-    let journeySnapshot: [JourneySnapshotItem]?
-    let parkHighlights: [ParkHighlightItem]?
-    let packageSchedule: [PackageScheduleItem]?
-    let includedServices: [IncludedServiceItem]?
-    let itinerary: [ItineraryDay]?
-    let cancellationPolicy: CancellationPolicy?
-    let components: [PackageComponent]?
+    let cartId: String
+    /// ISO 8601 date-time after which the cart is no longer valid.
+    let expiresAt: String?
+    let price: CartPrice?
+    let packageInfo: PackageInfo
+    let dynamicForm: DynamicForm?
 
-    var mandatoryComponents: [PackageComponent] { components?.filter(\.isMandatory) ?? [] }
-    var optionalComponents: [PackageComponent] { components?.filter { !$0.isMandatory } ?? [] }
+    var id: String { cartId }
 }
+
+/// Content of the package shown on the details screen.
+struct PackageInfo: Codable, Sendable {
+    let packageId: String
+    let name: String
+    /// Free text from the API, e.g. "7 nights".
+    let duration: String?
+    /// Remote image URLs for the header carousel.
+    let images: [String]?
+    let journeySnapshot: [JourneySnapshotItem]?
+    let highlights: ParkHighlights?
+    let products: PackageProducts?
+    let itinerary: PackageItinerary?
+    let includedServices: IncludedServices?
+    /// Refund tiers, ordered from the earliest cancellation window.
+    let cancellationPolicies: [CancellationPolicy]?
+}
+
+// MARK: - Price
 
 struct PackagePrice: Codable, Sendable, Hashable {
     let amount: Decimal
     let currency: String
 }
 
-struct PackageComponent: Codable, Sendable, Identifiable, Hashable {
-    let id: String
-    let type: PackageComponentType
-    let title: String
-    let description: String?
-    /// Mandatory components are included in the package price and cannot be removed.
-    let isMandatory: Bool
-    /// Extra cost for optional components; `nil` for mandatory ones.
-    let price: PackagePrice?
+struct CartPrice: Codable, Sendable, Hashable {
+    let finalAmount: Decimal
+    let currency: String
+    let breakdown: [PriceBreakdownSection]?
 }
 
-enum PackageComponentType: String, Codable, Sendable {
-    case flight
-    case hotel
-    case car
-    case experience
-    case addOn = "add_on"
-    case unknown
+/// A group of lines in the price summary (e.g. "Package price"),
+/// or a total row (e.g. "Total to pay") when `items` is missing.
+struct PriceBreakdownSection: Codable, Sendable, Hashable {
+    let title: String
+    /// e.g. "Tax included".
+    let note: String?
+    let amount: Decimal?
+    let items: [PriceBreakdownItem]?
+}
 
-    init(from decoder: Decoder) throws {
-        let rawValue = try decoder.singleValueContainer().decode(String.self)
-        self = PackageComponentType(rawValue: rawValue) ?? .unknown
-    }
+struct PriceBreakdownItem: Codable, Sendable, Hashable {
+    /// e.g. "1x Adult" or "Premium Economy".
+    let label: String
+    /// e.g. "420 × 2 travelers • Both flights".
+    let description: String?
+    let unitAmount: Decimal?
+    let quantity: Int?
+    let amount: Decimal
 }

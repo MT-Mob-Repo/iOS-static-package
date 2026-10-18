@@ -63,7 +63,7 @@ public final class AlmatarStaticPackageSDK {
     ///   - packageId: The package to show.
     ///   - cartId: The cart from `POST v1/packages/book`, if the package was already booked.
     ///     When `nil`, the package is booked when the user taps "Go to payment".
-    public func getStaticPackageDetailsView(packageId: String, cartId: String? = nil) -> some View {
+    public func getStaticPackageDetailsView(packageId: String, cartId: String) -> some View {
         let viewModel = StaticPackageDetailsViewModel(
             packageId: packageId,
             cartId: cartId,

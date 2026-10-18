@@ -19,10 +19,13 @@ struct ItineraryView: View {
         static let chevronDownIcon = "chevron.down"
         static let addIcon = "plus"
         static let addedIcon = "checkmark"
+        static let downloadIcon = "square.and.arrow.down"
     }
 
     let strings: ItineraryStrings
     let days: [ItineraryDay]
+    /// PDF version of the itinerary; hides the download button when `nil`.
+    let downloadURL: URL?
     let activitySubtitle: (ItineraryActivity) -> String
     let isActivityAdded: (ItineraryActivity) -> Bool
     let onToggleActivity: (ItineraryActivity) -> Void
@@ -34,12 +37,14 @@ struct ItineraryView: View {
     init(
         strings: ItineraryStrings,
         days: [ItineraryDay],
+        downloadURL: URL? = nil,
         activitySubtitle: @escaping (ItineraryActivity) -> String,
         isActivityAdded: @escaping (ItineraryActivity) -> Bool,
         onToggleActivity: @escaping (ItineraryActivity) -> Void
     ) {
         self.strings = strings
         self.days = days
+        self.downloadURL = downloadURL
         self.activitySubtitle = activitySubtitle
         self.isActivityAdded = isActivityAdded
         self.onToggleActivity = onToggleActivity
@@ -52,6 +57,10 @@ struct ItineraryView: View {
 
             VStack(spacing: Spacing.small) {
                 ForEach(days) { dayCard($0) }
+            }
+
+            if let downloadURL {
+                downloadButton(downloadURL)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -137,18 +146,6 @@ struct ItineraryView: View {
                 actionColor: AlmatarColors.textPrimaryInteractive
             )
         }
-
-        if let activities = day.activities, !activities.isEmpty {
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                Text(strings.activities)
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
-                    // Letter spacing breaks Arabic letter joining, so it is applied to LTR only.
-                    .kerning(layoutDirection == .rightToLeft ? .zero : Layout.sectionLabelKerning)
-                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
-
-                ForEach(activities) { activityRow($0) }
-            }
-        }
     }
 
     private func dayImage(_ url: URL) -> some View {
@@ -232,6 +229,26 @@ struct ItineraryView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Download
+
+    /// Pill under the days that opens the itinerary PDF; title first, icon trailing.
+    private func downloadButton(_ url: URL) -> some View {
+        Link(destination: url) {
+            HStack(spacing: Spacing.xSmall) {
+                Text(strings.download)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
+                Image(systemName: Layout.downloadIcon)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.light))
+            }
+            .foregroundStyle(AlmatarColors.textPrimaryInteractive)
+            .padding(.horizontal, Spacing.medium)
+            .padding(.vertical, Spacing.xSmall)
+            .background(AlmatarColors.surfaceSecondaryBase)
+            .clipShape(Capsule())
+        }
+        .padding(.top, Spacing.small)
+    }
+
     private func toggle(_ day: ItineraryDay) {
         if expandedDays.contains(day.id) {
             expandedDays.remove(day.id)
@@ -249,6 +266,7 @@ struct ItineraryStrings {
     let included: String
     let add: String
     let added: String
+    let download: String
     let readMore: String
     let readLess: String
     let dayLabel: (Int) -> String
@@ -264,11 +282,13 @@ struct ItineraryStrings {
                 included: "Included",
                 add: "Add",
                 added: "Added",
+                download: "Download Itinerary",
                 readMore: "Read more",
                 readLess: "Read less",
                 dayLabel: { "DAY \($0)" }
             ),
             days: ItineraryDay.mockItems,
+            downloadURL: URL(string: "https://cdn.almatar.com/packages/six-flags-qiddiya/itinerary.pdf"),
             activitySubtitle: { $0.duration ?? "" },
             isActivityAdded: { _ in false },
             onToggleActivity: { _ in }

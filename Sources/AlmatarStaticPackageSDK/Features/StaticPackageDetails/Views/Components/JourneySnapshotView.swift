@@ -6,8 +6,8 @@
 import SwiftUI
 import AlmatarSystemDesignSDK
 
-/// Card listing the package highlights. Full-width items take a whole row;
-/// the rest are laid out two per row.
+/// Card listing the package highlights, two per row.
+/// With an odd number of items, the first one (usually the location) takes the whole row.
 struct JourneySnapshotView: View {
     private enum Layout {
         static let iconSize: CGFloat = 24
@@ -42,42 +42,27 @@ struct JourneySnapshotView: View {
 
     // MARK: - Rows
 
-    /// Groups items into rows: a full-width item alone, other items in pairs.
+    /// Groups items into pairs; the first item is alone when the count is odd.
     private var rows: [[JourneySnapshotItem]] {
+        var remaining = items[...]
         var rows: [[JourneySnapshotItem]] = []
-        var pending: JourneySnapshotItem?
-
-        for item in items {
-            if item.isFullWidth {
-                if let half = pending {
-                    rows.append([half])
-                    pending = nil
-                }
-                rows.append([item])
-            } else if let half = pending {
-                rows.append([half, item])
-                pending = nil
-            } else {
-                pending = item
-            }
+        if remaining.count % 2 == 1, let first = remaining.popFirst() {
+            rows.append([first])
         }
-        if let half = pending {
-            rows.append([half])
+        while !remaining.isEmpty {
+            rows.append(Array(remaining.prefix(2)))
+            remaining = remaining.dropFirst(2)
         }
         return rows
     }
 
     @ViewBuilder
     private func rowView(_ row: [JourneySnapshotItem]) -> some View {
-        if let item = row.first, item.isFullWidth {
+        if row.count == 1, let item = row.first {
             tile(item)
         } else {
             HStack(spacing: Spacing.small) {
                 ForEach(row) { tile($0) }
-                // Keep a lone half-width item at half width.
-                if row.count == 1 {
-                    Color.clear.frame(maxWidth: .infinity)
-                }
             }
             // Both tiles in a row share the height of the taller one.
             .fixedSize(horizontal: false, vertical: true)
@@ -86,9 +71,9 @@ struct JourneySnapshotView: View {
 
     private func tile(_ item: JourneySnapshotItem) -> some View {
         HStack(spacing: Spacing.small) {
-            RemoteIconView(icon: item.icon, size: Layout.iconSize, tint: AlmatarColors.iconPrimaryStatic)
+            RemoteIconView(icon: item.icon, size: Layout.iconSize)
 
-            Text(item.title)
+            Text(item.label)
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .lineLimit(2)
@@ -100,9 +85,4 @@ struct JourneySnapshotView: View {
         .background(AlmatarColors.surfaceCardSecondary)
         .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
     }
-}
-
-#Preview {
-    JourneySnapshotView(title: "Journey Snapshot", items: JourneySnapshotItem.mockItems)
-        .padding(Spacing.screenHorizontal)
 }

@@ -56,59 +56,68 @@ struct StaticPackageDetailsView: View {
         switch viewModel.state {
         case .idle, .loading:
             ProgressView()
-        case .loaded(let details):
+        case .loaded:
             ScrollView {
                 VStack(spacing: Spacing.xLarge) {
                     PackageDetailsHeaderView(
                         title: viewModel.headerTitle,
-                        description: viewModel.headerDescription,
                         tags: viewModel.headerTags,
-                        metaLine: viewModel.headerMetaLine,
+                        metaLine: nil,
+                        imageURLs: viewModel.headerImageURLs,
                         imageNames: viewModel.headerImageNames
                     )
 
                     VStack(spacing: Spacing.xLarge) {
-                        if let snapshot = details.journeySnapshot, !snapshot.isEmpty {
-                            JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: snapshot)
+                        if !viewModel.journeySnapshotItems.isEmpty {
+                            JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: viewModel.journeySnapshotItems)
                         }
-                        if let highlights = details.parkHighlights, !highlights.isEmpty {
-                            ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: highlights)
+                        if !viewModel.parkHighlightItems.isEmpty {
+                            ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: viewModel.parkHighlightItems)
                         }
-                        if let schedule = details.packageSchedule, !schedule.isEmpty {
+                        if !viewModel.packageScheduleItems.isEmpty {
                             PackageScheduleView(
                                 title: viewModel.packageScheduleTitle,
-                                subTitle: viewModel.packageScheduleTitle,
-                                items: schedule
+                                subTitle: viewModel.packageScheduleSubtitle,
+                                items: viewModel.packageScheduleItems
                             )
                         }
-                        if let itinerary = details.itinerary, !itinerary.isEmpty {
+                        if !viewModel.itineraryDays.isEmpty {
                             ItineraryView(
                                 strings: viewModel.itineraryStrings,
-                                days: itinerary,
+                                days: viewModel.itineraryDays,
+                                downloadURL: viewModel.itineraryDownloadURL,
                                 activitySubtitle: viewModel.activitySubtitle,
                                 isActivityAdded: viewModel.isActivityAdded,
                                 onToggleActivity: viewModel.toggleActivity
                             )
                         }
-                        if let services = details.includedServices, !services.isEmpty {
+                        if !viewModel.includedServiceItems.isEmpty {
                             IncludedServicesView(
                                 title: viewModel.includedServicesTitle,
                                 subtitle: viewModel.includedServicesSubtitle,
                                 includedTitle: viewModel.includedInYourPassTitle,
-                                items: services
+                                items: viewModel.includedServiceItems
                             )
                         }
-                        if let policy = details.cancellationPolicy {
+                        if !viewModel.cancellationTiers.isEmpty {
                             CancellationPolicyView(
                                 title: viewModel.cancellationPolicyTitle,
-                                tiers: viewModel.cancellationTiers(policy)
+                                tiers: viewModel.cancellationTiers
                             )
                         }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
-                   
+
+                    if viewModel.visitorForm.hasContent {
+                        // Full-width band on the secondary background, reaching the bottom of the scroll content.
+                        VisitorDetailsView(form: viewModel.visitorForm)
+                            .padding(.horizontal, Spacing.screenHorizontal)
+                            .padding(.top, Spacing.xLarge)
+                            .padding(.bottom, Spacing.screenBottom)
+                            .background(AlmatarColors.backgroundSecondary)
+                    }
                 }
-                .padding(.bottom, Spacing.screenBottom)
+                .padding(.bottom, viewModel.visitorForm.hasContent ? Spacing.zero : Spacing.screenBottom)
             }
             .ignoresSafeArea(edges: .top)
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -128,12 +137,12 @@ struct StaticPackageDetailsView: View {
         }
     }
 }
-
+/*
 #Preview("English") {
     let _ = AlmatarStaticPackageSDK.shared.setLanguage(.english)
     NavigationStack {
         StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
-            packageId: "pkg-001",
+            cartId: "68d7f1c4a9e2b30f5c1a77de",
             repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
             startPayment: { _ in .success(.success) },
             onPaymentFinished: {}
@@ -145,7 +154,7 @@ struct StaticPackageDetailsView: View {
     let _ = AlmatarStaticPackageSDK.shared.setLanguage(.arabic)
     NavigationStack {
         StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
-            packageId: "pkg-001",
+            cartId: "68d7f1c4a9e2b30f5c1a77de",
             repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
             startPayment: { _ in .success(.success) },
             onPaymentFinished: {}
@@ -153,3 +162,4 @@ struct StaticPackageDetailsView: View {
     }
     .environment(\.layoutDirection, .rightToLeft)
 }
+*/

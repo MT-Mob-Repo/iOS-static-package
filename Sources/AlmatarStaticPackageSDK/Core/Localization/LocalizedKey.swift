@@ -27,9 +27,24 @@ enum LocalizedKey: String {
     case itineraryAdd = "static_package_details.itinerary_add"
     case itineraryAdded = "static_package_details.itinerary_added"
     case cancellationPolicy = "static_package_details.cancellation_policy"
-    case cancellationFree = "static_package_details.cancellation_free"
-    case cancellationPartialRefund = "static_package_details.cancellation_partial_refund"
-    case cancellationNonRefundable = "static_package_details.cancellation_non_refundable"
+    case itineraryDownload = "static_package_details.itinerary_download"
+    case hotelRoom = "static_package_details.hotel_room"
+    case hotelSleeps = "static_package_details.hotel_sleeps"
+    case until = "static_package_details.until"
+    case flightUpgraded = "static_package_details.flight_upgraded"
+    case flightDirect = "static_package_details.flight_direct"
+    case flightOneStop = "static_package_details.flight_one_stop"
+    case flightStops = "static_package_details.flight_stops"
+    case flightChangeUpgrade = "static_package_details.flight_change_upgrade"
+    case visitorDetails = "static_package_details.visitor_details"
+    case groupDetails = "static_package_details.group_details"
+    case leadGuestDetails = "static_package_details.lead_guest_details"
+    case adults = "static_package_details.adults"
+    case children = "static_package_details.children"
+    case infants = "static_package_details.infants"
+    case adultsAgeHint = "static_package_details.adults_age_hint"
+    case childrenAgeHint = "static_package_details.children_age_hint"
+    case infantsAgeHint = "static_package_details.infants_age_hint"
 
     // MARK: Packages List
     case startingFrom = "packages_list.starting_from"
@@ -42,6 +57,8 @@ enum LocalizedKey: String {
     case ok = "common.ok"
     case readMore = "common.read_more"
     case readLess = "common.read_less"
+    case select = "common.select"
+    case done = "common.done"
 
     /// Localized value in the language currently configured in the SDK, independent of the device language.
     @MainActor

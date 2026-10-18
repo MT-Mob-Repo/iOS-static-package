@@ -5,7 +5,8 @@
 
 import SwiftUI
 
-/// Shows an icon from a remote URL, or from an SF Symbol name when the value is not a URL.
+/// Shows an icon from a remote URL, or from a local symbol when the value is not a URL.
+/// Icon keys sent by the API (e.g. "group", "thrill") are mapped to SF Symbols by `PackageIcon`.
 struct RemoteIconView: View {
     private enum Constants {
         static let httpScheme = "http"
@@ -13,7 +14,7 @@ struct RemoteIconView: View {
 
     let icon: String
     let size: CGFloat
-    let tint: Color
+    var tint: Color? = nil
 
     var body: some View {
         Group {
@@ -21,7 +22,6 @@ struct RemoteIconView: View {
                 AsyncImage(url: url) { image in
                     image
                         .resizable()
-                        .renderingMode(.template)
                         .scaledToFit()
                 } placeholder: {
                     Color.clear
@@ -32,7 +32,7 @@ struct RemoteIconView: View {
                     .scaledToFit()
             }
         }
-        .foregroundStyle(tint)
+        .modifier(OptionalForegroundStyle(tint: tint))
         .frame(width: size, height: size)
         .accessibilityHidden(true)
     }
@@ -40,5 +40,18 @@ struct RemoteIconView: View {
     private var remoteURL: URL? {
         guard icon.lowercased().hasPrefix(Constants.httpScheme) else { return nil }
         return URL(string: icon)
+    }
+}
+
+private struct OptionalForegroundStyle: ViewModifier {
+    let tint: Color?
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if let tint {
+            content.foregroundStyle(tint)
+        } else {
+            content
+        }
     }
 }

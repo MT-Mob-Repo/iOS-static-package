@@ -16,6 +16,7 @@ struct ExpandableTextView: View {
     let collapsedLineLimit: Int
     let readMoreTitle: String
     let readLessTitle: String
+    var actionColor: Color = AlmatarColors.textPrimaryStatic
 
     @State private var isExpanded = false
     @State private var fullHeight: CGFloat = .zero
@@ -43,7 +44,7 @@ struct ExpandableTextView: View {
                 } label: {
                     Text(isExpanded ? readLessTitle : readMoreTitle)
                         .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
-                        .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                        .foregroundStyle(actionColor)
                 }
                 .buttonStyle(.plain)
             }

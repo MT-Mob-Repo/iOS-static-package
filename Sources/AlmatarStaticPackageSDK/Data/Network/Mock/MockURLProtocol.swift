@@ -20,7 +20,8 @@ final class MockURLProtocol: URLProtocol {
 
     /// Maps an endpoint path prefix to a mock file name in `Resources/Mocks`.
     private static let routes: [(pathPrefix: String, fileName: String)] = [
-        (StaticPackagesEndpoint.packageDetailsPrefix, "package_details"),
+        (StaticPackagesEndpoint.packageCartPrefix, "package_details"),
+        (StaticPackagesEndpoint.bookPackage, "book_package"),
         (StaticPackagesEndpoint.cartPrefix, "package_cart")
     ]
 

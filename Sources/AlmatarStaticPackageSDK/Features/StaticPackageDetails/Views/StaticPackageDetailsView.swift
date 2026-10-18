@@ -14,20 +14,41 @@ struct StaticPackageDetailsView: View {
     }
 
     var body: some View {
-        VStack(spacing: Spacing.medium) {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            PrimaryButton(viewModel.goToPaymentTitle, isDisabled: viewModel.packageDetails == nil) {
-                viewModel.goToPaymentTapped()
+        VStack(spacing: Spacing.zero) {
+            if #available(iOS 26.0, *) {
+                content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .scrollEdgeEffectHidden(true, for: .top)
+            } else {
+                content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding(.horizontal, Spacing.screenHorizontal)
-            .padding(.bottom, Spacing.screenBottom)
+               
+
+            if viewModel.packageDetails != nil {
+                PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
+                    Task { await viewModel.goToPaymentTapped() }
+                }
+                .padding(.horizontal, Spacing.screenHorizontal)
+                .padding(.bottom, Spacing.screenBottom)
+            }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
+        .defaultToolbar(title: viewModel.headerTitle)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .task {
             await viewModel.loadPackageDetails()
         }
+        .alert(viewModel.paymentErrorMessage ?? "", isPresented: isShowingPaymentError) {
+            Button(viewModel.okTitle, role: .cancel) {}
+        }
+    }
+
+    private var isShowingPaymentError: Binding<Bool> {
+        Binding(
+            get: { viewModel.paymentErrorMessage != nil },
+            set: { if !$0 { viewModel.paymentErrorMessage = nil } }
+        )
     }
 
     @ViewBuilder
@@ -35,33 +56,71 @@ struct StaticPackageDetailsView: View {
         switch viewModel.state {
         case .idle, .loading:
             ProgressView()
-        case .loaded(let details):
+        case .loaded:
             ScrollView {
-                VStack(spacing: Spacing.medium) {
-                    if let snapshot = details.journeySnapshot, !snapshot.isEmpty {
-                        JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: snapshot)
+                VStack(spacing: Spacing.xLarge) {
+                    PackageDetailsHeaderView(
+                        title: viewModel.headerTitle,
+                        tags: viewModel.headerTags,
+                        metaLine: nil,
+                        imageURLs: viewModel.headerImageURLs,
+                        imageNames: viewModel.headerImageNames
+                    )
+
+                    VStack(spacing: Spacing.xLarge) {
+                        if !viewModel.journeySnapshotItems.isEmpty {
+                            JourneySnapshotView(title: viewModel.journeySnapshotTitle, items: viewModel.journeySnapshotItems)
+                        }
+                        if !viewModel.parkHighlightItems.isEmpty {
+                            ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: viewModel.parkHighlightItems)
+                        }
+                        if !viewModel.packageScheduleItems.isEmpty {
+                            PackageScheduleView(
+                                title: viewModel.packageScheduleTitle,
+                                subTitle: viewModel.packageScheduleSubtitle,
+                                items: viewModel.packageScheduleItems
+                            )
+                        }
+                        if !viewModel.itineraryDays.isEmpty {
+                            ItineraryView(
+                                strings: viewModel.itineraryStrings,
+                                days: viewModel.itineraryDays,
+                                downloadURL: viewModel.itineraryDownloadURL,
+                                activitySubtitle: viewModel.activitySubtitle,
+                                isActivityAdded: viewModel.isActivityAdded,
+                                onToggleActivity: viewModel.toggleActivity
+                            )
+                        }
+                        if !viewModel.includedServiceItems.isEmpty {
+                            IncludedServicesView(
+                                title: viewModel.includedServicesTitle,
+                                subtitle: viewModel.includedServicesSubtitle,
+                                includedTitle: viewModel.includedInYourPassTitle,
+                                items: viewModel.includedServiceItems
+                            )
+                        }
+                        if !viewModel.cancellationTiers.isEmpty {
+                            CancellationPolicyView(
+                                title: viewModel.cancellationPolicyTitle,
+                                tiers: viewModel.cancellationTiers
+                            )
+                        }
                     }
-                    if let highlights = details.parkHighlights, !highlights.isEmpty {
-                        ParkHighlightsView(title: viewModel.parkHighlightsTitle, items: highlights)
-                    }
-                    if let schedule = details.packageSchedule, !schedule.isEmpty {
-                        PackageScheduleView(
-                            title: viewModel.packageScheduleTitle,
-                            subTitle: viewModel.packageScheduleTitle,
-                            items: schedule)
-                    }
-                    if let services = details.includedServices, !services.isEmpty {
-                        IncludedServicesView(
-                            title: viewModel.includedServicesTitle,
-                            subtitle: viewModel.includedServicesSubtitle,
-                            includedTitle: viewModel.includedInYourPassTitle,
-                            items: services
-                        )
+                    .padding(.horizontal, Spacing.screenHorizontal)
+
+                    if viewModel.visitorForm.hasContent {
+                        // Full-width band on the secondary background, reaching the bottom of the scroll content.
+                        VisitorDetailsView(form: viewModel.visitorForm)
+                            .padding(.horizontal, Spacing.screenHorizontal)
+                            .padding(.top, Spacing.xLarge)
+                            .padding(.bottom, Spacing.screenBottom)
+                            .background(AlmatarColors.backgroundSecondary)
                     }
                 }
-                .padding(.horizontal, Spacing.screenHorizontal)
-                .padding(.top, Spacing.screenTop)
+                .padding(.bottom, viewModel.visitorForm.hasContent ? Spacing.zero : Spacing.screenBottom)
             }
+            .ignoresSafeArea(edges: .top)
+            .toolbarBackground(.hidden, for: .navigationBar)
         case .failed(let message):
             VStack(spacing: Spacing.xSmall) {
                 Text(message)
@@ -78,22 +137,29 @@ struct StaticPackageDetailsView: View {
         }
     }
 }
-
+/*
 #Preview("English") {
     let _ = AlmatarStaticPackageSDK.shared.setLanguage(.english)
-    StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
-        packageId: "pkg-001",
-        repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
-        onGoToPayment: {}
-    ))
+    NavigationStack {
+        StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
+            cartId: "68d7f1c4a9e2b30f5c1a77de",
+            repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
+            startPayment: { _ in .success(.success) },
+            onPaymentFinished: {}
+        ))
+    }
 }
 
 #Preview("Arabic") {
     let _ = AlmatarStaticPackageSDK.shared.setLanguage(.arabic)
-    StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
-        packageId: "pkg-001",
-        repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
-        onGoToPayment: {}
-    ))
+    NavigationStack {
+        StaticPackageDetailsView(viewModel: StaticPackageDetailsViewModel(
+            cartId: "68d7f1c4a9e2b30f5c1a77de",
+            repository: StaticPackagesRepository(baseURL: "https://mock.almatar.com", networkClient: .mock),
+            startPayment: { _ in .success(.success) },
+            onPaymentFinished: {}
+        ))
+    }
     .environment(\.layoutDirection, .rightToLeft)
 }
+*/

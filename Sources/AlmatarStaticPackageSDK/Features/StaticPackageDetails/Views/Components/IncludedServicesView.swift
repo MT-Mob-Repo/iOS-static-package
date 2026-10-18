@@ -10,8 +10,6 @@ import AlmatarSystemDesignSDK
 struct IncludedServicesView: View {
     private enum Layout {
         static let iconSize: CGFloat = 24
-        static let checkmarkSize: CGFloat = 14
-        static let checkmarkIcon = "checkmark"
         static let borderWidth: CGFloat = 1
     }
 
@@ -24,7 +22,9 @@ struct IncludedServicesView: View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             header
 
-            includedHeader
+            Text(includedTitle)
+                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
+                .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .padding(.top, Spacing.small)
 
             VStack(spacing: Spacing.small) {
@@ -35,7 +35,7 @@ struct IncludedServicesView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
             Text(title)
                 .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
@@ -43,21 +43,8 @@ struct IncludedServicesView: View {
             Text(subtitle)
                 .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                .fixedSize(horizontal: false, vertical: true)
         }
-    }
-
-    private var includedHeader: some View {
-        HStack(spacing: Spacing.xSmall) {
-            Image(systemName: Layout.checkmarkIcon)
-                .font(.system(size: Layout.checkmarkSize, weight: Typography.Weight.semibold))
-                .foregroundStyle(AlmatarColors.iconPrimaryStatic)
-                .accessibilityHidden(true)
-
-            Text(includedTitle)
-                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
-        }
-        .padding(.horizontal, Spacing.xSmall)
     }
 
     private func card(_ item: IncludedServiceItem) -> some View {

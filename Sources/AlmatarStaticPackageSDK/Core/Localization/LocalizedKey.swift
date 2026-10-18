@@ -31,6 +31,11 @@ enum LocalizedKey: String {
     case hotelRoom = "static_package_details.hotel_room"
     case hotelSleeps = "static_package_details.hotel_sleeps"
     case until = "static_package_details.until"
+    case flightUpgraded = "static_package_details.flight_upgraded"
+    case flightDirect = "static_package_details.flight_direct"
+    case flightOneStop = "static_package_details.flight_one_stop"
+    case flightStops = "static_package_details.flight_stops"
+    case flightChangeUpgrade = "static_package_details.flight_change_upgrade"
 
     // MARK: Common
     case genericError = "common.generic_error"

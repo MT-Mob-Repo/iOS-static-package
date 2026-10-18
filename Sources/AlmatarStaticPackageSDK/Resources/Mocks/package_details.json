@@ -67,7 +67,7 @@
           "description": "Return flights between Jeddah and Riyadh, economy class.",
           "productType": "flight",
           "inventoryType": "static",
-          "tags": [{ "icon": "flight", "label": "Flight" }],
+          "tags": [{ "icon": "https://media.istockphoto.com/id/1414160809/vector/airplane-icon-plane-flight-pictogram-transport-symbol-travel.jpg?s=612x612&w=0&k=20&c=BtgJVW1RQ9a4i8sTMm-Uk-HAFI2sNbDFQVvHbPKbQA4=", "label": "Flight" }],
           "status": "allocated",
           "isMandatory": true,
           "flightInfo": {
@@ -123,7 +123,7 @@
           "description": "Palace-style luxury in the heart of Riyadh.",
           "productType": "hotel",
           "inventoryType": "static",
-          "tags": [{ "icon": "hotel", "label": "Stay" }],
+          "tags": [{ "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpwwrFsr8As5UlEEFJdUcaswqsUjTghj5yNiG5cxEQSMJSGnuL8W2I-_k&s=10", "label": "Stay" }],
           "status": "allocated",
           "isMandatory": true,
           "hotelInfo": {
@@ -142,7 +142,7 @@
           "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
           "productType": "addon",
           "inventoryType": "static",
-          "tags": [{ "icon": "ticket", "label": "Ticket" }],
+          "tags": [{ "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXMgwGp9X4QUPXS0EgLAu6c6nfW9WzImbdUXC31gvwIA&s=10", "label": "Ticket" }],
           "status": "allocated",
           "isMandatory": true,
           "addonInfo": {

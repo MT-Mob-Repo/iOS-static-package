@@ -118,7 +118,7 @@ struct StaticPackageDetailsView: View {
         }
     }
 }
-
+/*
 #Preview("English") {
     let _ = AlmatarStaticPackageSDK.shared.setLanguage(.english)
     NavigationStack {
@@ -141,3 +141,4 @@ struct StaticPackageDetailsView: View {
     }
     .environment(\.layoutDirection, .rightToLeft)
 }
+*/

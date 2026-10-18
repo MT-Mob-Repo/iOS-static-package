@@ -28,13 +28,22 @@ struct PackageScheduleView: View {
         // TODO: Replace with the design-system success color once available.
         static let ratingTint = AlmatarColors.iconComplementaryGreen
         static let ratingBackgroundOpacity: Double = 0.05
+        static let airlineLogoSize: CGFloat = 46
+        static let airlineLogoInset: CGFloat = 6
+        static let flightIcon = "airplane"
+        static let flightPathDotSize: CGFloat = 6
+        static let flightPathMinWidth: CGFloat = 60
     }
 
     let title: String
     let subTitle: String?
     let items: [PackageScheduleItem]
+    /// Called when "Change upgrade" is tapped on a flight card.
+    var onChangeUpgrade: (PackageScheduleItem) -> Void = { _ in }
     let readMoreTitle = LocalizedKey.readMore.localized()
     let readLessTitle = LocalizedKey.readLess.localized()
+    let upgradedTitle = LocalizedKey.flightUpgraded.localized()
+    let changeUpgradeTitle = LocalizedKey.flightChangeUpgrade.localized()
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
@@ -125,7 +134,11 @@ struct PackageScheduleView: View {
             }
 
             if let card = item.card {
-                cardView(card)
+                if let flight = card.flight {
+                    flightCardView(flight) { onChangeUpgrade(item) }
+                } else {
+                    cardView(card)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -176,20 +189,164 @@ struct PackageScheduleView: View {
             }
 
             if hasFooter {
-                Rectangle()
-                    .fill(AlmatarColors.borderDefaultCard)
-                    .frame(height: Layout.borderWidth)
+                cardDivider
                 cardFooter(room: card.room, status: status)
             }
         }
-        .padding(Spacing.medium)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .modifier(ScheduleCardStyle(borderWidth: Layout.borderWidth))
+    }
+
+    private var cardDivider: some View {
+        Rectangle()
+            .fill(AlmatarColors.borderDefaultCard)
+            .frame(height: Layout.borderWidth)
+    }
+
+    // MARK: - Flight card
+
+    /// One block per leg separated by dividers, then the optional "Change upgrade" button.
+    private func flightCardView(_ flight: PackageScheduleFlight, onChangeUpgrade: @escaping () -> Void) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            ForEach(Array(flight.legs.enumerated()), id: \.offset) { index, leg in
+                if index > 0 {
+                    cardDivider
+                }
+                flightLegView(leg)
+            }
+
+            if flight.isUpgradeAvailable {
+                cardDivider
+                changeUpgradeButton(action: onChangeUpgrade)
+            }
+        }
+        .modifier(ScheduleCardStyle(borderWidth: Layout.borderWidth))
+    }
+
+    private func flightLegView(_ leg: PackageScheduleFlightLeg) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.small) {
+            if leg.isUpgraded {
+                upgradedBadge
+            }
+
+            HStack(spacing: Spacing.small) {
+                airlineLogo(leg.airlineLogoUrl)
+                VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+                    Text(leg.route)
+                        .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
+                        .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                        .lineLimit(Layout.titleLineLimit)
+                    if let subtitle = leg.subtitle.nonEmpty {
+                        Text(subtitle)
+                            .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                            .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            HStack(alignment: .top, spacing: Spacing.small) {
+                flightEndpoint(time: leg.departureTime, location: leg.departureLocation, alignment: .leading)
+                flightPath(leg.durationInfo)
+                flightEndpoint(time: leg.arrivalTime, location: leg.arrivalLocation, alignment: .trailing)
+            }
+        }
+    }
+
+    private var upgradedBadge: some View {
+        Text(upgradedTitle.uppercased())
+            .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.semibold))
+            .foregroundStyle(AlmatarColors.textHighlightStatic)
+            .padding(.horizontal, Spacing.small)
+            .padding(.vertical, Spacing.xxSmall)
+            .background(AlmatarColors.surfaceSecondaryBase)
+            .clipShape(Capsule())
+    }
+
+    /// Circular airline logo; falls back to a plane icon when there is no logo.
+    private func airlineLogo(_ logoUrl: String?) -> some View {
+        Group {
+            if let url = logoUrl.nonEmpty.flatMap(URL.init(string:)) {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    Color.clear
+                }
+                .padding(Layout.airlineLogoInset)
+            } else {
+                RemoteIconView(icon: Layout.flightIcon, size: Layout.smallIconSize, tint: AlmatarColors.iconPrimaryStatic)
+            }
+        }
+        .frame(width: Layout.airlineLogoSize, height: Layout.airlineLogoSize)
         .background(AlmatarColors.surfaceCard)
-        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.xLarge))
+        .clipShape(Circle())
         .overlay(
-            RoundedRectangle(cornerRadius: CornerRadius.xLarge)
+            Circle()
                 .stroke(AlmatarColors.borderDefaultCard, lineWidth: Layout.borderWidth)
         )
+        .accessibilityHidden(true)
+    }
+
+    /// Time above the "City (CODE)" label.
+    private func flightEndpoint(time: String?, location: String, alignment: HorizontalAlignment) -> some View {
+        VStack(alignment: alignment, spacing: Spacing.xxSmall) {
+            if let time = time.nonEmpty {
+                Text(time)
+                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.bold))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            }
+            Text(location)
+                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                .multilineTextAlignment(alignment == .leading ? .leading : .trailing)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        // Times and airports keep their width; the path in between absorbs the rest.
+        .layoutPriority(1)
+    }
+
+    /// "1h 45m • Direct" above a dot – line – dot route.
+    private func flightPath(_ durationInfo: String?) -> some View {
+        VStack(spacing: Spacing.xSmall) {
+            if let durationInfo = durationInfo.nonEmpty {
+                Text(durationInfo)
+                    .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.regular))
+                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            HStack(spacing: Spacing.zero) {
+                flightPathDot
+                Rectangle()
+                    .fill(AlmatarColors.borderDefaultCard)
+                    .frame(height: Layout.borderWidth)
+                flightPathDot
+            }
+        }
+        .padding(.top, Spacing.xxSmall)
+        .frame(minWidth: Layout.flightPathMinWidth, maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var flightPathDot: some View {
+        Circle()
+            .fill(AlmatarColors.textPrimaryInteractive)
+            .frame(width: Layout.flightPathDotSize, height: Layout.flightPathDotSize)
+    }
+
+    private func changeUpgradeButton(action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(changeUpgradeTitle)
+                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                .foregroundStyle(AlmatarColors.textPrimaryInteractive)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, Spacing.xSmall)
+                .background(AlmatarColors.surfaceSecondaryBase)
+                .clipShape(Capsule())
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
     }
 
     private func cardImage(_ url: URL) -> some View {
@@ -310,6 +467,23 @@ struct PackageScheduleView: View {
             .overlay(
                 Capsule()
                     .stroke(AlmatarColors.borderDefaultCard, lineWidth: Layout.borderWidth)
+            )
+    }
+}
+
+/// Padded, bordered rounded container shared by all schedule cards.
+private struct ScheduleCardStyle: ViewModifier {
+    let borderWidth: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .padding(Spacing.medium)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AlmatarColors.surfaceCard)
+            .clipShape(RoundedRectangle(cornerRadius: CornerRadius.xLarge))
+            .overlay(
+                RoundedRectangle(cornerRadius: CornerRadius.xLarge)
+                    .stroke(AlmatarColors.borderDefaultCard, lineWidth: borderWidth)
             )
     }
 }

@@ -119,6 +119,96 @@
         }
       }
     },
+    "static_package_details.flight_change_upgrade" : {
+      "comment" : "Schedule flight card: button to change the cabin upgrade",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تغيير الترقية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change upgrade"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_direct" : {
+      "comment" : "Schedule flight card: non-stop flight",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مباشر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direct"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_one_stop" : {
+      "comment" : "Schedule flight card: flight with one stop",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "توقف واحد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 stop"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_stops" : {
+      "comment" : "Schedule flight card: flight with several stops",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d توقفات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d stops"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_upgraded" : {
+      "comment" : "Schedule flight card: badge on an upgraded leg",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمت الترقية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upgraded"
+          }
+        }
+      }
+    },
     "static_package_details.go_to_payment" : {
       "comment" : "Static Package Details screen: primary button that opens payment",
       "extractionState" : "manual",

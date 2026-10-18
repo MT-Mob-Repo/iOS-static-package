@@ -15,7 +15,6 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     private enum Constants {
-        static let flightIcon = "airplane"
         static let locationIcon = "mappin.and.ellipse"
         static let calendarIcon = "calendar"
         static let separator = " • "
@@ -42,6 +41,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     private var dynamicPackageTag: String { LocalizedKey.dynamicPackageTag.localized() }
     private var includedTitle: String { LocalizedKey.itineraryIncluded.localized() }
     private var optionalTitle: String { LocalizedKey.itineraryOptional.localized() }
+    private var directFlightTitle: String { LocalizedKey.flightDirect.localized() }
 
     var packageDetails: PackageDetails? {
         if case .loaded(let details) = state { return details }
@@ -222,8 +222,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             id: "\(index)-\(product.productType.rawValue)",
             title: product.title,
             description: product.description,
-            tag: tag,
-            statusLabel: status,
+            tag: product.productType != .addon ? tag : nil,
+            statusLabel: product.productType != .addon ? status : nil,
             card: scheduleCard(product, status: status)
         )
     }
@@ -231,15 +231,19 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     private func scheduleCard(_ product: PackageProduct, status: String) -> PackageScheduleCard? {
         switch product.productType {
         case .flight:
-            guard let legs = product.flightInfo?.legs, !legs.isEmpty else { return nil }
+            guard let flightInfo = product.flightInfo, !flightInfo.legs.isEmpty else { return nil }
             return PackageScheduleCard(
                 imageUrl: nil,
                 title: product.title,
                 rating: nil,
-                details: legs.map { PackageScheduleInfo(icon: Constants.flightIcon, text: flightLegText($0)) },
+                details: nil,
                 description: nil,
                 room: nil,
-                statusLabel: status
+                statusLabel: nil,
+                flight: PackageScheduleFlight(
+                    legs: flightInfo.legs.map(flightLeg),
+                    isUpgradeAvailable: flightInfo.isCabinUpgradeAvailable == true
+                )
             )
         case .hotel:
             guard let hotel = product.hotelInfo else { return nil }
@@ -268,23 +272,42 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
-    /// e.g. "SV-1430 • JED → RUH • 16 Jul • 08:30 – 10:15".
-    private func flightLegText(_ leg: FlightLeg) -> String {
-        var parts: [String] = []
-        if let flightNumber = leg.flightNumber.nonEmpty {
-            parts.append(flightNumber)
-        }
-        parts.append(leg.departure.airportCode + Constants.routeArrow + leg.arrival.airportCode)
+    private func flightLeg(_ leg: FlightLeg) -> PackageScheduleFlightLeg {
+        let subtitle = [leg.flightNumber.nonEmpty, leg.cabin.nonEmpty].compactMap { $0 }
+        let durationInfo = [leg.duration.nonEmpty, stopsText(leg.stops)].compactMap { $0 }
+        return PackageScheduleFlightLeg(
+            // TODO: Map once the API returns the upgraded cabin state per leg.
+            isUpgraded: false,
+            airlineLogoUrl: leg.airline?.logoUrl,
+            route: cityName(leg.departure) + Constants.routeArrow + cityName(leg.arrival),
+            subtitle: subtitle.isEmpty ? nil : subtitle.joined(separator: Constants.separator),
+            departureTime: leg.departure.time.getAsDate("yyyy-MM-dd'T'HH:mm:ssZ")?.stringValue("HH:mm") ?? "",
+            departureLocation: locationText(leg.departure),
+            arrivalTime: leg.arrival.time.getAsDate("yyyy-MM-dd'T'HH:mm:ssZ")?.stringValue("HH:mm") ?? "",
+            arrivalLocation: locationText(leg.arrival),
+            durationInfo: durationInfo.isEmpty ? nil : durationInfo.joined(separator: Constants.separator)
+        )
+    }
 
-        if let departure = Self.parseDateTime(leg.departure.time) {
-            parts.append(dayMonthFormatter.string(from: departure))
-            var times = timeFormatter.string(from: departure)
-            if let arrival = Self.parseDateTime(leg.arrival.time) {
-                times += Constants.rangeDash + timeFormatter.string(from: arrival)
-            }
-            parts.append(times)
+    /// City name, falling back to the airport code.
+    private func cityName(_ point: FlightPoint) -> String {
+        point.cityName.nonEmpty ?? point.airportCode
+    }
+
+    /// e.g. "Barcelona (BCN)".
+    private func locationText(_ point: FlightPoint) -> String {
+        guard let city = point.cityName.nonEmpty ?? point.airportName.nonEmpty else { return point.airportCode }
+        return "\(city) (\(point.airportCode))"
+    }
+
+    /// "Direct", "1 stop" or "2 stops".
+    private func stopsText(_ stops: Int?) -> String? {
+        guard let stops else { return nil }
+        switch stops {
+        case ..<1: return directFlightTitle
+        case 1: return LocalizedKey.flightOneStop.localized()
+        default: return LocalizedKey.flightStops.localized(with: stops)
         }
-        return parts.joined(separator: Constants.separator)
     }
 
     /// Location line ("Palace-style luxury • Riyadh") and stay line ("16 Jul – 21 Jul • 5 Nights").
@@ -354,28 +377,54 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return formatter
     }
 
-    private static func parseDateTime(_ value: String) -> Date? {
-        let formatter = ISO8601DateFormatter()
-        if let date = formatter.date(from: value) { return date }
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter.date(from: value)
-    }
-
-    /// Parses "yyyy-MM-dd".
-    private static func parseDate(_ value: String?) -> Date? {
-        guard let value = value.nonEmpty else { return nil }
-        let formatter = DateFormatter()
-        formatter.locale = Constants.posixLocale
-        formatter.timeZone = Constants.utc
-        formatter.dateFormat = Constants.apiDateFormat
-        return formatter.date(from: value)
-    }
-
     private static func formattedAmount(_ amount: Decimal) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         return formatter.string(from: amount as NSDecimalNumber) ?? "\(amount)"
+    }
+    
+    private static func parseDateTime(_ value: String) -> Date? {
+          let formatter = ISO8601DateFormatter()
+          if let date = formatter.date(from: value) { return date }
+          formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+          return formatter.date(from: value)
+      }
+
+      private static func parseDate(_ value: String?) -> Date? {
+          guard let value = value.nonEmpty else { return nil }
+          let formatter = DateFormatter()
+          formatter.locale = Constants.posixLocale
+          formatter.timeZone = Constants.utc
+          formatter.dateFormat = Constants.apiDateFormat
+          return formatter.date(from: value)
+      }
+}
+
+extension String {
+    func getAsDate(_ format: String = "MMM dd yyyy hh:mma", inGMT: Bool = false ) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        if inGMT {
+            dateFormatter.timeZone = TimeZone(identifier: "GMT")
+        }
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        let date = dateFormatter.date(from: self)
+        return  date
+    }
+}
+
+extension Date {
+    func stringValue(_ format: String = "yyyy-MM-dd", inGMT: Bool = false) -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en")
+        dateFormatter.dateFormat = format
+        if inGMT {
+            dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
+        }
+        return dateFormatter.string(from: self)
     }
 }

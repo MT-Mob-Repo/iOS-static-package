@@ -10,11 +10,14 @@ import Foundation
 public protocol AlmatarStaticPackageSDKProtocol: AnyObject {
     /// Opens the host app's payment screen and reports the outcome through `completion`.
     /// `completion` may be called on any thread.
+    /// - Parameter cancellationTiers: The package refund tiers, e.g. to show with
+    ///   `CancellationPolicyView` on the payment screen; `nil` when the package has none.
     func startPayment(
         bookingId: String,
         bookingKey: String,
         amountInSar: Float,
         productType: String,
+        cancellationTiers: [CancellationPolicyTier]?,
         completion: @escaping (AlmatarStaticPackageSDK.PaymentResult) -> Void
     )
 }
@@ -46,4 +49,5 @@ struct PackagePaymentRequest: Sendable, Equatable {
     let bookingKey: String
     let amountInSar: Float
     let productType: String
+    let cancellationTiers: [CancellationPolicyTier]?
 }

@@ -219,7 +219,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 bookingId: cartId,
                 bookingKey: cartId,
                 amountInSar: NSDecimalNumber(decimal: amount).floatValue,
-                productType: PackagePaymentRequest.productType
+                productType: PackagePaymentRequest.productType,
+                cancellationTiers: cancellationTiers.isEmpty ? nil : cancellationTiers
             )
             handlePaymentResult(await startPayment(request))
         } catch is CancellationError {

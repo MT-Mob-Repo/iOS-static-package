@@ -7,16 +7,26 @@ import SwiftUI
 import AlmatarSystemDesignSDK
 
 /// One row in the cancellation policy, ready for display.
-struct CancellationPolicyTier: Identifiable, Hashable {
-    let id: Int
-    let title: String
-    let window: String?
-    let note: String?
+public struct CancellationPolicyTier: Identifiable, Hashable, Sendable {
+    public let id: Int
+    /// e.g. "Free cancellation".
+    public let title: String
+    /// e.g. "30+ days before departure until 2026-04-17".
+    public let window: String?
+    /// e.g. "Full refund, except visa fee".
+    public let note: String?
+
+    public init(id: Int, title: String, window: String? = nil, note: String? = nil) {
+        self.id = id
+        self.title = title
+        self.window = window
+        self.note = note
+    }
 }
 
 /// Collapsible card listing the refund tiers on a timeline.
 /// Collapsed, it shows the first tier only.
-struct CancellationPolicyView: View {
+public struct CancellationPolicyView: View {
     private enum Layout {
         static let dotSize: CGFloat = 8
         /// Centers the dot on the first line of the tier title.
@@ -33,13 +43,17 @@ struct CancellationPolicyView: View {
 
     @State private var isExpanded: Bool
 
-    init(title: String, tiers: [CancellationPolicyTier], startsExpanded: Bool = false) {
+    /// - Parameters:
+    ///   - title: The card title, e.g. "Cancellation Policy".
+    ///   - tiers: The refund tiers, earliest cancellation window first.
+    ///   - startsExpanded: Whether the tiers are visible when the card first appears.
+    public init(title: String, tiers: [CancellationPolicyTier], startsExpanded: Bool = false) {
         self.title = title
         self.tiers = tiers
         _isExpanded = State(initialValue: startsExpanded)
     }
 
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             header
             if !visibleTiers.isEmpty {

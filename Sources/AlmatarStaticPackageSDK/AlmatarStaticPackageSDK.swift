@@ -111,7 +111,8 @@ public final class AlmatarStaticPackageSDK {
                 bookingId: request.bookingId,
                 bookingKey: request.bookingKey,
                 amountInSar: request.amountInSar,
-                productType: request.productType
+                productType: request.productType,
+                cancellationTiers: request.cancellationTiers
             ) { result in
                 continuation.resume(returning: result)
             }

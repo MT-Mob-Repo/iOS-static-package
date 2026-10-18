@@ -32,7 +32,9 @@ struct PackageScheduleView: View {
         static let airlineLogoInset: CGFloat = 6
         static let flightIcon = "airplane"
         static let flightPathDotSize: CGFloat = 6
-        static let flightPathMinWidth: CGFloat = 60
+        /// Fixed so the departure and arrival columns split the remaining width evenly.
+        static let flightPathWidth: CGFloat = 80
+        static let locationLineLimit = 2
     }
 
     let title: String
@@ -235,10 +237,12 @@ struct PackageScheduleView: View {
                         .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
                         .foregroundStyle(AlmatarColors.textPrimaryStatic)
                         .lineLimit(Layout.titleLineLimit)
+                        .fixedSize(horizontal: false, vertical: true)
                     if let subtitle = leg.subtitle.nonEmpty {
                         Text(subtitle)
                             .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
                             .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -250,6 +254,7 @@ struct PackageScheduleView: View {
                 flightEndpoint(time: leg.arrivalTime, location: leg.arrivalLocation, alignment: .trailing)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var upgradedBadge: some View {
@@ -300,10 +305,11 @@ struct PackageScheduleView: View {
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
                 .multilineTextAlignment(alignment == .leading ? .leading : .trailing)
+                .lineLimit(Layout.locationLineLimit)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        // Times and airports keep their width; the path in between absorbs the rest.
-        .layoutPriority(1)
+        // Both columns share the width left by the path, so long names wrap instead of overflowing.
+        .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .top))
     }
 
     /// "1h 45m • Direct" above a dot – line – dot route.
@@ -313,8 +319,10 @@ struct PackageScheduleView: View {
                 Text(durationInfo)
                     .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.textSecondaryStatic)
-                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(Layout.locationLineLimit)
                     .minimumScaleFactor(0.8)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             HStack(spacing: Spacing.zero) {
                 flightPathDot
@@ -325,7 +333,7 @@ struct PackageScheduleView: View {
             }
         }
         .padding(.top, Spacing.xxSmall)
-        .frame(minWidth: Layout.flightPathMinWidth, maxWidth: .infinity)
+        .frame(width: Layout.flightPathWidth)
         .accessibilityElement(children: .combine)
     }
 

@@ -26,7 +26,7 @@ public struct CancellationPolicyTier: Identifiable, Hashable, Sendable {
 
 /// Collapsible card listing the refund tiers on a timeline.
 /// Collapsed, it shows the first tier only.
-public struct CancellationPolicyView: View {
+public struct PackageCancellationPolicyView: View {
     private enum Layout {
         static let dotSize: CGFloat = 8
         /// Centers the dot on the first line of the tier title.

@@ -100,7 +100,7 @@ struct StaticPackageDetailsView: View {
                             )
                         }
                         if !viewModel.cancellationTiers.isEmpty {
-                            CancellationPolicyView(
+                            PackageCancellationPolicyView(
                                 title: viewModel.cancellationPolicyTitle,
                                 tiers: viewModel.cancellationTiers
                             )

@@ -144,6 +144,23 @@
         }
       }
     },
+    "packages_list.book" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "احجز"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Book"
+          }
+        }
+      }
+    },
     "static_package_details.adults" : {
       "comment" : "Visitor details: adults counter",
       "extractionState" : "manual",

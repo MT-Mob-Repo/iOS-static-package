@@ -58,6 +58,12 @@ enum LocalizedKey: String {
     case readMore = "common.read_more"
     case readLess = "common.read_less"
     case select = "common.select"
+    case close = "common.close"
+    case selectVisitDate = "visitor_details.select_visit_date"
+    case confirmDates = "visitor_details.confirm_dates"
+    case availableCount = "visitor_details.available_count"
+    case returnDateAutoSet = "visitor_details.return_date_auto_set"
+    case weekdayDayMonthFormat = "visitor_details.weekday_day_month_format"
     case done = "common.done"
 
     /// Localized value in the language currently configured in the SDK, independent of the device language.

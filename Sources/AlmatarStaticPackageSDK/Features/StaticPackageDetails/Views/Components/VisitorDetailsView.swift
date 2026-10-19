@@ -27,8 +27,16 @@ struct VisitorDetailsView: View {
         static let upChevron = "chevron.up"
         static let minusIcon = "minus"
         static let plusIcon = "plus"
+        static let checkmarkIcon = "checkmark"
         // TODO: Replace with the design-system "on primary" text color once available.
         static let selectedPillText = Color.white
+    }
+
+    /// The picker section whose selection sheet is open.
+    private struct SelectionTarget: Identifiable {
+        let section: DynamicFormSection
+        let field: DynamicFormField
+        var id: String { "\(section.section).\(field.field)" }
     }
 
     /// The free-date field whose picker sheet is open.
@@ -43,11 +51,14 @@ struct VisitorDetailsView: View {
     /// Expandable cards start open.
     @State private var collapsedSections: Set<String> = []
     @State private var dateTarget: DateTarget?
+    @State private var selectionTarget: SelectionTarget?
     @State private var pickerDate = Date()
 
     private let leadGuestTitle = LocalizedKey.leadGuestDetails.localized()
     private let selectTitle = LocalizedKey.select.localized()
     private let doneTitle = LocalizedKey.done.localized()
+    private let confirmDatesTitle = LocalizedKey.confirmDates.localized()
+    private let returnDateTitle = LocalizedKey.returnDateAutoSet.localized()
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
@@ -71,6 +82,10 @@ struct VisitorDetailsView: View {
                     }
                 }
             }
+            // Attached here, not next to the date picker sheet, so both sheets present reliably on iOS 16.
+            .sheet(item: $selectionTarget) { target in
+                selectionSheet(target)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .sheet(item: $dateTarget) { target in
@@ -80,15 +95,12 @@ struct VisitorDetailsView: View {
 
     // MARK: - Selection row
 
-    /// Collapsed row that opens a menu with the field's choices, e.g. "Departure Riyadh".
+    /// Collapsed row that opens a bottom sheet with the field's choices, e.g. "Departure Riyadh".
     private func selectionRow(_ section: DynamicFormSection, _ field: DynamicFormField) -> some View {
-        let isDate: Bool = {
-            if case .dateList = form.kind(of: field) { return true }
-            return false
-        }()
+        let isDate = form.isDateList(field)
 
-        return Menu {
-            choiceMenuItems(section, field)
+        return Button {
+            selectionTarget = SelectionTarget(section: section, field: field)
         } label: {
             HStack(spacing: Spacing.small) {
                 Image(systemName: isDate ? Layout.dateIcon : Layout.departureIcon)
@@ -104,15 +116,79 @@ struct VisitorDetailsView: View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                if isDate {
-                    chevron(Layout.forwardChevron)
-                }
+                chevron(isDate ? Layout.forwardChevron : Layout.downChevron)
             }
             .padding(Spacing.medium)
             .modifier(VisitorCardStyle(borderWidth: Layout.borderWidth))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: - Selection sheet
+
+    @ViewBuilder
+    private func selectionSheet(_ target: SelectionTarget) -> some View {
+        let title = form.selectionSheetTitle(target.field)
+        switch form.kind(of: target.field) {
+        case .dateList(let options):
+            SelectionBottomSheet(
+                title: title,
+                sections: form.dateSheetSections(options),
+                selected: form.selectedDateOption(target.section, target.field),
+                confirmTitle: confirmDatesTitle,
+                onSelect: { form.setValue($0.date, target.section, target.field) }
+            ) { option, _ in
+                dateOptionRow(option)
+            }
+        case .dropdown(let options), .segmented(let options):
+            SelectionBottomSheet(
+                title: title,
+                sections: form.optionSheetSections(options),
+                selected: form.selectedOption(target.section, target.field),
+                onSelect: { form.setValue($0.code, target.section, target.field) }
+            ) { option, isSelected in
+                optionRow(option, isSelected: isSelected)
+            }
+        default:
+            EmptyView()
+        }
+    }
+
+    /// "Sunday, 19 July" and "Return date automatically set: 21 July 2026".
+    private func dateOptionRow(_ option: DynamicFormDateOption) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
+            Text(form.dateOptionDayTitle(option))
+                .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+
+            if let returnDate = form.returnDateText(option) {
+                HStack(spacing: Spacing.xxSmall) {
+                    Text(returnDateTitle)
+                        .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                    Text(returnDate)
+                        .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                }
+                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            }
+        }
+    }
+
+    /// Flag (when the code is a country) and name, with a checkmark when selected.
+    private func optionRow(_ option: DynamicFormOption, isSelected: Bool) -> some View {
+        HStack(spacing: Spacing.small) {
+            Text(optionTitle(option))
+                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
+                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if isSelected {
+                Image(systemName: Layout.checkmarkIcon)
+                    .font(.system(size: Layout.chevronSize, weight: .semibold))
+                    .foregroundStyle(AlmatarColors.iconPrimaryInteractive)
+                    .accessibilityHidden(true)
+            }
+        }
     }
 
     @ViewBuilder

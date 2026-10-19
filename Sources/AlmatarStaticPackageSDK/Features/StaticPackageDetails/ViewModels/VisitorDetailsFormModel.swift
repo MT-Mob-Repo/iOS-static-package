@@ -48,6 +48,12 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let apiDateFormat = "yyyy-MM-dd"
         static let displayDateFormat = "dd/MM/yyyy"
         static let dayMonthTemplate = "d MMM"
+        static let monthKeyFormat = "yyyy-MM"
+        // Fixed formats, not templates, so both languages read day before month as in the design.
+        static let monthYearFormat = "MMMM yyyy"
+        static let dayMonthYearFormat = "d MMMM yyyy"
+        /// Keeps Latin digits for Arabic dates, as in the design.
+        static let latinDigitsSuffix = "@numbers=latn"
         static let rangeDash = " – "
         static let posixLocale = Locale(identifier: "en_US_POSIX")
         static let utc = TimeZone(identifier: "UTC")!
@@ -230,6 +236,76 @@ final class VisitorDetailsFormModel: ObservableObject {
         return title
     }
 
+    // MARK: - Selection sheet
+
+    func isDateList(_ field: DynamicFormField) -> Bool {
+        if case .dateList = kind(of: field) { return true }
+        return false
+    }
+
+    /// e.g. "Select Your Visit Date", or the field label for other choices.
+    func selectionSheetTitle(_ field: DynamicFormField) -> String {
+        isDateList(field) ? LocalizedKey.selectVisitDate.localized() : field.label
+    }
+
+    /// Dates grouped by month in API order, e.g. "July 2026 · 2 Available".
+    func dateSheetSections(_ options: [DynamicFormDateOption]) -> [SelectionSheetSection<DynamicFormDateOption>] {
+        var groups: [(key: String, date: Date, items: [DynamicFormDateOption])] = []
+        let monthKey = apiFormatter(Constants.monthKeyFormat)
+        for option in options {
+            guard let date = apiDateFormatter.date(from: option.date) else { continue }
+            let key = monthKey.string(from: date)
+            if let index = groups.firstIndex(where: { $0.key == key }) {
+                groups[index].items.append(option)
+            } else {
+                groups.append((key, date, [option]))
+            }
+        }
+        let monthYear = displayFormatter(Constants.monthYearFormat)
+        return groups.map { group in
+            SelectionSheetSection(
+                id: group.key,
+                title: monthYear.string(from: group.date),
+                caption: LocalizedKey.availableCount.localized(with: group.items.count),
+                items: group.items
+            )
+        }
+    }
+
+    /// One untitled section holding every option, e.g. departure cities.
+    func optionSheetSections(_ options: [DynamicFormOption]) -> [SelectionSheetSection<DynamicFormOption>] {
+        [SelectionSheetSection(id: "options", title: nil, caption: nil, items: options)]
+    }
+
+    /// e.g. "Sunday, 19 July".
+    func dateOptionDayTitle(_ option: DynamicFormDateOption) -> String {
+        guard let date = apiDateFormatter.date(from: option.date) else { return option.date }
+        // The format is localized so each language uses its own comma.
+        return displayFormatter(LocalizedKey.weekdayDayMonthFormat.localized()).string(from: date)
+    }
+
+    /// e.g. "21 July 2026"; `nil` when the option has no return date.
+    func returnDateText(_ option: DynamicFormDateOption) -> String? {
+        guard let date = option.returnDate.nonEmpty.flatMap(apiDateFormatter.date(from:)) else { return nil }
+        return displayFormatter(Constants.dayMonthYearFormat).string(from: date)
+    }
+
+    func selectedDateOption(_ section: DynamicFormSection, _ field: DynamicFormField) -> DynamicFormDateOption? {
+        guard case .dateList(let options) = kind(of: field) else { return nil }
+        let current = value(section, field)
+        return options.first { $0.date == current }
+    }
+
+    func selectedOption(_ section: DynamicFormSection, _ field: DynamicFormField) -> DynamicFormOption? {
+        let current = value(section, field)
+        switch kind(of: field) {
+        case .dropdown(let options), .segmented(let options):
+            return options.first { $0.code == current }
+        default:
+            return nil
+        }
+    }
+
     /// Flag emoji for an ISO country code; `nil` when the code is not two letters.
     nonisolated static func flag(for code: String) -> String? {
         let letters = code.uppercased().unicodeScalars
@@ -324,7 +400,24 @@ final class VisitorDetailsFormModel: ObservableObject {
     // MARK: - Formatting
 
     private var displayLocale: Locale {
-        Locale(identifier: AlmatarStaticPackageSDK.shared.configuration.language.rawValue)
+        Locale(identifier: AlmatarStaticPackageSDK.shared.configuration.language.rawValue + Constants.latinDigitsSuffix)
+    }
+
+    private func apiFormatter(_ format: String) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Constants.posixLocale
+        formatter.timeZone = Constants.utc
+        formatter.dateFormat = format
+        return formatter
+    }
+
+    /// Localized month and weekday names in UTC, matching how API dates are parsed.
+    private func displayFormatter(_ format: String) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = displayLocale
+        formatter.timeZone = Constants.utc
+        formatter.dateFormat = format
+        return formatter
     }
 
     private var apiDateFormatter: DateFormatter {

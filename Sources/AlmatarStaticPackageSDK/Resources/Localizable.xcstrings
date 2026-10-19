@@ -18,6 +18,24 @@
         }
       }
     },
+    "common.close" : {
+      "comment" : "Accessibility label for a close button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إغلاق"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
     "common.done" : {
       "comment" : "Closes a picker",
       "extractionState" : "manual",
@@ -822,6 +840,96 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visitor Details"
+          }
+        }
+      }
+    },
+    "visitor_details.available_count" : {
+      "comment" : "Number of available dates in a month; %d is the count",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d متاح"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d Available"
+          }
+        }
+      }
+    },
+    "visitor_details.confirm_dates" : {
+      "comment" : "Button confirming the selected visit date",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأكيد التواريخ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm Dates"
+          }
+        }
+      }
+    },
+    "visitor_details.return_date_auto_set" : {
+      "comment" : "Label before the return date of a visit date option",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم تحديد تاريخ العودة تلقائيًا:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return date automatically set:"
+          }
+        }
+      }
+    },
+    "visitor_details.select_visit_date" : {
+      "comment" : "Title of the visit date selection sheet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر تاريخ الزيارة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Your Visit Date"
+          }
+        }
+      }
+    },
+    "visitor_details.weekday_day_month_format" : {
+      "comment" : "Date format (Unicode pattern) for a visit date option, e.g. Sunday, 19 July. Translate only the punctuation.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EEEE، d MMMM"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EEEE, d MMMM"
           }
         }
       }

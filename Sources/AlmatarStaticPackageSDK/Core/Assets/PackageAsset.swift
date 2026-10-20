@@ -15,4 +15,7 @@ enum PackageAsset {
         "package_carousel_1",
         "package_carousel_1"
     ]
+
+    /// Illustration of the "Remove visitor" confirmation.
+    static let removeVisitorIcon = "remove-visitor-icon"
 }

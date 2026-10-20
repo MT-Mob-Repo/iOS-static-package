@@ -26,18 +26,6 @@ private enum SelectionSheetLayout {
     static let placeholderHeight: CGFloat = 300
 }
 
-private extension View {
-    /// Reports the view's height now and whenever it changes.
-    func readHeight(_ onChange: @escaping (CGFloat) -> Void) -> some View {
-        background(
-            GeometryReader { proxy in
-                Color.clear
-                    .onAppear { onChange(proxy.size.height) }
-                    .onChange(of: proxy.size.height) { onChange($0) }
-            }
-        )
-    }
-}
 
 /// Bottom sheet with a title, a close button and a list of selectable cards, optionally grouped.
 ///

@@ -28,6 +28,11 @@ struct VisitorDetailsView: View {
         static let minusIcon = "minus"
         static let plusIcon = "plus"
         static let checkmarkIcon = "checkmark"
+        static let visitorIcon = "person"
+        static let removeIcon = "trash"
+        static let avatarSize: CGFloat = 40
+        static let avatarIconSize: CGFloat = 18
+        static let illustrationSize: CGFloat = 96
         // TODO: Replace with the design-system "on primary" text color once available.
         static let selectedPillText = Color.white
     }
@@ -53,9 +58,16 @@ struct VisitorDetailsView: View {
     @State private var dateTarget: DateTarget?
     @State private var selectionTarget: SelectionTarget?
     @State private var pickerDate = Date()
+    /// The visitor whose removal is waiting for confirmation.
+    @State private var visitorToRemove: VisitorDetailsFormModel.Visitor?
 
-    private let leadGuestTitle = LocalizedKey.leadGuestDetails.localized()
     private let selectTitle = LocalizedKey.select.localized()
+    private let completedTitle = LocalizedKey.completed.localized()
+    private let incompleteTitle = LocalizedKey.incomplete.localized()
+    private let removeVisitorTitle = LocalizedKey.removeVisitor.localized()
+    private let removeTitle = LocalizedKey.remove.localized()
+    private let cancelTitle = LocalizedKey.cancel.localized()
+    private let dateOfBirthPlaceholder = LocalizedKey.dateOfBirthPlaceholder.localized()
     private let doneTitle = LocalizedKey.done.localized()
     private let confirmDatesTitle = LocalizedKey.confirmDates.localized()
     private let returnDateTitle = LocalizedKey.returnDateAutoSet.localized()
@@ -232,6 +244,8 @@ struct VisitorDetailsView: View {
 
     // MARK: - Expandable card
 
+    /// Collapsible card. The travellers section shows the counters and one card per visitor;
+    /// any other section shows its fields.
     private func sectionCard(_ section: DynamicFormSection) -> some View {
         let isExpanded = !collapsedSections.contains(section.id)
         let isTravellers = form.isTravellersSection(section)
@@ -248,7 +262,7 @@ struct VisitorDetailsView: View {
                         .foregroundStyle(AlmatarColors.iconPrimaryStatic)
                         .accessibilityHidden(true)
                     Text(form.cardTitle(for: section))
-                        .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                        .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
                         .foregroundStyle(AlmatarColors.textPrimaryStatic)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     chevron(isExpanded ? Layout.upChevron : Layout.downChevron)
@@ -260,25 +274,134 @@ struct VisitorDetailsView: View {
             if isExpanded {
                 if isTravellers {
                     travellerCounters
-                    Text(leadGuestTitle)
-                        .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
-                        .foregroundStyle(AlmatarColors.textPrimaryStatic)
-                }
-
-                VStack(alignment: .leading, spacing: Spacing.medium) {
-                    ForEach(Array(form.rows(for: section).enumerated()), id: \.offset) { _, row in
-                        HStack(alignment: .top, spacing: Spacing.small) {
-                            ForEach(row) { field in
-                                fieldView(field, in: section)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
+                    VStack(spacing: Spacing.small) {
+                        ForEach(form.visitors) { visitorCard($0) }
                     }
+                } else {
+                    fieldsList(section)
                 }
             }
         }
         .padding(Spacing.medium)
         .modifier(VisitorCardStyle(borderWidth: Layout.borderWidth))
+        .popup(item: $visitorToRemove) { visitor in
+            removeVisitorPopup(visitor)
+        }
+    }
+
+    private func fieldsList(_ section: DynamicFormSection) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            ForEach(section.fields) { field in
+                fieldView(field, in: section)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
+    // MARK: - Visitor card
+
+    private func visitorCard(_ visitor: VisitorDetailsFormModel.Visitor) -> some View {
+        let isExpanded = form.isExpanded(visitor)
+
+        return VStack(alignment: .leading, spacing: Spacing.medium) {
+            Button {
+                withAnimation(.easeInOut) { form.toggleExpanded(visitor) }
+            } label: {
+                visitorHeader(visitor, isExpanded: isExpanded)
+            }
+            .buttonStyle(.plain)
+
+            if isExpanded, let section = form.section(for: visitor) {
+                fieldsList(section)
+
+                if form.canRemove(visitor) {
+                    removeVisitorButton(visitor)
+                }
+            }
+        }
+        .padding(Spacing.medium)
+        .modifier(VisitorCardStyle(borderWidth: Layout.borderWidth))
+    }
+
+    private func visitorHeader(_ visitor: VisitorDetailsFormModel.Visitor, isExpanded: Bool) -> some View {
+        HStack(spacing: Spacing.small) {
+            Image(systemName: Layout.visitorIcon)
+                .font(.system(size: Layout.avatarIconSize, weight: .medium))
+                .foregroundStyle(AlmatarColors.iconPrimaryInteractive)
+                .frame(width: Layout.avatarSize, height: Layout.avatarSize)
+                .background(AlmatarColors.surfaceSecondaryBase)
+                .clipShape(Circle())
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: Spacing.xxxSmall) {
+                Text(form.displayName(visitor))
+                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                    .lineLimit(1)
+                Text(form.roleTitle(visitor))
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            statusPill(isComplete: form.isComplete(visitor))
+
+            chevron(isExpanded ? Layout.upChevron : Layout.downChevron)
+        }
+        .contentShape(Rectangle())
+    }
+
+    private func statusPill(isComplete: Bool) -> some View {
+        Text(isComplete ? completedTitle : incompleteTitle)
+            .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+            .foregroundStyle(isComplete ? AlmatarColors.textComplementaryGreen : AlmatarColors.textSecondaryStatic)
+            .lineLimit(1)
+            .padding(.horizontal, Spacing.small)
+            .padding(.vertical, Spacing.xxSmall)
+            .background(isComplete ? AlmatarColors.surfaceComplementaryGreen : AlmatarColors.surfaceCardSecondary)
+            .clipShape(Capsule())
+    }
+
+    private func removeVisitorButton(_ visitor: VisitorDetailsFormModel.Visitor) -> some View {
+        Button {
+            visitorToRemove = visitor
+        } label: {
+            HStack(spacing: Spacing.xSmall) {
+                Image(systemName: Layout.removeIcon)
+                    .font(.system(size: Layout.rowIconSize, weight: .regular))
+                Text(removeVisitorTitle)
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold))
+            }
+            .foregroundStyle(AlmatarColors.textComplementaryRed)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func removeVisitorPopup(_ visitor: VisitorDetailsFormModel.Visitor) -> some View {
+        ConfirmationPopup(
+            title: LocalizedKey.removeVisitorSheetTitle.localized(),
+            message: LocalizedKey.removeVisitorMessage.localized(with: form.visitorNumberTitle(visitor)),
+            cancelTitle: cancelTitle,
+            confirmTitle: removeTitle,
+            isDestructive: true,
+            onConfirm: {
+                withAnimation(.easeInOut) { form.remove(visitor) }
+            }
+        ) {
+            removeVisitorIllustration
+        }
+    }
+
+    /// Person with a trash badge. SDK images must load from the SDK bundle (`.module`),
+    /// not the host app's main bundle.
+    private var removeVisitorIllustration: some View {
+        Image(PackageAsset.removeVisitorIcon, bundle: .module)
+            .resizable()
+            .scaledToFit()
+            .frame(width: Layout.illustrationSize, height: Layout.illustrationSize)
     }
 
     private func toggle(_ section: DynamicFormSection) {
@@ -312,7 +435,10 @@ struct VisitorDetailsView: View {
                     icon: Layout.minusIcon,
                     isEnabled: form.canDecrement(traveller),
                     isPrimary: false
-                ) { form.decrement(traveller) }
+                ) {
+                    // Same confirmation as "Remove visitor", for the last visitor of this type.
+                    visitorToRemove = form.lastRemovableVisitor(of: traveller)
+                }
 
                 Text("\(form.count(traveller))")
                     .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
@@ -430,7 +556,7 @@ struct VisitorDetailsView: View {
                 if let flag, form.selectedText(section, field) != nil {
                     Text(flag)
                 }
-                inputText(form.selectedText(section, field))
+                inputText(form.selectedText(section, field), placeholder: LocalizedKey.selectFieldPlaceholder.localized(with: field.label))
                 chevron(Layout.downChevron)
             }
             .modifier(InputBoxStyle(height: Layout.inputHeight))
@@ -446,7 +572,7 @@ struct VisitorDetailsView: View {
             dateTarget = DateTarget(section: section, field: field)
         } label: {
             HStack(spacing: Spacing.small) {
-                inputText(form.selectedText(section, field))
+                inputText(form.selectedText(section, field), placeholder: dateOfBirthPlaceholder)
                 chevron(Layout.downChevron)
             }
             .modifier(InputBoxStyle(height: Layout.inputHeight))
@@ -517,7 +643,7 @@ struct VisitorDetailsView: View {
         contentType: UITextContentType?
     ) -> some View {
         TextField(
-            "",
+            LocalizedKey.enterFieldPlaceholder.localized(with: field.label),
             text: Binding(
                 get: { form.value(section, field) },
                 set: { form.setValue($0, section, field) }
@@ -543,9 +669,9 @@ struct VisitorDetailsView: View {
 
     // MARK: - Helpers
 
-    /// Selected value, or a muted "Select" placeholder.
-    private func inputText(_ text: String?) -> some View {
-        Text(text ?? selectTitle)
+    /// Selected value, or a muted placeholder ("Select" by default).
+    private func inputText(_ text: String?, placeholder: String? = nil) -> some View {
+        Text(text ?? placeholder ?? selectTitle)
             .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
             .foregroundStyle(text == nil ? AlmatarColors.textSecondaryStatic : AlmatarColors.textPrimaryStatic)
             .lineLimit(1)

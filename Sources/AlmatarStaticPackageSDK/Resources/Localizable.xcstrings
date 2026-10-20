@@ -18,6 +18,24 @@
         }
       }
     },
+    "common.cancel" : {
+      "comment" : "Button that dismisses without changes",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إلغاء"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
     "common.close" : {
       "comment" : "Accessibility label for a close button",
       "extractionState" : "manual",
@@ -122,6 +140,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Read more"
+          }
+        }
+      }
+    },
+    "common.remove" : {
+      "comment" : "Destructive confirm button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إزالة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
           }
         }
       }
@@ -391,24 +427,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go to payment"
-          }
-        }
-      }
-    },
-    "static_package_details.group_details" : {
-      "comment" : "Visitor details: travellers card title",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تفاصيل المجموعة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Group Details"
           }
         }
       }
@@ -719,24 +737,6 @@
         }
       }
     },
-    "static_package_details.lead_guest_details" : {
-      "comment" : "Visitor details: lead guest fields header",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "بيانات الضيف الرئيسي"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lead Guest Details"
-          }
-        }
-      }
-    },
     "static_package_details.nights_meta" : {
       "comment" : "Static Package Details header: expanded meta line. %1$lld = nights, %2$@ = destination/detail",
       "extractionState" : "manual",
@@ -844,6 +844,24 @@
         }
       }
     },
+    "visitor_details.adult" : {
+      "comment" : "Singular visitor type, used in e.g. Adult 2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بالغ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adult"
+          }
+        }
+      }
+    },
     "visitor_details.available_count" : {
       "comment" : "Number of available dates in a month; %d is the count",
       "extractionState" : "manual",
@@ -858,6 +876,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d Available"
+          }
+        }
+      }
+    },
+    "visitor_details.child" : {
+      "comment" : "Singular visitor type, used in e.g. Child 1",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "طفل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Child"
+          }
+        }
+      }
+    },
+    "visitor_details.completed" : {
+      "comment" : "Status of a visitor whose details are complete",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مكتملة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
           }
         }
       }
@@ -880,6 +934,150 @@
         }
       }
     },
+    "visitor_details.date_placeholder" : {
+      "comment" : "Placeholder of a free date field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اليوم/الشهر/السنة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DD/MM/YYYY"
+          }
+        }
+      }
+    },
+    "visitor_details.enter_field_placeholder" : {
+      "comment" : "Text field placeholder; %@ is the field label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ادخل %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter %@"
+          }
+        }
+      }
+    },
+    "visitor_details.incomplete" : {
+      "comment" : "Status of a visitor with missing details",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مكتملة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incomplete"
+          }
+        }
+      }
+    },
+    "visitor_details.infant" : {
+      "comment" : "Singular visitor type, used in e.g. Infant 1",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رضيع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Infant"
+          }
+        }
+      }
+    },
+    "visitor_details.lead_visitor" : {
+      "comment" : "Role of the first adult in the group",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الزائر الرئيسي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lead visitor"
+          }
+        }
+      }
+    },
+    "visitor_details.remove_visitor" : {
+      "comment" : "Link at the bottom of a visitor card",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إزالة الزائر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove visitor"
+          }
+        }
+      }
+    },
+    "visitor_details.remove_visitor_message" : {
+      "comment" : "Remove visitor confirmation; %@ is e.g. Visitor 2 and is shown in bold",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لو أزلت **%@** الآن بتحتاج تعبّي بياناته من جديد إذا أضفته مرة ثانية."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you remove **%@**, you’ll need to re-enter their details to add them again."
+          }
+        }
+      }
+    },
+    "visitor_details.remove_visitor_sheet_title" : {
+      "comment" : "Title of the remove visitor confirmation",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إزالة زائر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove visitor"
+          }
+        }
+      }
+    },
     "visitor_details.return_date_auto_set" : {
       "comment" : "Label before the return date of a visit date option",
       "extractionState" : "manual",
@@ -898,6 +1096,24 @@
         }
       }
     },
+    "visitor_details.select_field_placeholder" : {
+      "comment" : "Dropdown placeholder; %@ is the field label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select %@"
+          }
+        }
+      }
+    },
     "visitor_details.select_visit_date" : {
       "comment" : "Title of the visit date selection sheet",
       "extractionState" : "manual",
@@ -912,6 +1128,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select Your Visit Date"
+          }
+        }
+      }
+    },
+    "visitor_details.visitor_number" : {
+      "comment" : "Visitor position in the group; %d is the number",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الزائر %d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visitor %d"
+          }
+        }
+      }
+    },
+    "visitor_details.visitors_information" : {
+      "comment" : "Title of the visitors card",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بيانات الزوار"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visitors information"
           }
         }
       }

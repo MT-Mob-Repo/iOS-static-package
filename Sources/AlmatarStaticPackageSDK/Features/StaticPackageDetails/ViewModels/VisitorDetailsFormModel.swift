@@ -30,6 +30,12 @@ final class VisitorDetailsFormModel: ObservableObject {
         var id: String { rawValue }
     }
 
+    /// One person in the group; the first adult is the lead visitor.
+    struct Visitor: Identifiable, Hashable {
+        let id: UUID
+        let type: Traveller
+    }
+
     /// Country calling code shown in the phone field.
     struct PhoneCountry: Hashable, Identifiable, Sendable {
         /// ISO 3166 alpha-2 code, used for the flag.
@@ -44,6 +50,9 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let travellersSection = "travellers"
         static let firstNameField = "firstName"
         static let lastNameField = "lastName"
+        /// Prefix of the per-visitor section keys, e.g. "travellers#<uuid>".
+        static let visitorSectionSeparator = "#"
+        static let visitorTypeKey = "type"
         static let maxTravellers = 9
         static let apiDateFormat = "yyyy-MM-dd"
         static let displayDateFormat = "dd/MM/yyyy"
@@ -76,7 +85,10 @@ final class VisitorDetailsFormModel: ObservableObject {
     @Published private(set) var form: DynamicForm?
     @Published private var values: [String: String] = [:]
     @Published private var phoneCountryCodes: [String: String] = [:]
-    @Published private(set) var travellerCounts: [Traveller: Int] = [.adults: 1, .children: 0, .infants: 0]
+    /// The group in the order visitors were added; always starts with the lead adult.
+    @Published private(set) var visitors: [Visitor] = [Visitor(id: UUID(), type: .adults)]
+    /// Visitor cards that are open; a newly added visitor opens automatically.
+    @Published var expandedVisitorIds: Set<UUID> = []
 
     var title: String { form?.title.nonEmpty ?? LocalizedKey.visitorDetails.localized() }
     var subtitle: String? { form?.subtitle.nonEmpty }
@@ -90,7 +102,9 @@ final class VisitorDetailsFormModel: ObservableObject {
         self.form = form
         values = [:]
         phoneCountryCodes = [:]
-        travellerCounts = [.adults: 1, .children: 0, .infants: 0]
+        let lead = Visitor(id: UUID(), type: .adults)
+        visitors = [lead]
+        expandedVisitorIds = [lead.id]
 
         for section in form?.sections ?? [] where isPickerSection(section) {
             guard let field = section.fields.first else { continue }
@@ -124,27 +138,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     }
 
     func cardTitle(for section: DynamicFormSection) -> String {
-        isTravellersSection(section) ? LocalizedKey.groupDetails.localized() : (section.title.nonEmpty ?? "")
-    }
-
-    /// Fields grouped into rows; first and last name share a row.
-    func rows(for section: DynamicFormSection) -> [[DynamicFormField]] {
-        var rows: [[DynamicFormField]] = []
-        var index = 0
-        let fields = section.fields
-        while index < fields.count {
-            let field = fields[index]
-            if field.field == Constants.firstNameField,
-               index + 1 < fields.count,
-               fields[index + 1].field == Constants.lastNameField {
-                rows.append([field, fields[index + 1]])
-                index += 2
-            } else {
-                rows.append([field])
-                index += 1
-            }
-        }
-        return rows
+        isTravellersSection(section) ? LocalizedKey.visitorsInformation.localized() : (section.title.nonEmpty ?? "")
     }
 
     func kind(of field: DynamicFormField) -> FieldKind {
@@ -314,14 +308,119 @@ final class VisitorDetailsFormModel: ObservableObject {
         return flag
     }
 
-    // MARK: - Travellers
+    // MARK: - Visitors
+
+    var travellersSection: DynamicFormSection? {
+        sections.first(where: isTravellersSection)
+    }
+
+    func isLead(_ visitor: Visitor) -> Bool {
+        visitor.id == visitors.first?.id
+    }
+
+    /// The visitor's own copy of the travellers fields. Values are stored under its own section key,
+    /// so every field control works per visitor. Contact fields are asked of the lead visitor only.
+    func section(for visitor: Visitor) -> DynamicFormSection? {
+        guard let travellers = travellersSection else { return nil }
+        let fields = isLead(visitor) ? travellers.fields : travellers.fields.filter { !isContactField($0) }
+        return DynamicFormSection(
+            section: Constants.travellersSection + Constants.visitorSectionSeparator + visitor.id.uuidString,
+            title: nil,
+            fields: fields
+        )
+    }
+
+    /// Full name once entered, otherwise e.g. "Adult 2".
+    func displayName(_ visitor: Visitor) -> String {
+        if let section = section(for: visitor) {
+            let name = [Constants.firstNameField, Constants.lastNameField]
+                .compactMap { key in section.fields.first { $0.field == key } }
+                .map { value(section, $0).trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+                .joined(separator: " ")
+            if !name.isEmpty { return name }
+        }
+        let position = visitors.filter { $0.type == visitor.type }.firstIndex(of: visitor).map { $0 + 1 } ?? 1
+        return "\(visitor.type.singularTitle) \(position)"
+    }
+
+    /// "Lead visitor", or e.g. "Visitor 2".
+    func roleTitle(_ visitor: Visitor) -> String {
+        isLead(visitor) ? LocalizedKey.leadVisitor.localized() : visitorNumberTitle(visitor)
+    }
+
+    /// e.g. "Visitor 2", by position in the whole group.
+    func visitorNumberTitle(_ visitor: Visitor) -> String {
+        let number = (visitors.firstIndex(of: visitor) ?? 0) + 1
+        return LocalizedKey.visitorNumber.localized(with: number)
+    }
+
+    func isComplete(_ visitor: Visitor) -> Bool {
+        guard let section = section(for: visitor) else { return false }
+        return section.fields.allSatisfy { isFieldValid($0, in: section) }
+    }
+
+    func isExpanded(_ visitor: Visitor) -> Bool {
+        expandedVisitorIds.contains(visitor.id)
+    }
+
+    func toggleExpanded(_ visitor: Visitor) {
+        if expandedVisitorIds.contains(visitor.id) {
+            expandedVisitorIds.remove(visitor.id)
+        } else {
+            expandedVisitorIds.insert(visitor.id)
+        }
+    }
+
+    /// Every visitor except the lead can be removed.
+    func canRemove(_ visitor: Visitor) -> Bool {
+        !isLead(visitor) && visitors.contains(visitor)
+    }
+
+    /// Removes the visitor and their entered details.
+    func remove(_ visitor: Visitor) {
+        guard canRemove(visitor) else { return }
+        delete([visitor])
+        dropInfantsAboveAdults()
+    }
+
+    private func isContactField(_ field: DynamicFormField) -> Bool {
+        switch kind(of: field) {
+        case .phone, .email: return true
+        default: return false
+        }
+    }
+
+    private func delete(_ removed: [Visitor]) {
+        let ids = Set(removed.map(\.id))
+        let prefixes = removed.compactMap { section(for: $0)?.section }.map { $0 + "." }
+        visitors.removeAll { ids.contains($0.id) }
+        expandedVisitorIds.subtract(ids)
+        values = values.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
+        phoneCountryCodes = phoneCountryCodes.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
+    }
+
+    /// One infant per adult: removing adults also removes the last extra infants.
+    private func dropInfantsAboveAdults() {
+        let extra = count(.infants) - count(.adults)
+        guard extra > 0 else { return }
+        delete(Array(visitors.filter { $0.type == .infants }.suffix(extra)))
+    }
+
+    // MARK: - Counters
 
     func count(_ traveller: Traveller) -> Int {
-        travellerCounts[traveller] ?? 0
+        visitors.filter { $0.type == traveller }.count
+    }
+
+    /// The visitor the counter's minus button removes: the last one of that type, never the lead.
+    func lastRemovableVisitor(of traveller: Traveller) -> Visitor? {
+        guard let last = visitors.last(where: { $0.type == traveller }), canRemove(last) else { return nil }
+        return last
     }
 
     func canDecrement(_ traveller: Traveller) -> Bool {
-        count(traveller) > minimum(traveller)
+        lastRemovableVisitor(of: traveller) != nil
     }
 
     func canIncrement(_ traveller: Traveller) -> Bool {
@@ -334,30 +433,22 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    /// Adds a visitor of the given type and opens their card.
     func increment(_ traveller: Traveller) {
         guard canIncrement(traveller) else { return }
-        travellerCounts[traveller] = count(traveller) + 1
-    }
-
-    func decrement(_ traveller: Traveller) {
-        guard canDecrement(traveller) else { return }
-        travellerCounts[traveller] = count(traveller) - 1
-        if traveller == .adults, count(.infants) > count(.adults) {
-            travellerCounts[.infants] = count(.adults)
-        }
-    }
-
-    private func minimum(_ traveller: Traveller) -> Int {
-        traveller == .adults ? 1 : 0
+        let visitor = Visitor(id: UUID(), type: traveller)
+        visitors.append(visitor)
+        expandedVisitorIds.insert(visitor.id)
     }
 
     // MARK: - Validation & output
 
-    /// `true` when every required field has a valid value.
+    /// `true` when every required field has a valid value, for every visitor.
     var isValid: Bool {
-        sections.allSatisfy { section in
+        let otherSectionsValid = sections.filter { !isTravellersSection($0) }.allSatisfy { section in
             section.fields.allSatisfy { isFieldValid($0, in: section) }
         }
+        return otherSectionsValid && visitors.allSatisfy(isComplete)
     }
 
     func isFieldValid(_ field: DynamicFormField, in section: DynamicFormSection) -> Bool {
@@ -373,25 +464,35 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
-    /// Values keyed by field, grouped by section; phone numbers include the dial code.
+    /// Values keyed by field, grouped by section (travellers excluded, see `visitorSubmissions`);
+    /// phone numbers include the dial code.
     var submissionValues: [String: [String: String]] {
         var result: [String: [String: String]] = [:]
-        for section in sections {
-            var sectionValues: [String: String] = [:]
-            for field in section.fields {
-                let current = value(section, field)
-                guard !current.isEmpty else { continue }
-                if case .phone = kind(of: field) {
-                    sectionValues[field.field] = phoneCountry(section, field).dialCode + current.filter(\.isNumber)
-                } else {
-                    sectionValues[field.field] = current
-                }
-            }
-            result[section.section] = sectionValues
+        for section in sections where !isTravellersSection(section) {
+            result[section.section] = fieldValues(section)
         }
-        if result[Constants.travellersSection] != nil {
-            for traveller in Traveller.allCases {
-                result[Constants.travellersSection]?[traveller.rawValue] = String(count(traveller))
+        return result
+    }
+
+    /// One entry per visitor in group order, with its type, e.g. `["type": "adults", "firstName": ...]`.
+    var visitorSubmissions: [[String: String]] {
+        visitors.compactMap { visitor in
+            guard let section = section(for: visitor) else { return nil }
+            var entry = fieldValues(section)
+            entry[Constants.visitorTypeKey] = visitor.type.rawValue
+            return entry
+        }
+    }
+
+    private func fieldValues(_ section: DynamicFormSection) -> [String: String] {
+        var result: [String: String] = [:]
+        for field in section.fields {
+            let current = value(section, field)
+            guard !current.isEmpty else { continue }
+            if case .phone = kind(of: field) {
+                result[field.field] = phoneCountry(section, field).dialCode + current.filter(\.isNumber)
+            } else {
+                result[field.field] = current
             }
         }
         return result
@@ -442,5 +543,19 @@ final class VisitorDetailsFormModel: ObservableObject {
         formatter.timeZone = .current
         formatter.dateFormat = format
         return formatter
+    }
+}
+
+// MARK: - Traveller strings
+
+extension VisitorDetailsFormModel.Traveller {
+    /// e.g. "Adult", used in "Adult 2".
+    @MainActor
+    var singularTitle: String {
+        switch self {
+        case .adults: return LocalizedKey.adult.localized()
+        case .children: return LocalizedKey.child.localized()
+        case .infants: return LocalizedKey.infant.localized()
+        }
     }
 }

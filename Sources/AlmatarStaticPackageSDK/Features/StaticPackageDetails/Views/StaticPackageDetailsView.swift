@@ -15,13 +15,16 @@ struct StaticPackageDetailsView: View {
 
     var body: some View {
         VStack(spacing: Spacing.zero) {
+            // Toasts (e.g. "<name> removed.") appear at the bottom of the content, above the payment bar.
             if #available(iOS 26.0, *) {
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .scrollEdgeEffectHidden(true, for: .top)
+                    .toastHost()
             } else {
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .toastHost()
             }
                
 

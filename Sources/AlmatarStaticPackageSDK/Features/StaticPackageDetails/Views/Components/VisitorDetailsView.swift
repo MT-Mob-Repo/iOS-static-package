@@ -60,6 +60,8 @@ struct VisitorDetailsView: View {
     @State private var pickerDate = Date()
     /// The visitor whose removal is waiting for confirmation.
     @State private var visitorToRemove: VisitorDetailsFormModel.Visitor?
+    /// "<name> removed." after a visitor is removed.
+    @State private var toastMessage: ToastMessage?
 
     private let selectTitle = LocalizedKey.select.localized()
     private let completedTitle = LocalizedKey.completed.localized()
@@ -284,6 +286,7 @@ struct VisitorDetailsView: View {
         }
         .padding(Spacing.medium)
         .modifier(VisitorCardStyle(borderWidth: Layout.borderWidth))
+        .toast(item: $toastMessage)
         .popup(item: $visitorToRemove) { visitor in
             removeVisitorPopup(visitor)
         }
@@ -388,7 +391,9 @@ struct VisitorDetailsView: View {
             confirmTitle: removeTitle,
             isDestructive: true,
             onConfirm: {
+                let name = form.visitorNumberTitle(visitor)
                 withAnimation(.easeInOut) { form.remove(visitor) }
+                toastMessage = ToastMessage(text: LocalizedKey.visitorRemoved.localized(with: name))
             }
         ) {
             removeVisitorIllustration

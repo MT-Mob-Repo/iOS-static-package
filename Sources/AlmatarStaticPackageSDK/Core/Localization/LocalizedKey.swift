@@ -73,6 +73,7 @@ enum LocalizedKey: String {
     case removeVisitor = "visitor_details.remove_visitor"
     case removeVisitorSheetTitle = "visitor_details.remove_visitor_sheet_title"
     case removeVisitorMessage = "visitor_details.remove_visitor_message"
+    case visitorRemoved = "visitor_details.visitor_removed"
     case remove = "common.remove"
     case cancel = "common.cancel"
     case enterFieldPlaceholder = "visitor_details.enter_field_placeholder"

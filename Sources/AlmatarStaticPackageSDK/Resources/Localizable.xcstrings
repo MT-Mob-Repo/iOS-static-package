@@ -1150,6 +1150,24 @@
         }
       }
     },
+    "visitor_details.visitor_removed" : {
+      "comment" : "Toast after a visitor is removed; %@ is the visitor name, e.g. Saad Alotaibi",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمت إزالة %@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ removed."
+          }
+        }
+      }
+    },
     "visitor_details.visitors_information" : {
       "comment" : "Title of the visitors card",
       "extractionState" : "manual",

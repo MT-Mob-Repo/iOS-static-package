@@ -28,10 +28,10 @@ struct BookingConfirmationHeaderView: View {
     let bookingIdTitle: String
     let bookingId: String
     let copyAccessibilityLabel: String
-    let onCopy: () -> Void
 
     @State private var isCopied = false
-
+    @State private var showCopiedToast: Bool = false
+    
     var body: some View {
         VStack(spacing: Spacing.xLarge) {
             successBadge
@@ -141,8 +141,8 @@ struct BookingConfirmationHeaderView: View {
                 .textSelection(.enabled)
 
             Button {
-                onCopy()
-                showCopiedFeedback()
+                UIPasteboard.general.string = bookingId
+                showCopiedToast = true
             } label: {
                 Image(systemName: isCopied ? Layout.copiedIcon : Layout.copyIcon)
                     .font(.system(size: Layout.copyIconSize, weight: Typography.Weight.medium))
@@ -153,16 +153,16 @@ struct BookingConfirmationHeaderView: View {
         }
         .padding(.horizontal, Spacing.small)
         .padding(.vertical, Spacing.xSmall)
+        .background {
+            if showCopiedToast {
+                DropView(message: LocalizedKey.textCopied.localized(), state: true)
+                    .onAppear {
+                        // Reset outside of body evaluation (mutating state from body is unsafe).
+                        DispatchQueue.main.async { showCopiedToast = false }
+                    }
+            }
+        }
         .background(AlmatarColors.surfaceCardSecondary)
         .clipShape(Capsule())
-    }
-
-    @MainActor
-    private func showCopiedFeedback() {
-        withAnimation { isCopied = true }
-        Task {
-            try? await Task.sleep(nanoseconds: Layout.copiedFeedbackDuration)
-            withAnimation { isCopied = false }
-        }
     }
 }

@@ -69,7 +69,7 @@ enum LocalizedKey: String {
     case refundPercentage = "package_booking_confirmation.refund_percentage"
     case goToMyTrips = "package_booking_confirmation.go_to_my_trips"
     case backToHome = "package_booking_confirmation.back_to_home"
-
+    case textCopied = "package_booking_confirmation.text_copied"
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"

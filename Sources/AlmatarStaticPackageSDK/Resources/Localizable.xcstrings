@@ -126,24 +126,6 @@
         }
       }
     },
-    "package_booking_confirmation.back_to_home" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" :  "العودة إلى الرئيسية"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back to Home"
-          }
-        }
-      }
-    },
     "common.select" : {
       "comment" : "Secondary button",
       "extractionState" : "manual",
@@ -162,6 +144,24 @@
         }
       }
     },
+    "package_booking_confirmation.back_to_home" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العودة إلى الرئيسية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Home"
+          }
+        }
+      }
+    },
     "package_booking_confirmation.booking_id" : {
       "comment" : "Secondary button",
       "extractionState" : "manual",
@@ -169,31 +169,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" :  "رقم الحجز"
+            "value" : "رقم الحجز"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Booking ID"
-          }
-        }
-      }
-    },
-    "static_package_details.adults" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "البالغون"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adults"
           }
         }
       }
@@ -205,31 +187,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" :  "سياسة الإلغاء"
+            "value" : "سياسة الإلغاء"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancellation Policy"
-          }
-        }
-      }
-    },
-    "static_package_details.adults_age_hint" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "12 سنة فأكثر"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age 12+"
           }
         }
       }
@@ -252,24 +216,6 @@
         }
       }
     },
-    "static_package_details.children" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "الأطفال"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Children"
-          }
-        }
-      }
-    },
     "package_booking_confirmation.destination" : {
       "comment" : "Secondary button",
       "extractionState" : "manual",
@@ -284,24 +230,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Destination"
-          }
-        }
-      }
-    },
-    "static_package_details.children_age_hint" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "من 2 إلى 11 سنة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age 2-11"
           }
         }
       }
@@ -324,24 +252,6 @@
         }
       }
     },
-    "static_package_details.flight_change_upgrade" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تغيير الترقية"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change upgrade"
-          }
-        }
-      }
-    },
     "package_booking_confirmation.go_to_my_trips" : {
       "comment" : "Secondary button",
       "extractionState" : "manual",
@@ -360,42 +270,6 @@
         }
       }
     },
-    "static_package_details.flight_direct" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مباشر"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Direct"
-          }
-        }
-      }
-    },
-    "static_package_details.flight_one_stop" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "توقف واحد"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" :  "1 stop"
-          }
-        }
-      }
-    },
     "package_booking_confirmation.package" : {
       "comment" : "Secondary button",
       "extractionState" : "manual",
@@ -410,42 +284,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Package"
-          }
-        }
-      }
-    },
-    "static_package_details.flight_stops" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d توقفات"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" :  "%d stops"
-          }
-        }
-      }
-    },
-    "static_package_details.flight_upgraded" : {
-      "comment" : "Secondary button",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تمت الترقية"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" :  "Package Upgrade"
           }
         }
       }
@@ -522,6 +360,23 @@
         }
       }
     },
+    "package_booking_confirmation.text_copied" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم النسخ بنجاح"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied successfully"
+          }
+        }
+      }
+    },
     "package_booking_confirmation.tier" : {
       "comment" : "Summary row label",
       "extractionState" : "manual",
@@ -572,6 +427,168 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total Paid"
+          }
+        }
+      }
+    },
+    "static_package_details.adults" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "البالغون"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adults"
+          }
+        }
+      }
+    },
+    "static_package_details.adults_age_hint" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 سنة فأكثر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age 12+"
+          }
+        }
+      }
+    },
+    "static_package_details.children" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الأطفال"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Children"
+          }
+        }
+      }
+    },
+    "static_package_details.children_age_hint" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "من 2 إلى 11 سنة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age 2-11"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_change_upgrade" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تغيير الترقية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change upgrade"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_direct" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مباشر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direct"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_one_stop" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "توقف واحد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 stop"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_stops" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d توقفات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d stops"
+          }
+        }
+      }
+    },
+    "static_package_details.flight_upgraded" : {
+      "comment" : "Secondary button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمت الترقية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Package Upgrade"
           }
         }
       }

@@ -18,9 +18,8 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     private enum Constants {
         static let priceLocale = Locale(identifier: "en_US")
         static let maxPriceFractionDigits = 2
-        static let maxPercentageFractionDigits = 1
-        static let percentSign = "%"
-        static let fullRefundPercentage: Double = 100
+        static let apiDateFormat = "yyyy-MM-dd"
+        static let dateRangeSeparator = " – "
     }
 
     @Published private(set) var state: State = .idle
@@ -45,18 +44,18 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
         return nil
     }
 
-    private let cartId: String
+    private let id: String
     private let repository: StaticPackagesRepositoryProtocol
     private let onGoToMyTrips: () -> Void
     private let onBackToHome: () -> Void
 
     init(
-        cartId: String,
+        id: String,
         repository: StaticPackagesRepositoryProtocol,
         onGoToMyTrips: @escaping () -> Void,
         onBackToHome: @escaping () -> Void
     ) {
-        self.cartId = cartId
+        self.id = id
         self.repository = repository
         self.onGoToMyTrips = onGoToMyTrips
         self.onBackToHome = onBackToHome
@@ -67,7 +66,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     func loadCart() async {
         state = .loading
         do {
-            let cart = try await repository.fetchCart(cartId: cartId)
+            let cart = try await repository.fetchCart(id: id)
             state = .loaded(cart)
         } catch is CancellationError {
             state = .idle
@@ -89,56 +88,57 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
 
     func copyBookingIdTapped() {
         guard let cart else { return }
-        UIPasteboard.general.string = cart.cartId
+        UIPasteboard.general.string = cart.bookingReference
     }
 
     // MARK: - Display Data
 
     func summaryRows(for cart: PackageCart) -> [PackageSummaryRow] {
-        var rows = [PackageSummaryRow(label: LocalizedKey.package.localized(), value: cart.name)]
-        if let destination = cart.destination.nonEmpty {
+        let summary = cart.packageSummary
+        var rows = [PackageSummaryRow(label: LocalizedKey.package.localized(), value: summary.title)]
+        if let destination = summary.destination.nonEmpty {
             rows.append(PackageSummaryRow(label: LocalizedKey.destination.localized(), value: destination))
         }
-        if let duration = cart.duration.nonEmpty {
-            rows.append(PackageSummaryRow(label: LocalizedKey.duration.localized(), value: duration))
+        if let dates = formattedDateRange(from: summary.startDate, to: summary.endDate) {
+            rows.append(PackageSummaryRow(label: LocalizedKey.duration.localized(), value: dates))
         }
-        if let tier = cart.tier.nonEmpty {
-            rows.append(PackageSummaryRow(label: LocalizedKey.tier.localized(), value: tier, isBadge: true))
+        if let badge = summary.badges?.first.nonEmpty {
+            rows.append(PackageSummaryRow(label: LocalizedKey.tier.localized(), value: badge, isBadge: true))
         }
         return rows
     }
 
-    /// One line per product priced through its add-on info.
+    func includes(for cart: PackageCart) -> [JourneySnapshotItem] {
+        cart.packageSummary.includes ?? []
+    }
+
+    /// One line per priced item in the payment breakdown; total rows are shown separately.
     func paymentLines(for cart: PackageCart) -> [PaymentDetailsLine] {
-        (cart.products ?? []).compactMap { product in
-            guard let addon = product.addonInfo else { return nil }
-            let quantity = addon.quantity ?? 1
-            return PaymentDetailsLine(
-                title: addon.title,
-                subtitle: addon.subtitle.nonEmpty,
-                quantity: quantity > 1 ? quantity : nil,
-                amount: formattedPrice(addon.price * Decimal(quantity), currency: addon.currency)
-            )
+        let currency = cart.payment.currency
+        return (cart.payment.breakdown ?? []).flatMap { section in
+            (section.items ?? []).map { item in
+                PaymentDetailsLine(
+                    title: item.label,
+                    subtitle: item.description.nonEmpty,
+                    quantity: nil,
+                    amount: formattedPrice(item.amount, currency: currency)
+                )
+            }
         }
     }
 
     func formattedTotal(for cart: PackageCart) -> String {
-        formattedPrice(cart.price.finalAmount, currency: cart.price.currency)
+        formattedPrice(cart.payment.totalPaid, currency: cart.payment.currency)
     }
 
-    func cancellationStatusTitle(for policy: CartCancellationPolicy) -> String {
-        policy.isRefundable
-            ? LocalizedKey.freeCancellation.localized()
-            : LocalizedKey.nonRefundable.localized()
-    }
-
-    func cancellationItems(for policy: CartCancellationPolicy) -> [CancellationPolicyItem] {
-        (policy.policies ?? []).map { rule in
-            CancellationPolicyItem(
-                window: rule.window.nonEmpty,
-                note: rule.note.nonEmpty,
-                refundTitle: LocalizedKey.refundPercentage.localized(formattedPercentage(rule.refundableAmountPercentage)),
-                isFullRefund: rule.refundableAmountPercentage >= Constants.fullRefundPercentage
+    /// Tiers in the order returned by the API (earliest cancellation window first).
+    func cancellationTiers(for cart: PackageCart) -> [CancellationPolicyTier] {
+        (cart.cancellationPolicies ?? []).enumerated().map { index, policy in
+            CancellationPolicyTier(
+                id: index,
+                title: policy.title.nonEmpty ?? "",
+                window: tierWindow(for: policy),
+                note: policy.note.nonEmpty
             )
         }
     }
@@ -154,20 +154,26 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
         return "\(currency) \(value)"
     }
 
-    private func formattedPercentage(_ value: Double) -> String {
-        let number = value.formatted(
-            .number
-                .precision(.fractionLength(0...Constants.maxPercentageFractionDigits))
-                .locale(Constants.priceLocale)
-        )
-        return number + Constants.percentSign
+    private func tierWindow(for policy: CancellationPolicy) -> String? {
+        let window = policy.window.nonEmpty
+        guard let until = policy.until.nonEmpty else { return window }
+        let untilText = "\(LocalizedKey.until.localized()) \(until)"
+        guard let window else { return untilText }
+        return "\(window) \(untilText)"
     }
-}
 
-private extension Optional where Wrapped == String {
-    /// The string, or `nil` when it is missing or blank.
-    var nonEmpty: String? {
-        guard let value = self?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty else { return nil }
-        return value
+    private func formattedDateRange(from start: String?, to end: String?) -> String? {
+        let dates = [start, end].compactMap { formattedDate($0.nonEmpty) }
+        return dates.isEmpty ? nil : dates.joined(separator: Constants.dateRangeSeparator)
+    }
+
+    /// "yyyy-MM-dd" from the API as a medium date, or the raw value when it cannot be parsed.
+    private func formattedDate(_ value: String?) -> String? {
+        guard let value else { return nil }
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+        parser.dateFormat = Constants.apiDateFormat
+        guard let date = parser.date(from: value) else { return value }
+        return date.formatted(date: .abbreviated, time: .omitted)
     }
 }

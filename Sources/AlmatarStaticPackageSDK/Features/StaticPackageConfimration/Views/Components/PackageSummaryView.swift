@@ -27,7 +27,7 @@ struct PackageSummaryView: View {
     let title: String
     let rows: [PackageSummaryRow]
     let includesTitle: String
-    let includes: [CartSnapshotItem]
+    let includes: [JourneySnapshotItem]
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
@@ -90,7 +90,7 @@ struct PackageSummaryView: View {
     }
 
     private func badge(_ value: String) -> some View {
-        Text(""value.uppercased())
+        Text(value.uppercased())
             .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.medium))
             .foregroundStyle(AlmatarColors.textComplementaryGreen)
             .padding(.horizontal, Spacing.small)

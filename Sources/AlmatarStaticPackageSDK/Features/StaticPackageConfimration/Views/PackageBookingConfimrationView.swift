@@ -44,7 +44,7 @@ struct PackageBookingConfimrationView: View {
                         title: viewModel.titleText,
                         subtitle: viewModel.subtitleText,
                         bookingIdTitle: viewModel.bookingIdTitle,
-                        bookingId: cart.cartId,
+                        bookingId: cart.bookingReference,
                         copyAccessibilityLabel: viewModel.copyBookingIdTitle,
                         onCopy: { viewModel.copyBookingIdTapped() }
                     )
@@ -53,7 +53,7 @@ struct PackageBookingConfimrationView: View {
                         title: viewModel.packageSummaryTitle,
                         rows: viewModel.summaryRows(for: cart),
                         includesTitle: viewModel.packageIncludesTitle,
-                        includes: cart.journeySnapshot ?? []
+                        includes: viewModel.includes(for: cart)
                     )
 
                     PaymentDetailsView(
@@ -63,12 +63,11 @@ struct PackageBookingConfimrationView: View {
                         total: viewModel.formattedTotal(for: cart)
                     )
 
-                    if let policy = cart.cancellationPolicy {
+                    let tiers = viewModel.cancellationTiers(for: cart)
+                    if !tiers.isEmpty {
                         CancellationPolicyView(
                             title: viewModel.cancellationPolicyTitle,
-                            statusTitle: viewModel.cancellationStatusTitle(for: policy),
-                            isRefundable: policy.isRefundable,
-                            items: viewModel.cancellationItems(for: policy)
+                            tiers: tiers
                         )
                     }
                 }

@@ -1,77 +1,126 @@
 {
-    "cartId": "68d7f1c4a9e2b30f5c1a77de",
-    "expiresAt": "2026-09-28T14:32:00.000Z",
-    "name": "Makkah Essentials",
-    "tier": "Premium",
-    "duration": "5 days, 4 nights",
-    "destination": "Makkah",
-    "description": "Transport, hotel and guided visits.",
-    "price": { "finalAmount": 2900, "currency": "SAR" },
-    "heroImageUrl": "https://cdn.almatar.com/pkg/9eed7-hero.jpg",
-    "journeySnapshot": [
-        { "icon": "hotel", "label": "4 nights in Makkah" },
-        { "icon": "transfer", "label": "Airport transfers included" }
+    "orderId": "68d80a19c4f7e2113b09d5aa",
+    "bookingReference": "SFQ-6S0333333U3",
+    "status": "confirmed",
+    "failureReason": null,
+    "bookedAt": "2026-07-01T14:20:11.000Z",
+    "packageSummary": {
+        "packageId": "6ab3f963bb7b185457c9eed7",
+        "title": "Six Flags Qiddiya City VIP Pass",
+        "destination": "Qiddiya City, Riyadh, Saudi Arabia",
+        "startDate": "2026-07-16",
+        "endDate": "2026-07-24",
+        "badges": ["VIP access"],
+        "includes": [
+            { "icon": "flight", "label": "Round trip flight" },
+            { "icon": "hotel", "label": "8 nights hotel" },
+            { "icon": "transfer", "label": "Private inter-city transport" }
+        ]
+    },
+    "travellers": [
+        { "firstName": "Xavier", "lastName": "Crespo", "isMainGuest": true },
+        { "firstName": "Carlos", "lastName": "Silvestri", "isMainGuest": false },
+        { "firstName": "Lamin", "lastName": "Yamal", "isMainGuest": false }
     ],
     "products": [
         {
-            "title": "Transfers",
-            "type": "addon",
-            "mandatory": true,
-            "status": "allocated",
-            "addonInfo": {
-                "id": 812, "key": "makkah-transfer",
-                "title": "Private airport transfer",
-                "subtitle": "Jeddah to Makkah, one way",
-                "price": 450, "currency": "SAR", "quantity": 1,
-                "imageUrl": "https://cdn.almatar.com/addons/812.jpg"
+            "title": "Round trip flight",
+            "description": "Return flights between Jeddah and Riyadh, economy class.",
+            "productType": "flight",
+            "inventoryType": "static",
+            "tags": [{ "icon": "flight", "label": "Flight" }],
+            "status": "confirmed",
+            "isMandatory": true,
+            "flightInfo": {
+                "isCabinUpgradeAvailable": true,
+                "legs": [
+                    {
+                        "departure": { "time": "2026-07-16T08:30:00Z", "airportCode": "JED", "airportName": "King Abdulaziz International Airport", "cityName": "Jeddah", "countryName": "Saudi Arabia" },
+                        "arrival": { "time": "2026-07-16T10:15:00Z", "airportCode": "RUH", "airportName": "King Khalid International Airport", "cityName": "Riyadh", "countryName": "Saudi Arabia" },
+                        "airline": { "code": "SV", "name": "Saudia", "logoUrl": "https://cdn.almatar.com/airlines/SV.png" },
+                        "flightNumber": "SV-1430",
+                        "cabin": "Economy",
+                        "duration": "1h 45m",
+                        "stops": 0
+                    },
+                    {
+                        "departure": { "time": "2026-07-24T18:45:00Z", "airportCode": "RUH", "airportName": "King Khalid International Airport", "cityName": "Riyadh", "countryName": "Saudi Arabia" },
+                        "arrival": { "time": "2026-07-24T20:30:00Z", "airportCode": "JED", "airportName": "King Abdulaziz International Airport", "cityName": "Jeddah", "countryName": "Saudi Arabia" },
+                        "airline": { "code": "SV", "name": "Saudia", "logoUrl": "https://cdn.almatar.com/airlines/SV.png" },
+                        "flightNumber": "SV-1431",
+                        "cabin": "Economy",
+                        "duration": "1h 45m",
+                        "stops": 0
+                    }
+                ]
             }
-        }
-    ],
-    "itinerary": [
+        },
         {
-            "day": 1,
-            "image": "https://cdn.almatar.com/pkg/day1.jpg",
-            "title": "Arrival",
-            "description": "Meet your driver and travel to the hotel.",
-            "activities": [{ "name": "Airport pickup", "duration": "1h 30m", "productId": 812 }]
+            "title": "The Ritz-Carlton, Riyadh",
+            "description": "Palace-style luxury in the heart of Riyadh.",
+            "productType": "hotel",
+            "inventoryType": "static",
+            "tags": [{ "icon": "hotel", "label": "Stay" }],
+            "status": "confirmed",
+            "isMandatory": true,
+            "hotelInfo": {
+                "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/ritz-carlton.jpg",
+                "starRating": 4.9,
+                "tagline": "Palace-style luxury",
+                "city": "Riyadh",
+                "checkIn": "2026-07-16",
+                "checkOut": "2026-07-21",
+                "nights": 5,
+                "room": { "name": "Deluxe City View", "beds": "1 king bed", "sleeps": 2 }
+            }
+        },
+        {
+            "title": "Splash Island & Kids' Play",
+            "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+            "productType": "addon",
+            "inventoryType": "static",
+            "tags": [{ "icon": "ticket", "label": "Ticket" }],
+            "status": "confirmed",
+            "isMandatory": true,
+            "addonInfo": {
+                "id": 813,
+                "key": "splash-island-kids-play",
+                "title": "Splash Island & Kids' Play",
+                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+                "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
+            }
         }
     ],
-    "dynamicForm": {
-        "sections": [
+    "payment": {
+        "paymentId": "a3f1c2d4-7b8e-4e21-9c55-1f0e6d2b9a77",
+        "currency": "SAR",
+        "totalPaid": 6340,
+        "status": "success",
+        "breakdown": [
             {
-                "section": "passenger",
-                "fields": [
-                    { "field": "firstName", "label": "First name", "required": true,
-                      "dataType": "string", "options": [], "dateConfigs": null },
-                    { "field": "iqamaNumber", "label": "Iqama number", "required": false,
-                      "dataType": "string", "options": [], "dateConfigs": null }
+                "title": "Package price",
+                "items": [
+                    { "label": "1x Adult", "quantity": 1, "amount": 3000 },
+                    { "label": "1x Child", "quantity": 1, "amount": 2000 },
+                    { "label": "1x Infant", "quantity": 1, "amount": 500 }
                 ]
             },
             {
-                "section": "departureDate",
-                "fields": [
-                    { "field": "departureDate", "label": "Departure date", "required": true,
-                      "dataType": "date", "options": [],
-                      "dateConfigs": { "type": "range", "from": "2026-10-01", "to": "2027-03-31", "options": [] } }
+                "title": "Cabin upgrade",
+                "items": [
+                    { "label": "Premium Economy", "description": "420 × 2 travelers • Both flights", "unitAmount": 420, "quantity": 2, "amount": 840 }
                 ]
             },
-            {
-                "section": "departureCity",
-                "fields": [
-                    { "field": "departureCity", "label": "Departure city", "required": true,
-                      "dataType": "string", "dateConfigs": null,
-                      "options": [{ "code": "RUH", "name": "Riyadh" }, { "code": "JED", "name": "Jeddah" }] }
-                ]
-            }
+            { "title": "Total to pay", "note": "Tax included", "amount": 6340 }
         ]
     },
-    "cancellationPolicy": {
-        "isRefundable": true,
-        "policies": [
-            { "minRemainingHours": 48, "refundableAmountPercentage": 100,
-              "window": "More than 48 hours before departure", "note": "Cancel for a full refund." },
-            { "minRemainingHours": 0, "refundableAmountPercentage": 50,
-              "window": "Less than 48 hours", "note": "Half the amount is refunded." }
-        ]
-    }
+    "cancellationPolicies": [
+        {
+            "title": "Free cancellation",
+            "window": "30+ days before departure",
+            "until": "2026-04-17",
+            "note": "Full refund, except visa fee",
+            "refundableAmountPercentage": 100
+        }
+    ]
 }

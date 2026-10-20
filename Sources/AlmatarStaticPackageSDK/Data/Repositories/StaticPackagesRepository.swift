@@ -6,16 +6,16 @@
 import Foundation
 
 protocol StaticPackagesRepositoryProtocol: Sendable {
-    func fetchPackageDetails(packageId: String) async throws -> PackageDetails
-    func fetchCart(cartId: String) async throws -> PackageCart
     func fetchPackageDetails(cartId: String) async throws -> PackageDetails
     func bookPackage(packageId: String) async throws -> PackageBooking
+    func fetchCart(id: String) async throws -> PackageCart
 }
 
 enum StaticPackagesEndpoint {
-    // TODO: Confirm the path with the backend team.
-    static let packageDetailsPrefix = "api/v1/static-packages/"
-    static func packageDetails(id: String) -> String { packageDetailsPrefix + id }
+    static let bookPackage = "v1/packages/book"
+    static let packageCartPrefix = "v1/packages/carts/"
+       /// `GET v1/packages/carts/{id}`
+    static func packageCart(id: String) -> String { packageCartPrefix + id }
     static let cartPrefix = "v1/partner/packages/carts/"
     static func cart(id: String) -> String { cartPrefix + id }
 }
@@ -33,7 +33,7 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
         // The cart is returned at the root of the body, without a `data` envelope.
         try await networkClient.get(
             baseURL: baseURL,
-            path: StaticPackagesEndpoint.packageCart(id: cartId)
+            path: StaticPackagesEndpoint.cart(id: cartId)
         )
     }
 
@@ -45,11 +45,11 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
         )
     }
 
-    func fetchCart(cartId: String) async throws -> PackageCart {
+    func fetchCart(id: String) async throws -> PackageCart {
         // The carts endpoint returns the cart at the top level, without a `data` wrapper.
         try await networkClient.get(
             baseURL: baseURL,
-            path: StaticPackagesEndpoint.cart(id: cartId)
+            path: StaticPackagesEndpoint.cart(id: id)
         )
     }
 }

@@ -64,7 +64,6 @@ enum LocalizedKey: String {
     case packageIncludes = "package_booking_confirmation.package_includes"
     case paymentDetails = "package_booking_confirmation.payment_details"
     case totalPaid = "package_booking_confirmation.total_paid"
-    case cancellationPolicy = "package_booking_confirmation.cancellation_policy"
     case freeCancellation = "package_booking_confirmation.free_cancellation"
     case nonRefundable = "package_booking_confirmation.non_refundable"
     case refundPercentage = "package_booking_confirmation.refund_percentage"

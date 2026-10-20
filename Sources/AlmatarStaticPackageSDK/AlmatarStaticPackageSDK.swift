@@ -86,9 +86,9 @@ public final class AlmatarStaticPackageSDK {
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
     /// Returns the Package Booking Confirmation screen for the given cart, in the configured language.
-    public func getPackageBookingConfirmationView(cartId: String) -> some View {
+    public func getPackageBookingConfirmationView(id: String) -> some View {
         let viewModel = PackageBookingConfimrationViewModel(
-            cartId: cartId,
+            id: id,
             repository: makeStaticPackagesRepository(),
             onGoToMyTrips: { [weak self] in self?.onGoToMyTrips?() },
             onBackToHome: { [weak self] in self?.onBackToHome?() }

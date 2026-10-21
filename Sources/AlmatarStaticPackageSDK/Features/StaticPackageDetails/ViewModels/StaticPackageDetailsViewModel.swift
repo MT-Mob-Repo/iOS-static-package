@@ -209,6 +209,17 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             : LocalizedKey.totalPriceVisitors.localized(with: visitorCount)
     }
 
+    // MARK: - Price breakdown
+    var priceDetailsTitle: String { LocalizedKey.priceDetails.localized() }
+    var priceIncludedTitle: String { LocalizedKey.itineraryIncluded.localized() }
+
+    /// Sections of the cart price that have something to show.
+    var priceBreakdownSections: [PriceBreakdownSection] {
+        (packageDetails?.price?.breakdown ?? []).filter { section in
+            !(section.items ?? []).isEmpty || section.amount != nil
+        }
+    }
+
     /// e.g. "6,000"; `nil` until the price is loaded.
     var totalPriceAmountText: String? {
         let price = packageDetails?.price.map { $0.finalAmount }
@@ -454,12 +465,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return formatter
     }
 
-    private static func formattedAmount(_ amount: Decimal) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter.string(from: amount as NSDecimalNumber) ?? "\(amount)"
+    private static func formattedAmount(_ amount: Double) -> String {
+        CurrencyManager.shared.formatPrice(value: amount)
     }
     
     private static func parseDateTime(_ value: String) -> Date? {

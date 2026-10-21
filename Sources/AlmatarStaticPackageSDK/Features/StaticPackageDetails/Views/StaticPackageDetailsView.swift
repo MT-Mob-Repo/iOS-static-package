@@ -8,6 +8,9 @@ import AlmatarSystemDesignSDK
 
 struct StaticPackageDetailsView: View {
     @StateObject private var viewModel: StaticPackageDetailsViewModel
+    /// The price breakdown opens above the total when the total is tapped.
+    @State private var isPriceBreakdownExpanded = false
+    @State private var priceBreakdownHeight: CGFloat = .zero
 
     init(viewModel: @autoclosure @escaping () -> StaticPackageDetailsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel())
@@ -30,12 +33,30 @@ struct StaticPackageDetailsView: View {
 
             if viewModel.packageDetails != nil {
                 VStack(spacing: Spacing.small) {
+                    if isPriceBreakdownExpanded {
+                        priceBreakdown
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                            .overlay(alignment: .bottom) {
+                                Rectangle()
+                                    .fill(AlmatarColors.borderDefaultCard)
+                                    .frame(height: 1)
+                            }
+                    }
+
                     if let amount = viewModel.totalPriceAmountText {
-                        TotalPriceSummaryView(
-                            form: viewModel.visitorForm,
-                            label: viewModel.totalPriceLabel(visitorCount:),
-                            amount: amount,
-                        )
+                        Button {
+                            withAnimation(.easeInOut) { isPriceBreakdownExpanded.toggle() }
+                        } label: {
+                            TotalPriceSummaryView(
+                                form: viewModel.visitorForm,
+                                label: viewModel.totalPriceLabel(visitorCount:),
+                                amount: amount,
+                                isExpanded: isPriceBreakdownExpanded
+                            )
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(viewModel.priceBreakdownSections.isEmpty)
                         .padding(.horizontal, Spacing.screenHorizontal)
                     }
 
@@ -69,6 +90,21 @@ struct StaticPackageDetailsView: View {
             get: { viewModel.paymentErrorMessage != nil },
             set: { if !$0 { viewModel.paymentErrorMessage = nil } }
         )
+    }
+
+    /// Scrolls once taller than half the screen; otherwise as tall as its content.
+    private var priceBreakdown: some View {
+        ScrollView {
+            PackagePriceBreakdownView(
+                title: viewModel.priceDetailsTitle,
+                sections: viewModel.priceBreakdownSections,
+                includedTitle: viewModel.priceIncludedTitle
+            )
+            .padding(.horizontal, Spacing.screenHorizontal)
+            .padding(.vertical, Spacing.xSmall)
+            .readHeight { priceBreakdownHeight = $0 }
+        }
+        .frame(height: min(priceBreakdownHeight, UIScreen.main.bounds.height * 0.8))
     }
 
     @ViewBuilder

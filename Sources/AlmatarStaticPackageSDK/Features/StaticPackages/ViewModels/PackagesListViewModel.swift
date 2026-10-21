@@ -58,7 +58,10 @@ final class PackagesListViewModel: ObservableObject {
     }
 
     func imageURL(_ package: PackageSummary) -> URL? {
-        package.images.lazy.compactMap { Optional($0).nonEmpty.flatMap(URL.init(string:)) }.first
+        if let imageUrl = package.imageUrl {
+            return URL.init(string: imageUrl)
+        }
+        return nil
     }
 
     // MARK: - Actions

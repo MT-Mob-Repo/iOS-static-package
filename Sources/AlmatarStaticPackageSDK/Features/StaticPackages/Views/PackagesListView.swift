@@ -275,12 +275,3 @@ private struct FlowLayout: Layout {
         return rows
     }
 }
-
-#Preview {
-    NavigationStack {
-        ScrollView {
-            PackagesListView(section: .mock)
-                .padding(Spacing.screenHorizontal)
-        }
-    }
-}

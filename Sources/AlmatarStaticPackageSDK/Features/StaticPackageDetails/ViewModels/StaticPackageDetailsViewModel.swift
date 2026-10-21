@@ -64,7 +64,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     var headerTags: [String] {
-        var tags = [dynamicPackageTag]
+        var tags: [String] = []
         if let duration = packageInfo?.duration.nonEmpty {
             tags.append(duration)
         }
@@ -75,10 +75,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     var headerImageURLs: [URL] {
         (packageInfo?.images ?? []).compactMap { Optional($0).nonEmpty.flatMap(URL.init(string:)) }
     }
-
-    /// Asset names for the header carousel (`Assets.xcassets`), used when the API has no images.
-    var headerImageNames: [String] { PackageAsset.carouselImageNames }
-
+    
     // MARK: - Sections
 
     var journeySnapshotItems: [JourneySnapshotItem] {

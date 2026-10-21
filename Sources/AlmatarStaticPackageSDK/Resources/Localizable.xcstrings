@@ -215,6 +215,23 @@
         }
       }
     },
+    "packages_list.starting_from" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يبدأ من"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting from"
+          }
+        }
+      }
+    },
     "static_package_details.adults" : {
       "comment" : "Visitor details: adults counter",
       "extractionState" : "manual",
@@ -725,14 +742,14 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "لمحة عن الرحلة"
+            "state" : "needs_review",
+            "value" : "ملخص الباقة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Journey Snapshot"
+            "value" : "Package summary"
           }
         }
       }

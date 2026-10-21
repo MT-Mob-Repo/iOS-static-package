@@ -22,7 +22,7 @@ struct PackagePriceBreakdownView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text(title)
-                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
 
             ForEach(sections.indices, id: \.self) { index in
@@ -39,7 +39,7 @@ struct PackagePriceBreakdownView: View {
         if let items = section.items, !items.isEmpty {
             VStack(alignment: .leading, spacing: Spacing.xSmall) {
                 Text(section.title)
-                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
 
                 card {
@@ -52,7 +52,7 @@ struct PackagePriceBreakdownView: View {
         } else {
             VStack(alignment: .leading, spacing: Spacing.xSmall) {
                 Text(section.title)
-                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
 
                 card { totalRow(section) }
@@ -86,7 +86,7 @@ struct PackagePriceBreakdownView: View {
         HStack(alignment: .top, spacing: Spacing.small) {
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 Text(item.label)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .fixedSize(horizontal: false, vertical: true)
 
@@ -107,7 +107,7 @@ struct PackagePriceBreakdownView: View {
         HStack(alignment: .top, spacing: Spacing.small) {
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 Text(section.title)
-                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
 
                 if let note = section.note.nonEmpty {
@@ -128,7 +128,7 @@ struct PackagePriceBreakdownView: View {
     private func amountView(_ amount: Double, size: CGFloat) -> some View {
         if amount == .zero {
             Text(includedTitle)
-                .modifier(AppTextModifier(size: size, fontWeight: Typography.Weight.semibold))
+                .modifier(AppTextModifier(size: size, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
         } else {
             let price = CurrencyManager.shared.formatPrice(value: amount)

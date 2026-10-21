@@ -42,6 +42,29 @@ public final class AlmatarStaticPackageSDK {
         syncNetworkClient()
     }
 
+    // MARK: - Currency
+
+    /// The user's selected currency code, e.g. "SAR".
+    public var currency: String { configuration.currency }
+
+    /// The currencies provided by the host app, base currency first.
+    public var availableCurrencies: [StaticPackageCurrency] { configuration.availableCurrencies }
+
+    /// The selected currency's details, when it is in `availableCurrencies`.
+    public var currentCurrency: StaticPackageCurrency? {
+        availableCurrencies.first { $0.code.caseInsensitiveCompare(configuration.currency) == .orderedSame }
+    }
+
+    /// Call when the user changes currency in the host app.
+    public func setCurrency(_ code: String) {
+        configuration.currency = code
+    }
+
+    /// Call when the host app loads or refreshes its currency list and rates.
+    public func setAvailableCurrencies(_ currencies: [StaticPackageCurrency]) {
+        configuration.availableCurrencies = currencies
+    }
+
     // MARK: - Request Providers
 
     /// Provides the access token sent as `Authorization: Bearer <token>`.

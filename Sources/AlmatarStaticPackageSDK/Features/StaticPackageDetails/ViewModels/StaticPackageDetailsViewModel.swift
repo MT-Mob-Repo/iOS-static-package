@@ -200,8 +200,23 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     var okTitle: String { LocalizedKey.ok.localized() }
 
+    // MARK: - Total price
+
+    /// e.g. "Total price • 2 visitors".
+    func totalPriceLabel(visitorCount: Int) -> String {
+        visitorCount == 1
+            ? LocalizedKey.totalPriceOneVisitor.localized()
+            : LocalizedKey.totalPriceVisitors.localized(with: visitorCount)
+    }
+
+    /// e.g. "6,000"; `nil` until the price is loaded.
+    var totalPriceAmountText: String? {
+        let price = packageDetails?.price.map { $0.finalAmount }
+       return CurrencyManager.shared.formatPrice(value: price)
+    }
+
     /// Package price plus the optional itinerary activities the customer added, in SAR.
-    var paymentAmount: Decimal? {
+    var paymentAmount: Double? {
         guard let details = packageDetails else { return nil }
         return details.price?.finalAmount ?? 0.0
     }
@@ -218,7 +233,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             let request = PackagePaymentRequest(
                 bookingId: cartId,
                 bookingKey: cartId,
-                amountInSar: NSDecimalNumber(decimal: amount).floatValue,
+                amountInSar: Float(amount),
                 productType: PackagePaymentRequest.productType,
                 cancellationTiers: cancellationTiers.isEmpty ? nil : cancellationTiers
             )

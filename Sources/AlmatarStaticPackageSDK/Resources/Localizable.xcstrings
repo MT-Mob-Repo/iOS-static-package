@@ -809,6 +809,42 @@
         }
       }
     },
+    "static_package_details.total_price_one_visitor" : {
+      "comment" : "Above the payment button with one visitor",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السعر الإجمالي • زائر واحد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total price • 1 visitor"
+          }
+        }
+      }
+    },
+    "static_package_details.total_price_visitors" : {
+      "comment" : "Above the payment button; %d is the number of visitors (2 or more)",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السعر الإجمالي • %d زوار"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total price • %d visitors"
+          }
+        }
+      }
+    },
     "static_package_details.until" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -43,7 +43,7 @@ struct PackagePrice: Codable, Sendable, Hashable {
 }
 
 struct CartPrice: Codable, Sendable, Hashable {
-    let finalAmount: Decimal
+    let finalAmount: Double
     let currency: String
     let breakdown: [PriceBreakdownSection]?
 }

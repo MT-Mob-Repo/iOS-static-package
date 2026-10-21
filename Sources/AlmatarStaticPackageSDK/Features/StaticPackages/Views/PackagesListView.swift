@@ -205,8 +205,7 @@ public struct PackagesListView: View {
                         .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
                     HStack(alignment: .firstTextBaseline, spacing: Spacing.xxSmall) {
-                        Text(price)
-                            .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                        SUITextPrice(text: price, modifier: AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
                             .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     }
                 }

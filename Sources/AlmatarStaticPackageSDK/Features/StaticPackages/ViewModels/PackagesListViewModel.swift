@@ -48,13 +48,7 @@ final class PackagesListViewModel: ObservableObject {
     /// e.g. "SAR 1,250"; `nil` when the package has no price.
     func priceText(_ package: PackageSummary) -> String? {
         guard let price = package.startingPrice else { return nil }
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        let amount = formatter.string(from: price as NSDecimalNumber) ?? "\(price)"
-        guard let currency = package.currency.nonEmpty else { return amount }
-        return "\(currency) \(amount)"
+        return CurrencyManager.shared.formatPrice(value: price)
     }
 
     func imageURL(_ package: PackageSummary) -> URL? {

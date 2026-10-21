@@ -30,7 +30,7 @@ public struct PackageSummary: Codable, Sendable, Hashable, Identifiable {
     public let imageUrl: String?
     public let ribbons: [PackageRibbon]
     public let tags: [String]
-    public let startingPrice: Decimal?
+    public let startingPrice: Double?
     public let currency: String?
 
     public var id: String { packageId }
@@ -44,7 +44,7 @@ public struct PackageSummary: Codable, Sendable, Hashable, Identifiable {
         imageUrl: String? = nil,
         ribbons: [PackageRibbon] = [],
         tags: [String] = [],
-        startingPrice: Decimal? = nil,
+        startingPrice: Double? = nil,
         currency: String? = nil
     ) {
         self.packageId = packageId
@@ -73,7 +73,7 @@ public struct PackageSummary: Codable, Sendable, Hashable, Identifiable {
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         ribbons = try container.decodeIfPresent([PackageRibbon].self, forKey: .ribbons) ?? []
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
-        startingPrice = try container.decodeIfPresent(Decimal.self, forKey: .startingPrice)
+        startingPrice = try container.decodeIfPresent(Double.self, forKey: .startingPrice)
         currency = try container.decodeIfPresent(String.self, forKey: .currency)
     }
 }

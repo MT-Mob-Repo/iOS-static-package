@@ -29,11 +29,28 @@ struct StaticPackageDetailsView: View {
                
 
             if viewModel.packageDetails != nil {
-                PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
-                    Task { await viewModel.goToPaymentTapped() }
+                VStack(spacing: Spacing.small) {
+                    if let amount = viewModel.totalPriceAmountText {
+                        TotalPriceSummaryView(
+                            form: viewModel.visitorForm,
+                            label: viewModel.totalPriceLabel(visitorCount:),
+                            amount: amount,
+                        )
+                        .padding(.horizontal, Spacing.screenHorizontal)
+                    }
+
+                    PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
+                        Task { await viewModel.goToPaymentTapped() }
+                    }
+                    .padding(.horizontal, Spacing.screenHorizontal)
                 }
-                .padding(.horizontal, Spacing.screenHorizontal)
+                .padding(.top, Spacing.small)
                 .padding(.bottom, Spacing.screenBottom)
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(AlmatarColors.borderDefaultCard)
+                        .frame(height: 1)
+                }
             }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())

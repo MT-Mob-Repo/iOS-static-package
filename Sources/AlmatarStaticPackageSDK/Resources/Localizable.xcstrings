@@ -412,6 +412,42 @@
         }
       }
     },
+    "static_package_details.fixed_price" : {
+      "comment" : "Schedule section: fixed price banner title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باقة بسعر ثابت"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixed price"
+          }
+        }
+      }
+    },
+    "static_package_details.fixed_price_description" : {
+      "comment" : "Schedule section: fixed price banner description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تشمل الباقة الطيران والإقامة والخدمات، وتقدر تغيّر درجة السفر فقط."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flights, hotel, and services are included. You can change your cabin class only."
+          }
+        }
+      }
+    },
     "static_package_details.flight_upgraded" : {
       "comment" : "Schedule flight card: badge on an upgraded leg",
       "extractionState" : "manual",

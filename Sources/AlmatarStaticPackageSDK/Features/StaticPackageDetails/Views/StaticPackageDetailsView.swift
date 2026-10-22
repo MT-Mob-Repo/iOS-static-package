@@ -119,8 +119,7 @@ struct StaticPackageDetailsView: View {
                         title: viewModel.headerTitle,
                         tags: viewModel.headerTags,
                         metaLine: nil,
-                        imageURLs: viewModel.headerImageURLs,
-                        imageNames: viewModel.headerImageNames
+                        imageURLs: viewModel.headerImageURLs
                     )
 
                     VStack(spacing: Spacing.xLarge) {

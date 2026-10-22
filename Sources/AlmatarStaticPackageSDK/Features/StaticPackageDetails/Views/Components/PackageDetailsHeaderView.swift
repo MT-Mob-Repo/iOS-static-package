@@ -26,17 +26,11 @@ struct PackageDetailsHeaderView: View {
     let metaLine: String?
     /// Remote carousel images; when empty, `imageNames` are shown instead.
     var imageURLs: [URL] = []
-    /// Asset catalog names from `Assets.xcassets` (loaded via `Bundle.module`).
-    let imageNames: [String]
 
     @State private var currentPage = 0
 
-    private var slides: [String] {
-        imageNames.isEmpty ? PackageAsset.carouselImageNames : imageNames
-    }
-
     private var slideCount: Int {
-        imageURLs.isEmpty ? max(slides.count, 1) : imageURLs.count
+        imageURLs.count
     }
     
     var body: some View {
@@ -81,11 +75,7 @@ struct PackageDetailsHeaderView: View {
 
     @ViewBuilder
     private func slide(at index: Int) -> some View {
-        if !imageURLs.isEmpty {
-            remoteSlide(at: index)
-        } else {
-            assetSlide(at: index)
-        }
+        remoteSlide(at: index)
     }
 
     private func remoteSlide(at index: Int) -> some View {
@@ -102,20 +92,6 @@ struct PackageDetailsHeaderView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .clipped()
-    }
-
-    @ViewBuilder
-    private func assetSlide(at index: Int) -> some View {
-        let name = slides[index % slides.count]
-        if UIImage(named: name, in: .module, compatibleWith: nil) != nil {
-            Image(name, bundle: .module)
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipped()
-        } else {
-            placeholder(at: index, assetName: name)
-        }
     }
 
     private func placeholder(at index: Int, assetName: String) -> some View {

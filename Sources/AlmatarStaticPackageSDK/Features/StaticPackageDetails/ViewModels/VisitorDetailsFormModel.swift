@@ -47,7 +47,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     private enum Constants {
         static let segmentedMaxOptions = 3
         static let segmentedMaxTitleLength = 4
-        static let travellersSection = "travellers"
+        static let travellersSection = "passenger"
         static let firstNameField = "firstName"
         static let lastNameField = "lastName"
         /// Prefix of the per-visitor section keys, e.g. "travellers#<uuid>".

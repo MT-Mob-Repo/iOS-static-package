@@ -139,6 +139,7 @@ public struct PackagesListView: View {
                 }
             )
             .clipped()
+            .contentShape(Rectangle())
             .overlay(alignment: .top) { imageBadges(package) }
     }
 

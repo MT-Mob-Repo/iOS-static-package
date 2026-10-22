@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import AlmatarSystemDesignSDK
 
 /// State of the "Visitor Details" section built from the backend `DynamicForm`.
 /// Values are stored as strings keyed by "section.field" so they can be sent back as-is.
@@ -17,10 +18,11 @@ final class VisitorDetailsFormModel: ObservableObject {
         case dropdown([DynamicFormOption])
         /// Fixed list of dates shown in a dropdown.
         case dateList([DynamicFormDateOption])
-        /// Free date, e.g. date of birth.
+        /// Free date, e.g. date of birth, optionally limited by the field's `from` / `to`.
         case date
         case phone
         case email
+        case number
         case text
     }
 
@@ -36,26 +38,25 @@ final class VisitorDetailsFormModel: ObservableObject {
         let type: Traveller
     }
 
-    /// Country calling code shown in the phone field.
-    struct PhoneCountry: Hashable, Identifiable, Sendable {
-        /// ISO 3166 alpha-2 code, used for the flag.
-        let code: String
-        let dialCode: String
-        var id: String { code }
-    }
-
     private enum Constants {
         static let segmentedMaxOptions = 3
-        static let segmentedMaxTitleLength = 4
+        static let segmentedMaxTitleLength = 8
         static let travellersSection = "passenger"
         static let firstNameField = "firstName"
         static let lastNameField = "lastName"
+        static let passportNumberField = "passportNumber"
+        static let iqamaNumberField = "iqamaNumber"
+        static let maleOption = "male"
+        static let femaleOption = "female"
+        /// Default dial code of phone fields, as in the design system phone field.
+        static let defaultPhoneCode = "+966"
+        static let maxAgeYears = 100
         /// Prefix of the per-visitor section keys, e.g. "travellers#<uuid>".
         static let visitorSectionSeparator = "#"
         static let visitorTypeKey = "type"
         static let maxTravellers = 9
         static let apiDateFormat = "yyyy-MM-dd"
-        static let displayDateFormat = "dd/MM/yyyy"
+        static let displayDateFormat = "dd MMM yyyy"
         static let dayMonthTemplate = "d MMM"
         static let monthKeyFormat = "yyyy-MM"
         // Fixed formats, not templates, so both languages read day before month as in the design.
@@ -66,25 +67,15 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let rangeDash = " – "
         static let posixLocale = Locale(identifier: "en_US_POSIX")
         static let utc = TimeZone(identifier: "UTC")!
-        static let emailPattern = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
-        static let minPhoneDigits = 6
     }
-
-    // TODO: Replace with the list from the backend once available.
-    nonisolated static let phoneCountries: [PhoneCountry] = [
-        PhoneCountry(code: "SA", dialCode: "+966"),
-        PhoneCountry(code: "AE", dialCode: "+971"),
-        PhoneCountry(code: "KW", dialCode: "+965"),
-        PhoneCountry(code: "QA", dialCode: "+974"),
-        PhoneCountry(code: "BH", dialCode: "+973"),
-        PhoneCountry(code: "OM", dialCode: "+968"),
-        PhoneCountry(code: "EG", dialCode: "+20"),
-        PhoneCountry(code: "JO", dialCode: "+962")
-    ]
 
     @Published private(set) var form: DynamicForm?
     @Published private var values: [String: String] = [:]
-    @Published private var phoneCountryCodes: [String: String] = [:]
+    /// Dial code per phone field, e.g. "+966", as chosen in the phone field's country list.
+    @Published private var phoneCodes: [String: String] = [:]
+    @Published private var phoneCountryNames: [String: String] = [:]
+    /// Drives the design-system fields to show their errors, e.g. when trying to continue.
+    @Published var shouldValidate = false
     /// The group in the order visitors were added; always starts with the lead adult.
     @Published private(set) var visitors: [Visitor] = [Visitor(id: UUID(), type: .adults)]
     /// Visitor cards that are open; a newly added visitor opens automatically.
@@ -101,7 +92,9 @@ final class VisitorDetailsFormModel: ObservableObject {
     func configure(with form: DynamicForm?) {
         self.form = form
         values = [:]
-        phoneCountryCodes = [:]
+        phoneCodes = [:]
+        phoneCountryNames = [:]
+        shouldValidate = false
         let lead = Visitor(id: UUID(), type: .adults)
         visitors = [lead]
         expandedVisitorIds = [lead.id]
@@ -128,17 +121,40 @@ final class VisitorDetailsFormModel: ObservableObject {
               section.fields.count == 1,
               let field = section.fields.first else { return false }
         switch kind(of: field) {
-        case .dropdown, .segmented, .dateList: return true
+        case .dropdown, .segmented, .dateList, .date: return true
         default: return false
         }
     }
 
+    /// The section filled once per visitor: flagged `isMultiple`, or the "passenger" key.
     func isTravellersSection(_ section: DynamicFormSection) -> Bool {
-        section.section == Constants.travellersSection
+        section.isMultiple == true || section.section == Constants.travellersSection
     }
 
     func cardTitle(for section: DynamicFormSection) -> String {
         isTravellersSection(section) ? LocalizedKey.visitorsInformation.localized() : (section.title.nonEmpty ?? "")
+    }
+
+    /// Fields grouped into rows; first and last name share a row wherever the first of them appears.
+    func rows(for section: DynamicFormSection) -> [[DynamicFormField]] {
+        let fields = section.fields
+        let firstName = fields.first { $0.field == Constants.firstNameField }
+        let lastName = fields.first { $0.field == Constants.lastNameField }
+        guard let firstName, let lastName else { return fields.map { [$0] } }
+
+        var rows: [[DynamicFormField]] = []
+        var didAddNames = false
+        for field in fields {
+            if field == firstName || field == lastName {
+                if !didAddNames {
+                    rows.append([firstName, lastName])
+                    didAddNames = true
+                }
+            } else {
+                rows.append([field])
+            }
+        }
+        return rows
     }
 
     func kind(of field: DynamicFormField) -> FieldKind {
@@ -148,6 +164,8 @@ final class VisitorDetailsFormModel: ObservableObject {
             return .phone
         case .email:
             return .email
+        case .number:
+            return .number
         case .date:
             if let dates = field.dateConfigs?.options, !dates.isEmpty {
                 return .dateList(dates)
@@ -156,7 +174,7 @@ final class VisitorDetailsFormModel: ObservableObject {
         case .string, .unknown:
             guard !options.isEmpty else { return .text }
             let isShort = options.count <= Constants.segmentedMaxOptions
-                && options.allSatisfy { $0.name.count <= Constants.segmentedMaxTitleLength }
+                && options.allSatisfy { optionName($0).count <= Constants.segmentedMaxTitleLength }
             return isShort ? .segmented(options) : .dropdown(options)
         }
     }
@@ -175,13 +193,58 @@ final class VisitorDetailsFormModel: ObservableObject {
         values[key(section, field)] = value
     }
 
-    func phoneCountry(_ section: DynamicFormSection, _ field: DynamicFormField) -> PhoneCountry {
-        let code = phoneCountryCodes[key(section, field)]
-        return Self.phoneCountries.first { $0.code == code } ?? Self.phoneCountries[0]
+    /// e.g. "+966".
+    func phoneCode(_ section: DynamicFormSection, _ field: DynamicFormField) -> String {
+        phoneCodes[key(section, field)] ?? Constants.defaultPhoneCode
     }
 
-    func setPhoneCountry(_ country: PhoneCountry, _ section: DynamicFormSection, _ field: DynamicFormField) {
-        phoneCountryCodes[key(section, field)] = country.code
+    func setPhoneCode(_ code: String, _ section: DynamicFormSection, _ field: DynamicFormField) {
+        phoneCodes[key(section, field)] = code
+    }
+
+    func phoneCountryName(_ section: DynamicFormSection, _ field: DynamicFormField) -> String? {
+        phoneCountryNames[key(section, field)]
+    }
+
+    func setPhoneCountryName(_ name: String?, _ section: DynamicFormSection, _ field: DynamicFormField) {
+        phoneCountryNames[key(section, field)] = name
+    }
+
+    /// Dates the field accepts: its `from` / `to`, else up to today (e.g. date of birth).
+    func dateRange(for field: DynamicFormField) -> ClosedRange<Date> {
+        let formatter = localDateFormatter(Constants.apiDateFormat)
+        let today = Date()
+        let earliest = Calendar.current.date(byAdding: .year, value: -Constants.maxAgeYears, to: today) ?? today
+        let from = field.dateConfigs?.from.nonEmpty.flatMap(formatter.date(from:)) ?? earliest
+        let to = field.dateConfigs?.to.nonEmpty.flatMap(formatter.date(from:)) ?? today
+        return from <= to ? from...to : to...from
+    }
+
+    /// Display name of a choice; plain values such as "male" use the SDK's translation.
+    func optionName(_ option: DynamicFormOption) -> String {
+        switch option.code.lowercased() {
+        case Constants.maleOption: return LocalizedKey.male.localized()
+        case Constants.femaleOption: return LocalizedKey.female.localized()
+        default: return option.name
+        }
+    }
+
+    // MARK: - Validation rules
+
+    /// The design-system validator for a text field, matching the Almatar app forms.
+    /// Optional fields accept an empty value but validate anything entered.
+    func validatorType(for field: DynamicFormField, in section: DynamicFormSection) -> SUITextFieldValidatorTypes {
+        let type: SUITextFieldValidatorTypes
+        switch (kind(of: field), field.field) {
+        case (.email, _): type = .email
+        case (.phone, _): type = .mobile(code: phoneCode(section, field))
+        case (_, Constants.firstNameField): type = .firstName
+        case (_, Constants.lastNameField): type = .name
+        case (_, Constants.passportNumberField): type = .passport
+        case (_, Constants.iqamaNumberField): type = .iqama
+        default: type = .required
+        }
+        return field.required ? type : .custom(validator: OptionalValueValidator(wrapped: type.getValidator()))
     }
 
     /// Free dates come from the device date picker, so they use the device time zone.
@@ -201,11 +264,11 @@ final class VisitorDetailsFormModel: ObservableObject {
         guard !current.isEmpty else { return nil }
         switch kind(of: field) {
         case .dropdown(let options), .segmented(let options):
-            return options.first { $0.code == current }?.name
+            return options.first { $0.code == current }.map(optionName)
         case .dateList:
             return apiDateFormatter.date(from: current).map { dayMonthFormatter.string(from: $0) }
         case .date:
-            return date(section, field).map { localDateFormatter(Constants.displayDateFormat).string(from: $0) }
+            return date(section, field).map { displayFormatter(Constants.displayDateFormat, timeZone: .current).string(from: $0) }
         default:
             return current
         }
@@ -214,8 +277,11 @@ final class VisitorDetailsFormModel: ObservableObject {
     /// e.g. "Departure Riyadh" or "Visit Date: 16 Jul".
     func selectionRowTitle(_ section: DynamicFormSection, _ field: DynamicFormField) -> String {
         guard let selected = selectedText(section, field) else { return field.label }
-        if case .dateList = kind(of: field) {
+        switch kind(of: field) {
+        case .dateList, .date:
             return "\(field.label): \(selected)"
+        default:
+            break
         }
         return "\(field.label) \(selected)"
     }
@@ -326,6 +392,7 @@ final class VisitorDetailsFormModel: ObservableObject {
         return DynamicFormSection(
             section: Constants.travellersSection + Constants.visitorSectionSeparator + visitor.id.uuidString,
             title: nil,
+            isMultiple: false,
             fields: fields
         )
     }
@@ -397,7 +464,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         visitors.removeAll { ids.contains($0.id) }
         expandedVisitorIds.subtract(ids)
         values = values.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
-        phoneCountryCodes = phoneCountryCodes.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
+        phoneCodes = phoneCodes.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
+        phoneCountryNames = phoneCountryNames.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
     }
 
     /// One infant per adult: removing adults also removes the last extra infants.
@@ -451,16 +519,15 @@ final class VisitorDetailsFormModel: ObservableObject {
         return otherSectionsValid && visitors.allSatisfy(isComplete)
     }
 
+    /// Typed fields use the same design-system validators as their text fields;
+    /// choice and date fields only need a value when required.
     func isFieldValid(_ field: DynamicFormField, in section: DynamicFormSection) -> Bool {
         let current = value(section, field).trimmingCharacters(in: .whitespacesAndNewlines)
-        if current.isEmpty { return !field.required }
         switch kind(of: field) {
-        case .email:
-            return current.range(of: Constants.emailPattern, options: .regularExpression) != nil
-        case .phone:
-            return current.filter(\.isNumber).count >= Constants.minPhoneDigits
+        case .text, .email, .number, .phone:
+            return validatorType(for: field, in: section).getValidator().validate(value: current).0
         default:
-            return true
+            return !current.isEmpty || !field.required
         }
     }
 
@@ -490,7 +557,7 @@ final class VisitorDetailsFormModel: ObservableObject {
             let current = value(section, field)
             guard !current.isEmpty else { continue }
             if case .phone = kind(of: field) {
-                result[field.field] = phoneCountry(section, field).dialCode + current.filter(\.isNumber)
+                result[field.field] = phoneCode(section, field) + current.filter(\.isNumber)
             } else {
                 result[field.field] = current
             }
@@ -513,10 +580,11 @@ final class VisitorDetailsFormModel: ObservableObject {
     }
 
     /// Localized month and weekday names in UTC, matching how API dates are parsed.
-    private func displayFormatter(_ format: String) -> DateFormatter {
+    /// Localized month and weekday names; API dates are parsed in UTC, picked dates in the device time zone.
+    private func displayFormatter(_ format: String, timeZone: TimeZone = Constants.utc) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = displayLocale
-        formatter.timeZone = Constants.utc
+        formatter.timeZone = timeZone
         formatter.dateFormat = format
         return formatter
     }
@@ -557,5 +625,14 @@ extension VisitorDetailsFormModel.Traveller {
         case .children: return LocalizedKey.child.localized()
         case .infants: return LocalizedKey.infant.localized()
         }
+    }
+}
+
+/// Lets an optional field stay empty, but validates any value entered.
+private struct OptionalValueValidator: Validator {
+    let wrapped: Validator
+
+    func validate(value: String) -> (Bool, String?) {
+        value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? (true, nil) : wrapped.validate(value: value)
     }
 }

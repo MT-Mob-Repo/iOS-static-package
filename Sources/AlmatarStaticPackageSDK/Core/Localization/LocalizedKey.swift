@@ -85,6 +85,8 @@ enum LocalizedKey: String {
     case enterFieldPlaceholder = "visitor_details.enter_field_placeholder"
     case selectFieldPlaceholder = "visitor_details.select_field_placeholder"
     case dateOfBirthPlaceholder = "visitor_details.date_placeholder"
+    case male = "visitor_details.male"
+    case female = "visitor_details.female"
     case done = "common.done"
 
     /// Localized value in the language currently configured in the SDK, independent of the device language.

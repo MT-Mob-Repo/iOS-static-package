@@ -203,79 +203,39 @@
       ]
     },
     "dynamicForm": {
-      "title": "Visitor Details",
-      "subtitle": "Configure your park visit group",
+      "title": "Traveller Details",
+      "subtitle": "Tell us who is travelling and when",
       "sections": [
         {
-          "section": "departureCity",
+          "section": "passenger",
+          "title": "Passengers",
+          "isMultiple": true,
           "fields": [
-            {
-              "field": "departureCity",
-              "label": "Departure",
-              "required": true,
-              "dataType": "string",
-              "dateConfigs": null,
-              "options": [
-                { "code": "RUH", "name": "Riyadh" },
-                { "code": "JED", "name": "Jeddah" },
-                { "code": "DMM", "name": "Dammam" },
-                { "code": "DXB", "name": "Dubai" }
-              ]
-            }
+            { "field": "firstName", "label": "First name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
+            { "field": "lastName", "label": "Last name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
+            { "field": "email", "label": "Email", "required": true, "dataType": "email", "options": [], "dateConfigs": null },
+            { "field": "phoneNumber", "label": "Phone number", "required": true, "dataType": "phone", "options": [], "dateConfigs": null },
+            { "field": "dateOfBirth", "label": "Date of birth", "required": true, "dataType": "date", "options": [], "dateConfigs": { "type": "range", "from": "1930-01-01", "to": "2026-10-01", "options": [] } },
+            { "field": "passportNumber", "label": "Passport number", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
+            { "field": "iqamaNumber", "label": "Iqama number", "required": false, "dataType": "number", "options": [], "dateConfigs": null },
+            { "field": "nationality", "label": "Nationality", "required": true, "dataType": "string", "options": [ { "code": "SA", "name": "Saudi Arabia" }, { "code": "EG", "name": "Egypt" }, { "code": "AE", "name": "United Arab Emirates" }, { "code": "PK", "name": "Pakistan" } ], "dateConfigs": null },
+            { "field": "gender", "label": "Gender", "required": true, "dataType": "string", "options": [ "male", "female" ], "dateConfigs": null }
           ]
         },
         {
           "section": "departureDate",
+          "title": "Departure Date",
+          "isMultiple": false,
           "fields": [
-            {
-              "field": "departureDate",
-              "label": "Visit Date",
-              "required": true,
-              "dataType": "date",
-              "options": [],
-              "dateConfigs": {
-                "type": "list",
-                "options": [
-                  { "date": "2026-07-19", "returnDate": "2026-07-21" },
-                  { "date": "2026-08-19", "returnDate": "2026-08-21" },
-                  { "date": "2026-09-19", "returnDate": "2026-09-21" }
-                ]
-              }
-            }
+            { "field": "departureDate", "label": "Departure date", "required": true, "dataType": "date", "options": [], "dateConfigs": { "type": "range", "from": "2026-11-15", "to": "2027-05-31", "options": [] } }
           ]
         },
         {
-          "section": "travellers",
-          "title": "Travellers",
+          "section": "departureCity",
+          "title": "Departure City",
+          "isMultiple": false,
           "fields": [
-            {
-              "field": "title",
-              "label": "Title",
-              "required": true,
-              "dataType": "string",
-              "dateConfigs": null,
-              "options": [
-                { "code": "mr", "name": "Mr" },
-                { "code": "ms", "name": "Ms" },
-                { "code": "mrs", "name": "Mrs" }
-              ]
-            },
-            { "field": "firstName", "label": "Name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
-            { "field": "lastName", "label": "Last Name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
-            { "field": "phoneNumber", "label": "Phone", "required": true, "dataType": "phone", "options": [], "dateConfigs": null },
-            {
-              "field": "nationality",
-              "label": "Nationality",
-              "required": true,
-              "dataType": "string",
-              "options": [
-                { "code": "SA", "name": "Saudi Arabia" },
-                { "code": "EG", "name": "Egypt" },
-                { "code": "AE", "name": "United Arab Emirates" }
-              ],
-              "dateConfigs": null
-            },
-            { "field": "dateOfBirth", "label": "Date of Birth", "required": true, "dataType": "date", "options": [], "dateConfigs": null }
+            { "field": "departureCity", "label": "Departure city", "required": true, "dataType": "string", "options": [ { "code": "RUH", "name": "Riyadh" }, { "code": "JED", "name": "Jeddah" }, { "code": "DMM", "name": "Dammam" } ], "dateConfigs": null }
           ]
         }
       ]

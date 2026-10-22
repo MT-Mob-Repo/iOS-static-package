@@ -1095,6 +1095,24 @@
         }
       }
     },
+    "visitor_details.female" : {
+      "comment" : "Gender option",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أنثى"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Female"
+          }
+        }
+      }
+    },
     "visitor_details.incomplete" : {
       "comment" : "Status of a visitor with missing details",
       "extractionState" : "manual",
@@ -1145,6 +1163,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lead visitor"
+          }
+        }
+      }
+    },
+    "visitor_details.male" : {
+      "comment" : "Gender option",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ذكر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Male"
           }
         }
       }

@@ -112,8 +112,10 @@ struct VisitorDetailsView: View {
             default: return false
             }
         }()
+        let isSelectable = form.isSelectable(section)
 
         return Button {
+            guard isSelectable else { return }
             if case .date = form.kind(of: field) {
                 openDatePicker(section, field)
             } else {
@@ -134,7 +136,9 @@ struct VisitorDetailsView: View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                chevron(isDate ? Layout.forwardChevron : Layout.downChevron)
+                if isSelectable {
+                    chevron(isDate ? Layout.forwardChevron : Layout.downChevron)
+                }
             }
             .padding(Spacing.medium)
             .modifier(VisitorCardStyle(borderWidth: Layout.borderWidth))

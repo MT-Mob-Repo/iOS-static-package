@@ -42,6 +42,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let segmentedMaxOptions = 3
         static let segmentedMaxTitleLength = 8
         static let travellersSection = "passenger"
+        /// Shown, but not changeable by the user.
+        static let readOnlySections: Set<String> = ["departureCity"]
         static let firstNameField = "firstName"
         static let lastNameField = "lastName"
         static let passportNumberField = "passportNumber"
@@ -124,6 +126,12 @@ final class VisitorDetailsFormModel: ObservableObject {
         case .dropdown, .segmented, .dateList, .date: return true
         default: return false
         }
+    }
+
+    /// `false` for picker rows the user cannot change, e.g. the departure city;
+    /// they keep showing their preselected value.
+    func isSelectable(_ section: DynamicFormSection) -> Bool {
+        !Constants.readOnlySections.contains(section.section)
     }
 
     /// The section filled once per visitor: flagged `isMultiple`, or the "passenger" key.

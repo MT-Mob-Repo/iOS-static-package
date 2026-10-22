@@ -326,7 +326,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 statusLabel: nil,
                 flight: PackageScheduleFlight(
                     legs: flightInfo.legs.map(flightLeg),
-                    isUpgradeAvailable: flightInfo.isCabinUpgradeAvailable == true
+                    isUpgradeAvailable: !(product.optionsSection?.options ?? []).isEmpty,
+                    upgradeTitle: product.optionsSection?.ctaText.nonEmpty
                 )
             )
         case .hotel:

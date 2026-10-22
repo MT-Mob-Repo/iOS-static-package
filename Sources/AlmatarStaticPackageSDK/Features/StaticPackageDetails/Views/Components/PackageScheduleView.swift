@@ -270,7 +270,7 @@ struct PackageScheduleView: View {
 
             if flight.isUpgradeAvailable {
                 cardDivider
-                changeUpgradeButton(action: onChangeUpgrade)
+                changeUpgradeButton(title: flight.upgradeTitle ?? changeUpgradeTitle, action: onChangeUpgrade)
             }
         }
         .modifier(ScheduleCardStyle(borderWidth: Layout.borderWidth))
@@ -395,9 +395,9 @@ struct PackageScheduleView: View {
             .frame(width: Layout.flightPathDotSize, height: Layout.flightPathDotSize)
     }
 
-    private func changeUpgradeButton(action: @escaping () -> Void) -> some View {
+    private func changeUpgradeButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(changeUpgradeTitle)
+            Text(title)
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
                 .foregroundStyle(AlmatarColors.textPrimaryInteractive)
                 .frame(maxWidth: .infinity)

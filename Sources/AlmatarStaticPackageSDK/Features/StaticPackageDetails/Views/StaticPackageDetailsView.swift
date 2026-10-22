@@ -140,7 +140,7 @@ struct StaticPackageDetailsView: View {
                             ItineraryView(
                                 strings: viewModel.itineraryStrings,
                                 days: viewModel.itineraryDays,
-                                downloadURL: viewModel.itineraryDownloadURL,
+                                downloadURL: nil,
                                 activitySubtitle: viewModel.activitySubtitle,
                                 isActivityAdded: viewModel.isActivityAdded,
                                 onToggleActivity: viewModel.toggleActivity

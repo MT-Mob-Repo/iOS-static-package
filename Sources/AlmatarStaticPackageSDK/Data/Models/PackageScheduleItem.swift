@@ -43,6 +43,8 @@ struct PackageScheduleFlight: Codable, Sendable, Hashable {
     let legs: [PackageScheduleFlightLeg]
     /// Shows the "Change upgrade" button under the legs.
     let isUpgradeAvailable: Bool
+    /// Title of the "Change upgrade" button; falls back to the localized default when nil.
+    var upgradeTitle: String? = nil
 }
 
 struct PackageScheduleFlightLeg: Codable, Sendable, Hashable {

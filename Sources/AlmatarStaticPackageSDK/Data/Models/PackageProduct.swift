@@ -28,6 +28,8 @@ struct PackageProduct: Codable, Sendable, Hashable {
     let flightInfo: FlightInfo?
     let hotelInfo: HotelInfo?
     let addonInfo: AddonInfo?
+    /// Optional extras the customer can pick for this product (e.g. extra baggage, seat selection).
+    let optionsSection: ProductOptionsSection?
 }
 
 enum PackageProductType: String, Codable, Sendable {
@@ -46,6 +48,24 @@ struct PackageProductTag: Codable, Sendable, Hashable {
     /// Icon key, remote image URL or SF Symbol name.
     let icon: String?
     let label: String
+}
+
+// MARK: - Options
+
+/// The "Options" section of a product: selectable extras with their own price.
+struct ProductOptionsSection: Codable, Sendable, Hashable {
+    /// Button title, e.g. "Select Options".
+    let ctaText: String?
+    let title: String?
+    let note: String?
+    let options: [ProductOption]?
+}
+
+struct ProductOption: Codable, Sendable, Hashable {
+    let title: String
+    let subTitle: String?
+    let price: Double?
+    let currency: String?
 }
 
 // MARK: - Flight

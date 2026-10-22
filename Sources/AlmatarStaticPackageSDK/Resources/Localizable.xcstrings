@@ -448,6 +448,24 @@
         }
       }
     },
+    "static_package_details.flight_route" : {
+      "comment" : "Schedule flight card: route title, e.g. Jeddah → Riyadh",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ إلى %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ → %2$@"
+          }
+        }
+      }
+    },
     "static_package_details.flight_upgraded" : {
       "comment" : "Schedule flight card: badge on an upgraded leg",
       "extractionState" : "manual",

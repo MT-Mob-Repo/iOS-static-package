@@ -35,6 +35,7 @@ enum LocalizedKey: String {
     case fixedPriceDescription = "static_package_details.fixed_price_description"
     case flightUpgraded = "static_package_details.flight_upgraded"
     case flightDirect = "static_package_details.flight_direct"
+    case flightRoute = "static_package_details.flight_route"
     case flightOneStop = "static_package_details.flight_one_stop"
     case flightStops = "static_package_details.flight_stops"
     case flightChangeUpgrade = "static_package_details.flight_change_upgrade"

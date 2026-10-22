@@ -18,7 +18,6 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         static let locationIcon = "mappin.and.ellipse"
         static let calendarIcon = "calendar"
         static let separator = " • "
-        static let routeArrow = " → "
         static let rangeDash = " – "
         static let dayMonthTemplate = "d MMM"
         static let timeFormat = "HH:mm"
@@ -364,7 +363,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             // TODO: Map once the API returns the upgraded cabin state per leg.
             isUpgraded: false,
             airlineLogoUrl: leg.airline?.logoUrl,
-            route: cityName(leg.departure) + Constants.routeArrow + cityName(leg.arrival),
+            route: LocalizedKey.flightRoute.localized(with: cityName(leg.departure), cityName(leg.arrival)),
             subtitle: subtitle.isEmpty ? nil : subtitle.joined(separator: Constants.separator),
             departureTime: formatShortDate(leg.departure.time),
             departureLocation: locationText(leg.departure),

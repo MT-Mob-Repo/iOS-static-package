@@ -306,9 +306,9 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return PackageScheduleItem(
             id: "\(index)-\(product.productType.rawValue)",
             title: product.title,
-            description: product.description,
+            description: nil,
             tag: product.productType != .addon ? tag : nil,
-            statusLabel: product.productType != .addon ? status : nil,
+            statusLabel: nil,
             card: scheduleCard(product, status: status)
         )
     }
@@ -366,14 +366,25 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             airlineLogoUrl: leg.airline?.logoUrl,
             route: cityName(leg.departure) + Constants.routeArrow + cityName(leg.arrival),
             subtitle: subtitle.isEmpty ? nil : subtitle.joined(separator: Constants.separator),
-            departureTime: leg.departure.time.getAsDate("yyyy-MM-dd'T'HH:mm:ssZ")?.stringValue("HH:mm") ?? "",
+            departureTime: formatShortDate(leg.departure.time),
             departureLocation: locationText(leg.departure),
-            arrivalTime: leg.arrival.time.getAsDate("yyyy-MM-dd'T'HH:mm:ssZ")?.stringValue("HH:mm") ?? "",
+            arrivalTime: formatShortDate(leg.arrival.time),
             arrivalLocation: locationText(leg.arrival),
             durationInfo: durationInfo.isEmpty ? nil : durationInfo.joined(separator: Constants.separator)
         )
     }
 
+    /// Returns the wall-clock time exactly as written in the string, ignoring any timezone suffix.
+    /// e.g. "2026-12-10T07:30:00.000Z" -> "07:30" regardless of the device timezone.
+    private func formatShortDate(_ raw: String?) -> String {
+        guard let raw, let tIndex = raw.firstIndex(of: "T") else { return "" }
+        let time = raw[raw.index(after: tIndex)...].prefix(5)
+        let parts = time.split(separator: ":")
+        guard parts.count == 2,
+              parts.allSatisfy({ $0.count == 2 && $0.allSatisfy(\.isNumber) }) else { return "" }
+        return String(time)
+    }
+    
     /// City name, falling back to the airport code.
     private func cityName(_ point: FlightPoint) -> String {
         point.cityName.nonEmpty ?? point.airportCode

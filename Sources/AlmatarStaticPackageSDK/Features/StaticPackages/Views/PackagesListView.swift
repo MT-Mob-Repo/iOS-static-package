@@ -52,11 +52,13 @@ public struct PackagesListView: View {
                 )
             }
         }
-        .alert(
-            viewModel.bookingErrorMessage ?? "",
-            isPresented: isShowingError
-        ) {
-            Button(viewModel.okTitle, role: .cancel) {}
+        .background {
+            if let message = viewModel.bookingErrorMessage {
+                DropView(message: message, state: false)
+                    .frame(width: .zero, height: .zero)
+                    // Clear the message once the toast is shown so it isn't re-shown on later redraws.
+                    .onAppear { viewModel.bookingErrorMessage = nil }
+            }
         }
     }
 
@@ -64,13 +66,6 @@ public struct PackagesListView: View {
         Binding(
             get: { viewModel.bookedPackage != nil },
             set: { if !$0 { viewModel.bookedPackage = nil } }
-        )
-    }
-
-    private var isShowingError: Binding<Bool> {
-        Binding(
-            get: { viewModel.bookingErrorMessage != nil },
-            set: { if !$0 { viewModel.bookingErrorMessage = nil } }
         )
     }
 

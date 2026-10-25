@@ -12,12 +12,10 @@ protocol StaticPackagesRepositoryProtocol: Sendable {
 }
 
 enum StaticPackagesEndpoint {
-    static let bookPackage = "v1/packages/book"
-    static let packageCartPrefix = "v1/packages/carts/"
-       /// `GET v1/packages/carts/{id}`
+    static let bookPackage = "api/v1/packages/book"
+    static let packageCartPrefix = "api/v1/packages/carts/"
+    /// `GET v1/packages/carts/{id}`
     static func packageCart(id: String) -> String { packageCartPrefix + id }
-    static let cartPrefix = "v1/partner/packages/carts/"
-    static func cart(id: String) -> String { cartPrefix + id }
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -30,19 +28,26 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
     }
 
     func fetchPackageDetails(cartId: String) async throws -> PackageDetails {
-        // The cart is returned at the root of the body, without a `data` envelope.
-        try await networkClient.get(
+        let response: BaseNetworkResponse<PackageDetails> = try await networkClient.get(
             baseURL: baseURL,
             path: StaticPackagesEndpoint.cart(id: cartId)
         )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
     }
 
     func bookPackage(packageId: String) async throws -> PackageBooking {
-        try await networkClient.post(
+        let response: BaseNetworkResponse<PackageBooking> = try await networkClient.post(
             baseURL: baseURL,
             path: StaticPackagesEndpoint.bookPackage,
             body: BookPackageRequest(packageId: packageId)
         )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
     }
 
     func fetchCart(id: String) async throws -> PackageCart {

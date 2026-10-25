@@ -1,4 +1,7 @@
 {
-  "cartId": "68d7f1c4a9e2b30f5c1a77de",
-  "expiresAt": "2026-07-01T14:32:00.000Z"
+  "status": 200,
+  "data": {
+    "cartId": "68d7f1c4a9e2b30f5c1a77de",
+    "expiresAt": "2026-07-01T14:32:00.000Z"
+  }
 }

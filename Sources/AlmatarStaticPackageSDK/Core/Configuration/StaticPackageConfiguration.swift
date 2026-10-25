@@ -15,6 +15,10 @@ public struct StaticPackageConfiguration: Sendable {
     public var brand: String?
     /// Sent as the `device-id` header when provided.
     public var deviceId: String?
+    /// The user's selected currency code, e.g. "SAR" or "USD".
+    public var currency: String
+    /// The currencies the user can choose, base currency first, as loaded by the host app.
+    public var availableCurrencies: [StaticPackageCurrency]
     /// Serve bundled mock data through `NetworkClient` instead of calling the backend (until the API is ready).
     public var useMockData: Bool
 
@@ -23,12 +27,19 @@ public struct StaticPackageConfiguration: Sendable {
         language: AppLanguage = .english,
         brand: String? = nil,
         deviceId: String? = nil,
+        currency: String = StaticPackageConfiguration.defaultCurrency,
+        availableCurrencies: [StaticPackageCurrency] = [],
         useMockData: Bool = false
     ) {
         self.baseURL = baseURL
         self.language = language
         self.brand = brand
         self.deviceId = deviceId
+        self.currency = currency
+        self.availableCurrencies = availableCurrencies
         self.useMockData = useMockData
     }
+
+    /// Used when the host app does not pass a currency.
+    public static let defaultCurrency = "SAR"
 }

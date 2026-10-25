@@ -38,12 +38,12 @@ struct PackageInfo: Codable, Sendable {
 // MARK: - Price
 
 struct PackagePrice: Codable, Sendable, Hashable {
-    let amount: Decimal
+    let amount: Double
     let currency: String
 }
 
 struct CartPrice: Codable, Sendable, Hashable {
-    let finalAmount: Decimal
+    let finalAmount: Double
     let currency: String
     let breakdown: [PriceBreakdownSection]?
 }
@@ -54,7 +54,7 @@ struct PriceBreakdownSection: Codable, Sendable, Hashable {
     let title: String
     /// e.g. "Tax included".
     let note: String?
-    let amount: Decimal?
+    let amount: Double?
     let items: [PriceBreakdownItem]?
 }
 
@@ -63,7 +63,7 @@ struct PriceBreakdownItem: Codable, Sendable, Hashable {
     let label: String
     /// e.g. "420 × 2 travelers • Both flights".
     let description: String?
-    let unitAmount: Decimal?
+    let unitAmount: Double?
     let quantity: Int?
-    let amount: Decimal
+    let amount: Double
 }

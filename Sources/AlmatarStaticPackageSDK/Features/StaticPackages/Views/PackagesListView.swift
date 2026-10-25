@@ -52,11 +52,13 @@ public struct PackagesListView: View {
                 )
             }
         }
-        .alert(
-            viewModel.bookingErrorMessage ?? "",
-            isPresented: isShowingError
-        ) {
-            Button(viewModel.okTitle, role: .cancel) {}
+        .background {
+            if let message = viewModel.bookingErrorMessage {
+                DropView(message: message, state: false)
+                    .frame(width: .zero, height: .zero)
+                    // Clear the message once the toast is shown so it isn't re-shown on later redraws.
+                    .onAppear { viewModel.bookingErrorMessage = nil }
+            }
         }
     }
 
@@ -64,13 +66,6 @@ public struct PackagesListView: View {
         Binding(
             get: { viewModel.bookedPackage != nil },
             set: { if !$0 { viewModel.bookedPackage = nil } }
-        )
-    }
-
-    private var isShowingError: Binding<Bool> {
-        Binding(
-            get: { viewModel.bookingErrorMessage != nil },
-            set: { if !$0 { viewModel.bookingErrorMessage = nil } }
         )
     }
 
@@ -144,6 +139,7 @@ public struct PackagesListView: View {
                 }
             )
             .clipped()
+            .contentShape(Rectangle())
             .overlay(alignment: .top) { imageBadges(package) }
     }
 
@@ -205,8 +201,7 @@ public struct PackagesListView: View {
                         .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
                     HStack(alignment: .firstTextBaseline, spacing: Spacing.xxSmall) {
-                        Text(price)
-                            .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                        SUITextPrice(text: price, modifier: AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
                             .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     }
                 }
@@ -273,14 +268,5 @@ private struct FlowLayout: Layout {
         }
         if !current.indices.isEmpty { rows.append(current) }
         return rows
-    }
-}
-
-#Preview {
-    NavigationStack {
-        ScrollView {
-            PackagesListView(section: .mock)
-                .padding(Spacing.screenHorizontal)
-        }
     }
 }

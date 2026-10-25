@@ -35,6 +35,11 @@ struct PackageScheduleView: View {
         /// Fixed so the departure and arrival columns split the remaining width evenly.
         static let flightPathWidth: CGFloat = 80
         static let locationLineLimit = 2
+        static let fixedPriceIcon = "lock"
+        static let fixedPriceIconSize: CGFloat = 16
+        static let chevronSize: CGFloat = 14
+        static let chevronUpIcon = "chevron.up"
+        static let chevronDownIcon = "chevron.down"
     }
 
     let title: String
@@ -46,6 +51,10 @@ struct PackageScheduleView: View {
     let readLessTitle = LocalizedKey.readLess.localized()
     let upgradedTitle = LocalizedKey.flightUpgraded.localized()
     let changeUpgradeTitle = LocalizedKey.flightChangeUpgrade.localized()
+    let fixedPriceTitle = LocalizedKey.fixedPrice.localized()
+    let fixedPriceDescription = LocalizedKey.fixedPriceDescription.localized()
+
+    @State private var isFixedPriceExpanded = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
@@ -59,6 +68,8 @@ struct PackageScheduleView: View {
                     .foregroundStyle(AlmatarColors.textSecondaryStatic)
             }
 
+            fixedPriceView
+
             VStack(alignment: .leading, spacing: Spacing.zero) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     stepRow(item, isLast: index == items.count - 1)
@@ -66,6 +77,47 @@ struct PackageScheduleView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Fixed price
+
+    /// Static "Fixed price" banner; the description collapses with the chevron.
+    private var fixedPriceView: some View {
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
+            Button {
+                withAnimation(.easeInOut) { isFixedPriceExpanded.toggle() }
+            } label: {
+                HStack(spacing: Spacing.small) {
+                    Image(systemName: Layout.fixedPriceIcon)
+                        .font(.system(size: Layout.fixedPriceIconSize, weight: Typography.Weight.regular))
+                        .foregroundStyle(AlmatarColors.iconPrimaryStatic)
+                        .accessibilityHidden(true)
+
+                    Text(fixedPriceTitle)
+                        .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
+                        .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Image(systemName: isFixedPriceExpanded ? Layout.chevronUpIcon : Layout.chevronDownIcon)
+                        .font(.system(size: Layout.chevronSize, weight: Typography.Weight.semibold))
+                        .foregroundStyle(AlmatarColors.iconPrimaryStatic)
+                        .accessibilityHidden(true)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            if isFixedPriceExpanded {
+                Text(fixedPriceDescription)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(Spacing.medium)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AlmatarColors.surfaceCardSecondary)
+        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.xLarge))
     }
 
     // MARK: - Timeline
@@ -218,7 +270,7 @@ struct PackageScheduleView: View {
 
             if flight.isUpgradeAvailable {
                 cardDivider
-                changeUpgradeButton(action: onChangeUpgrade)
+                changeUpgradeButton(title: flight.upgradeTitle ?? changeUpgradeTitle, action: onChangeUpgrade)
             }
         }
         .modifier(ScheduleCardStyle(borderWidth: Layout.borderWidth))
@@ -343,9 +395,9 @@ struct PackageScheduleView: View {
             .frame(width: Layout.flightPathDotSize, height: Layout.flightPathDotSize)
     }
 
-    private func changeUpgradeButton(action: @escaping () -> Void) -> some View {
+    private func changeUpgradeButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(changeUpgradeTitle)
+            Text(title)
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
                 .foregroundStyle(AlmatarColors.textPrimaryInteractive)
                 .frame(maxWidth: .infinity)

@@ -16,7 +16,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/MT-Mob-Repo/iOS-Almatar-System-Design-SDK", .upToNextMajor(from: "1.0.6"))
+        .package(url: "https://github.com/MT-Mob-Repo/iOS-Almatar-System-Design-SDK", .upToNextMajor(from: "1.0.7"))
     ],
     targets: [
         .target(

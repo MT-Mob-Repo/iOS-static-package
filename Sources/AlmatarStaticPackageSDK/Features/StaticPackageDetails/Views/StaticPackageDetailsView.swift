@@ -8,6 +8,9 @@ import AlmatarSystemDesignSDK
 
 struct StaticPackageDetailsView: View {
     @StateObject private var viewModel: StaticPackageDetailsViewModel
+    /// The price breakdown opens above the total when the total is tapped.
+    @State private var isPriceBreakdownExpanded = false
+    @State private var priceBreakdownHeight: CGFloat = .zero
 
     init(viewModel: @autoclosure @escaping () -> StaticPackageDetailsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel())
@@ -15,22 +18,60 @@ struct StaticPackageDetailsView: View {
 
     var body: some View {
         VStack(spacing: Spacing.zero) {
+            // Toasts (e.g. "<name> removed.") appear at the bottom of the content, above the payment bar.
             if #available(iOS 26.0, *) {
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .scrollEdgeEffectHidden(true, for: .top)
+                    .toastHost()
             } else {
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .toastHost()
             }
                
 
             if viewModel.packageDetails != nil {
-                PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
-                    Task { await viewModel.goToPaymentTapped() }
+                VStack(spacing: Spacing.small) {
+                    if isPriceBreakdownExpanded {
+                        priceBreakdown
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                            .overlay(alignment: .bottom) {
+                                Rectangle()
+                                    .fill(AlmatarColors.borderDefaultCard)
+                                    .frame(height: 1)
+                            }
+                    }
+
+                    if let amount = viewModel.totalPriceAmountText {
+                        Button {
+                            withAnimation(.easeInOut) { isPriceBreakdownExpanded.toggle() }
+                        } label: {
+                            TotalPriceSummaryView(
+                                form: viewModel.visitorForm,
+                                label: viewModel.totalPriceLabel(visitorCount:),
+                                amount: amount,
+                                isExpanded: isPriceBreakdownExpanded
+                            )
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(viewModel.priceBreakdownSections.isEmpty)
+                        .padding(.horizontal, Spacing.screenHorizontal)
+                    }
+
+                    PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
+                        Task { await viewModel.goToPaymentTapped() }
+                    }
+                    .padding(.horizontal, Spacing.screenHorizontal)
                 }
-                .padding(.horizontal, Spacing.screenHorizontal)
+                .padding(.top, Spacing.small)
                 .padding(.bottom, Spacing.screenBottom)
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(AlmatarColors.borderDefaultCard)
+                        .frame(height: 1)
+                }
             }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
@@ -51,6 +92,21 @@ struct StaticPackageDetailsView: View {
         )
     }
 
+    /// Scrolls once taller than half the screen; otherwise as tall as its content.
+    private var priceBreakdown: some View {
+        ScrollView {
+            PackagePriceBreakdownView(
+                title: viewModel.priceDetailsTitle,
+                sections: viewModel.priceBreakdownSections,
+                includedTitle: viewModel.priceIncludedTitle
+            )
+            .padding(.horizontal, Spacing.screenHorizontal)
+            .padding(.vertical, Spacing.xSmall)
+            .readHeight { priceBreakdownHeight = $0 }
+        }
+        .frame(height: min(priceBreakdownHeight, UIScreen.main.bounds.height * 0.8))
+    }
+
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
@@ -63,8 +119,7 @@ struct StaticPackageDetailsView: View {
                         title: viewModel.headerTitle,
                         tags: viewModel.headerTags,
                         metaLine: nil,
-                        imageURLs: viewModel.headerImageURLs,
-                        imageNames: viewModel.headerImageNames
+                        imageURLs: viewModel.headerImageURLs
                     )
 
                     VStack(spacing: Spacing.xLarge) {
@@ -85,7 +140,7 @@ struct StaticPackageDetailsView: View {
                             ItineraryView(
                                 strings: viewModel.itineraryStrings,
                                 days: viewModel.itineraryDays,
-                                downloadURL: viewModel.itineraryDownloadURL,
+                                downloadURL: nil,
                                 activitySubtitle: viewModel.activitySubtitle,
                                 isActivityAdded: viewModel.isActivityAdded,
                                 onToggleActivity: viewModel.toggleActivity
@@ -100,7 +155,7 @@ struct StaticPackageDetailsView: View {
                             )
                         }
                         if !viewModel.cancellationTiers.isEmpty {
-                            CancellationPolicyView(
+                            PackageCancellationPolicyView(
                                 title: viewModel.cancellationPolicyTitle,
                                 tiers: viewModel.cancellationTiers
                             )

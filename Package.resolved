@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MT-Mob-Repo/iOS-Almatar-System-Design-SDK",
       "state" : {
-        "revision" : "ae10f9e00b050d0835deb7bc3472396fe3cc7889",
-        "version" : "1.0.6"
+        "revision" : "6d1f6656cf1f4a9650d7aac162893255377f87f3",
+        "version" : "1.0.7"
       }
     }
   ],

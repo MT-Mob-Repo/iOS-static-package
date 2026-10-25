@@ -18,7 +18,6 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         static let locationIcon = "mappin.and.ellipse"
         static let calendarIcon = "calendar"
         static let separator = " • "
-        static let routeArrow = " → "
         static let rangeDash = " – "
         static let dayMonthTemplate = "d MMM"
         static let timeFormat = "HH:mm"
@@ -64,7 +63,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     var headerTags: [String] {
-        var tags = [dynamicPackageTag]
+        var tags: [String] = []
         if let duration = packageInfo?.duration.nonEmpty {
             tags.append(duration)
         }
@@ -75,10 +74,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     var headerImageURLs: [URL] {
         (packageInfo?.images ?? []).compactMap { Optional($0).nonEmpty.flatMap(URL.init(string:)) }
     }
-
-    /// Asset names for the header carousel (`Assets.xcassets`), used when the API has no images.
-    var headerImageNames: [String] { PackageAsset.carouselImageNames }
-
+    
     // MARK: - Sections
 
     var journeySnapshotItems: [JourneySnapshotItem] {
@@ -200,8 +196,34 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     var okTitle: String { LocalizedKey.ok.localized() }
 
+    // MARK: - Total price
+
+    /// e.g. "Total price • 2 visitors".
+    func totalPriceLabel(visitorCount: Int) -> String {
+        visitorCount == 1
+            ? LocalizedKey.totalPriceOneVisitor.localized()
+            : LocalizedKey.totalPriceVisitors.localized(with: visitorCount)
+    }
+
+    // MARK: - Price breakdown
+    var priceDetailsTitle: String { LocalizedKey.priceDetails.localized() }
+    var priceIncludedTitle: String { LocalizedKey.itineraryIncluded.localized() }
+
+    /// Sections of the cart price that have something to show.
+    var priceBreakdownSections: [PriceBreakdownSection] {
+        (packageDetails?.price?.breakdown ?? []).filter { section in
+            !(section.items ?? []).isEmpty || section.amount != nil
+        }
+    }
+
+    /// e.g. "6,000"; `nil` until the price is loaded.
+    var totalPriceAmountText: String? {
+        let price = packageDetails?.price.map { $0.finalAmount }
+       return CurrencyManager.shared.formatPrice(value: price)
+    }
+
     /// Package price plus the optional itinerary activities the customer added, in SAR.
-    var paymentAmount: Decimal? {
+    var paymentAmount: Double? {
         guard let details = packageDetails else { return nil }
         return details.price?.finalAmount ?? 0.0
     }
@@ -218,7 +240,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             let request = PackagePaymentRequest(
                 bookingId: cartId,
                 bookingKey: cartId,
-                amountInSar: NSDecimalNumber(decimal: amount).floatValue,
+                amountInSar: Float(amount),
                 productType: PackagePaymentRequest.productType,
                 cancellationTiers: cancellationTiers.isEmpty ? nil : cancellationTiers
             )
@@ -283,9 +305,9 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return PackageScheduleItem(
             id: "\(index)-\(product.productType.rawValue)",
             title: product.title,
-            description: product.description,
+            description: nil,
             tag: product.productType != .addon ? tag : nil,
-            statusLabel: product.productType != .addon ? status : nil,
+            statusLabel: nil,
             card: scheduleCard(product, status: status)
         )
     }
@@ -304,7 +326,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 statusLabel: nil,
                 flight: PackageScheduleFlight(
                     legs: flightInfo.legs.map(flightLeg),
-                    isUpgradeAvailable: flightInfo.isCabinUpgradeAvailable == true
+                    isUpgradeAvailable: !(product.optionsSection?.options ?? []).isEmpty,
+                    upgradeTitle: product.optionsSection?.ctaText.nonEmpty
                 )
             )
         case .hotel:
@@ -341,16 +364,27 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             // TODO: Map once the API returns the upgraded cabin state per leg.
             isUpgraded: false,
             airlineLogoUrl: leg.airline?.logoUrl,
-            route: cityName(leg.departure) + Constants.routeArrow + cityName(leg.arrival),
+            route: LocalizedKey.flightRoute.localized(with: cityName(leg.departure), cityName(leg.arrival)),
             subtitle: subtitle.isEmpty ? nil : subtitle.joined(separator: Constants.separator),
-            departureTime: leg.departure.time.getAsDate("yyyy-MM-dd'T'HH:mm:ssZ")?.stringValue("HH:mm") ?? "",
+            departureTime: formatShortDate(leg.departure.time),
             departureLocation: locationText(leg.departure),
-            arrivalTime: leg.arrival.time.getAsDate("yyyy-MM-dd'T'HH:mm:ssZ")?.stringValue("HH:mm") ?? "",
+            arrivalTime: formatShortDate(leg.arrival.time),
             arrivalLocation: locationText(leg.arrival),
             durationInfo: durationInfo.isEmpty ? nil : durationInfo.joined(separator: Constants.separator)
         )
     }
 
+    /// Returns the wall-clock time exactly as written in the string, ignoring any timezone suffix.
+    /// e.g. "2026-12-10T07:30:00.000Z" -> "07:30" regardless of the device timezone.
+    private func formatShortDate(_ raw: String?) -> String {
+        guard let raw, let tIndex = raw.firstIndex(of: "T") else { return "" }
+        let time = raw[raw.index(after: tIndex)...].prefix(5)
+        let parts = time.split(separator: ":")
+        guard parts.count == 2,
+              parts.allSatisfy({ $0.count == 2 && $0.allSatisfy(\.isNumber) }) else { return "" }
+        return String(time)
+    }
+    
     /// City name, falling back to the airport code.
     private func cityName(_ point: FlightPoint) -> String {
         point.cityName.nonEmpty ?? point.airportCode
@@ -439,12 +473,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return formatter
     }
 
-    private static func formattedAmount(_ amount: Decimal) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter.string(from: amount as NSDecimalNumber) ?? "\(amount)"
+    private static func formattedAmount(_ amount: Double) -> String {
+        CurrencyManager.shared.formatPrice(value: amount)
     }
     
     private static func parseDateTime(_ value: String) -> Date? {

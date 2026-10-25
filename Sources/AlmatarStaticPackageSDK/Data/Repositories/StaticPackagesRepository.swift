@@ -16,6 +16,8 @@ enum StaticPackagesEndpoint {
     static let packageCartPrefix = "api/v1/packages/carts/"
     /// `GET v1/packages/carts/{id}`
     static func packageCart(id: String) -> String { packageCartPrefix + id }
+    static let orderPrefix = "api/v1/orders/"
+    static func cart(id: String) -> String { orderPrefix + id }
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -30,7 +32,7 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
     func fetchPackageDetails(cartId: String) async throws -> PackageDetails {
         let response: BaseNetworkResponse<PackageDetails> = try await networkClient.get(
             baseURL: baseURL,
-            path: StaticPackagesEndpoint.cart(id: cartId)
+            path: StaticPackagesEndpoint.packageCart(id: cartId)
         )
         guard let data = response.data else {
             throw NetworkError.noData

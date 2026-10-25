@@ -63,7 +63,7 @@ struct PackageBookingConfimrationView: View {
 
                     let tiers = viewModel.cancellationTiers(for: cart)
                     if !tiers.isEmpty {
-                        CancellationPolicyView(
+                        PackageCancellationPolicyView(
                             title: viewModel.cancellationPolicyTitle,
                             tiers: tiers
                         )

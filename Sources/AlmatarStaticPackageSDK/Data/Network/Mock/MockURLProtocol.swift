@@ -21,7 +21,7 @@ final class MockURLProtocol: URLProtocol {
     /// Maps an endpoint path prefix to a mock file name in `Resources/Mocks`.
     private static let routes: [(pathPrefix: String, fileName: String)] = [
         (StaticPackagesEndpoint.bookPackage, "book_package"),
-        (StaticPackagesEndpoint.cartPrefix, "package_cart")
+        (StaticPackagesEndpoint.packageCartPrefix, "package_cart")
     ]
 
     override class func canInit(with request: URLRequest) -> Bool { true }

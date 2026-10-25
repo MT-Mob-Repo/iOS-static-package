@@ -121,7 +121,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
                     title: item.label,
                     subtitle: item.description.nonEmpty,
                     quantity: nil,
-                    amount: formattedPrice(item.amount, currency: currency)
+                    amount: formattedPrice(Decimal(item.amount), currency: currency)
                 )
             }
         }

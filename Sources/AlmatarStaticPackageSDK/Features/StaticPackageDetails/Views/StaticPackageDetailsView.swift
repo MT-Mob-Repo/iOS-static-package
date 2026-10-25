@@ -9,8 +9,6 @@ import AlmatarSystemDesignSDK
 struct StaticPackageDetailsView: View {
     @StateObject private var viewModel: StaticPackageDetailsViewModel
     /// The price breakdown opens above the total when the total is tapped.
-    @State private var isPriceBreakdownExpanded = false
-    @State private var priceBreakdownHeight: CGFloat = .zero
 
     init(viewModel: @autoclosure @escaping () -> StaticPackageDetailsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel())
@@ -32,51 +30,32 @@ struct StaticPackageDetailsView: View {
                
 
             if viewModel.packageDetails != nil {
-                VStack(spacing: Spacing.small) {
-                    if isPriceBreakdownExpanded {
-                        priceBreakdown
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                            .overlay(alignment: .bottom) {
-                                Rectangle()
-                                    .fill(AlmatarColors.borderDefaultCard)
-                                    .frame(height: 1)
-                            }
-                    }
-
-                    if let amount = viewModel.totalPriceAmountText {
-                        Button {
-                            withAnimation(.easeInOut) { isPriceBreakdownExpanded.toggle() }
-                        } label: {
-                            TotalPriceSummaryView(
-                                form: viewModel.visitorForm,
-                                label: viewModel.totalPriceLabel(visitorCount:),
-                                amount: amount,
-                                isExpanded: isPriceBreakdownExpanded
-                            )
-                            .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-                        .disabled(viewModel.priceBreakdownSections.isEmpty)
-                        .padding(.horizontal, Spacing.screenHorizontal)
-                    }
-
-                    PrimaryButton(viewModel.goToPaymentTitle, isLoading: viewModel.isStartingPayment) {
-                        Task { await viewModel.goToPaymentTapped() }
-                    }
-                    .padding(.horizontal, Spacing.screenHorizontal)
-                }
-                .padding(.top, Spacing.small)
-                .padding(.bottom, Spacing.screenBottom)
-                .overlay(alignment: .top) {
-                    Rectangle()
-                        .fill(AlmatarColors.borderDefaultCard)
-                        .frame(height: 1)
+                PackagePriceFooterView(
+                    form: viewModel.visitorForm,
+                    totalLabel: viewModel.totalPriceLabel(visitorCount:),
+                    amount: viewModel.totalPriceAmountText(visitorCount:),
+                    detail: viewModel.optionsDetailText(visitorCount:),
+                    priceDetailsTitle: viewModel.priceDetailsTitle,
+                    includedTitle: viewModel.priceIncludedTitle,
+                    breakdownSections: viewModel.priceBreakdownSections,
+                    buttonTitle: viewModel.goToPaymentTitle,
+                    isLoading: viewModel.isStartingPayment
+                ) {
+                    Task { await viewModel.goToPaymentTapped() }
                 }
             }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
         .defaultToolbar(title: viewModel.headerTitle)
         .toolbarBackground(.hidden, for: .navigationBar)
+        // Pushes onto the navigation stack this screen is shown in.
+        .navigationDestination(isPresented: isShowingProductOptions) {
+            if let index = viewModel.optionsProductIndex,
+               let optionsViewModel = viewModel.makeProductOptionsViewModel(productIndex: index) {
+                ProductOptionsView(viewModel: optionsViewModel)
+                    .environment(\.layoutDirection, AlmatarStaticPackageSDK.shared.configuration.language.layoutDirection)
+            }
+        }
         .task {
             await viewModel.loadPackageDetails()
         }
@@ -93,18 +72,11 @@ struct StaticPackageDetailsView: View {
     }
 
     /// Scrolls once taller than half the screen; otherwise as tall as its content.
-    private var priceBreakdown: some View {
-        ScrollView {
-            PackagePriceBreakdownView(
-                title: viewModel.priceDetailsTitle,
-                sections: viewModel.priceBreakdownSections,
-                includedTitle: viewModel.priceIncludedTitle
-            )
-            .padding(.horizontal, Spacing.screenHorizontal)
-            .padding(.vertical, Spacing.xSmall)
-            .readHeight { priceBreakdownHeight = $0 }
-        }
-        .frame(height: min(priceBreakdownHeight, UIScreen.main.bounds.height * 0.8))
+    private var isShowingProductOptions: Binding<Bool> {
+        Binding(
+            get: { viewModel.optionsProductIndex != nil },
+            set: { if !$0 { viewModel.optionsProductIndex = nil } }
+        )
     }
 
     @ViewBuilder
@@ -133,7 +105,8 @@ struct StaticPackageDetailsView: View {
                             PackageScheduleView(
                                 title: viewModel.packageScheduleTitle,
                                 subTitle: viewModel.packageScheduleSubtitle,
-                                items: viewModel.packageScheduleItems
+                                items: viewModel.packageScheduleItems,
+                                onChangeUpgrade: viewModel.changeUpgradeTapped
                             )
                         }
                         if !viewModel.itineraryDays.isEmpty {

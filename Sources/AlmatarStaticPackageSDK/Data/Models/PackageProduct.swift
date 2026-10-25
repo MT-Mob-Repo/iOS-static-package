@@ -66,6 +66,7 @@ struct ProductOption: Codable, Sendable, Hashable {
     let subTitle: String?
     let price: Double?
     let currency: String?
+    let isAvailable: Bool?
 }
 
 // MARK: - Flight

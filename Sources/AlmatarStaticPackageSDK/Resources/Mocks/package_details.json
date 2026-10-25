@@ -72,6 +72,25 @@
             "tags": [{ "icon": "https://media.istockphoto.com/id/1414160809/vector/airplane-icon-plane-flight-pictogram-transport-symbol-travel.jpg?s=612x612&w=0&k=20&c=BtgJVW1RQ9a4i8sTMm-Uk-HAFI2sNbDFQVvHbPKbQA4=", "label": "Flight" }],
             "status": "allocated",
             "isMandatory": true,
+            "optionsSection": {
+              "ctaText": "Select Options",
+              "title": "Options",
+              "note": "Select your preferred options.",
+              "options": [
+                {
+                  "title": "Extra Baggage",
+                  "subTitle": "An extra 23 kg checked bag.",
+                  "price": 150,
+                  "currency": "SAR"
+                },
+                {
+                  "title": "Seat Selection",
+                  "subTitle": "Choose your preferred seat.",
+                  "price": 60,
+                  "currency": "SAR"
+                }
+              ]
+            },
             "flightInfo": {
               "isCabinUpgradeAvailable": true,
               "legs": [

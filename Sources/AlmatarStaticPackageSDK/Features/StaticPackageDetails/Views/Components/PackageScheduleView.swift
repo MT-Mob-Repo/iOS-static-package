@@ -73,6 +73,8 @@ struct PackageScheduleView: View {
             VStack(alignment: .leading, spacing: Spacing.zero) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     stepRow(item, isLast: index == items.count - 1)
+                        .clipped()
+                        .contentShape(Rectangle())
                 }
             }
         }

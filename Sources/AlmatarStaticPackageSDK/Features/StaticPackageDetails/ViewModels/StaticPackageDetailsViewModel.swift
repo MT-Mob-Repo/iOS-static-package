@@ -216,16 +216,72 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
-    /// e.g. "6,000"; `nil` until the price is loaded.
-    var totalPriceAmountText: String? {
-        let price = packageDetails?.price.map { $0.finalAmount }
-       return CurrencyManager.shared.formatPrice(value: price)
+    /// e.g. "6,000"; the cart total plus the chosen product options. `nil` until the price is loaded.
+    func totalPriceAmountText(visitorCount: Int) -> String? {
+        guard let price = packageDetails?.price else { return nil }
+        return CurrencyManager.shared.formatPrice(
+            value: price.finalAmount + optionsAmount(visitorCount: visitorCount),
+            currencyCode: price.currency
+        )
+    }
+
+    /// e.g. "+ 1,680 SAR • Cabin upgrade"; `nil` when no paid option is chosen.
+    func optionsDetailText(visitorCount: Int) -> String? {
+        let amount = optionsAmount(visitorCount: visitorCount)
+        guard amount > 0 else { return nil }
+        let titles = selectedProductOptions.keys.sorted().compactMap { optionsSection(forProductAt: $0)?.title.nonEmpty }
+        let label = titles.isEmpty ? LocalizedKey.selectOptions.localized() : titles.joined(separator: ", ")
+        return "+ \(CurrencyManager.shared.formatPrice(value: amount, currencyCode: packageDetails?.price?.currency)) • \(label)"
+    }
+
+    // MARK: - Product options
+
+    /// The product whose options screen is open, by its index in the products list.
+    @Published var optionsProductIndex: Int?
+
+    /// The option chosen for each product, by product index.
+    @Published private(set) var selectedProductOptions: [Int: ProductOption] = [:]
+
+    /// Chosen options cost per visitor, for the whole group.
+    func optionsAmount(visitorCount: Int) -> Double {
+        selectedProductOptions.values.reduce(0) { $0 + ($1.price ?? 0) } * Double(visitorCount)
+    }
+
+    func optionsSection(forProductAt index: Int) -> ProductOptionsSection? {
+        guard let products = packageInfo?.products?.items, products.indices.contains(index) else { return nil }
+        return products[index].optionsSection
+    }
+
+    /// Opens the options of the product shown by a schedule step, e.g. the flight's cabin class.
+    func changeUpgradeTapped(_ item: PackageScheduleItem) {
+        // Step ids are "<product index>-<type>".
+        guard let index = item.id.split(separator: "-").first.flatMap({ Int($0) }),
+              optionsSection(forProductAt: index) != nil else { return }
+        optionsProductIndex = index
+    }
+
+    func makeProductOptionsViewModel(productIndex: Int) -> ProductOptionsViewModel? {
+        guard let section = optionsSection(forProductAt: productIndex) else { return nil }
+        let otherOptions = selectedProductOptions.filter { $0.key != productIndex }
+        let otherOptionsPerVisitor = otherOptions.values.reduce(0) { $0 + ($1.price ?? 0) }
+        return ProductOptionsViewModel(
+            section: section,
+            selectedOption: selectedProductOptions[productIndex],
+            visitorForm: visitorForm,
+            // The options screen adds its own choice on top of the cart and the other products' choices.
+            baseAmount: (packageDetails?.price?.finalAmount ?? 0) + otherOptionsPerVisitor * Double(visitorForm.visitors.count),
+            currency: packageDetails?.price?.currency,
+            breakdownSections: priceBreakdownSections
+        ) { [weak self] option in
+            self?.selectedProductOptions[productIndex] = option
+        }
     }
 
     /// Package price plus the optional itinerary activities the customer added, in SAR.
+    /// The cart total plus the chosen product options for the whole group.
     var paymentAmount: Double? {
         guard let details = packageDetails else { return nil }
-        return details.price?.finalAmount ?? 0.0
+        return (details.price?.finalAmount ?? 0.0) + optionsAmount(visitorCount: visitorForm.visitors.count)
     }
 
     /// Books the package if needed, then opens the host app's payment flow.

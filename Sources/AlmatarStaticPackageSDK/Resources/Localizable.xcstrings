@@ -58,6 +58,24 @@
         }
       }
     },
+    "common.continue" : {
+      "comment" : "Button that confirms and goes back or forward",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متابعة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
     "common.done" : {
       "comment" : "Closes a picker",
       "extractionState" : "manual",
@@ -989,6 +1007,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starting from"
+          }
+        }
+      }
+    },
+    "product_options.per_visitor" : {
+      "comment" : "Under an option price that is charged per visitor",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لكل زائر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "per visitor"
+          }
+        }
+      }
+    },
+    "product_options.select_options" : {
+      "comment" : "Fallback title of a product options screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر الخيارات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Options"
           }
         }
       }

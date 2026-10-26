@@ -19,16 +19,26 @@ struct TotalPriceSummaryView: View {
     @ObservedObject var form: VisitorDetailsFormModel
     let label: (_ visitorCount: Int) -> String
     let amount: String
+    /// Optional second line under the label, e.g. "+ 1,680 SAR • Cabin upgrade".
+    var detail: String? = nil
     /// Flips the chevron while the price breakdown is open.
     var isExpanded = false
 
     var body: some View {
         HStack(spacing: Spacing.small) {
-            Text(label(form.visitors.count))
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
-                .foregroundStyle(AlmatarColors.textSecondaryStatic)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: Spacing.xxxSmall) {
+                Text(label(form.visitors.count))
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                    .lineLimit(1)
+
+                if let detail {
+                    SUITextPrice(text: detail, modifier: AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                        .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                        .lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             SUITextPrice(text: amount, modifier: AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)

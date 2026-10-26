@@ -30,6 +30,10 @@ public final class AlmatarStaticPackageSDK {
     /// Called when the user taps "Back to Home" on the booking confirmation screen.
     public var onBackToHome: (() -> Void)?
 
+    /// Called with the order id when the user taps "Receipt" on the booking confirmation screen.
+    /// The button is hidden while this is `nil`.
+    public var onViewReceipt: ((_ orderId: String) -> Void)?
+
     private init() {}
 
     // MARK: - Configuration
@@ -114,9 +118,11 @@ public final class AlmatarStaticPackageSDK {
             id: id,
             repository: makeStaticPackagesRepository(),
             onGoToMyTrips: { [weak self] in self?.onGoToMyTrips?() },
-            onBackToHome: { [weak self] in self?.onBackToHome?() }
+            onBackToHome: { [weak self] in self?.onBackToHome?() },
+            onViewReceipt: onViewReceipt == nil ? nil : { [weak self] orderId in self?.onViewReceipt?(orderId) }
         )
         return PackageBookingConfimrationView(viewModel: viewModel)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
     
     /// Returns the list of package cards for a section provided by the host app.

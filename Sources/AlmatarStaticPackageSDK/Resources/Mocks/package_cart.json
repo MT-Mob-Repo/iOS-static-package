@@ -10,17 +10,43 @@
         "destination": "Qiddiya City, Riyadh, Saudi Arabia",
         "startDate": "2026-07-16",
         "endDate": "2026-07-24",
-        "badges": ["VIP access"],
+        "badges": [
+            "VIP access"
+        ],
         "includes": [
-            { "icon": "flight", "label": "Round trip flight" },
-            { "icon": "hotel", "label": "8 nights hotel" },
-            { "icon": "transfer", "label": "Private inter-city transport" }
+            {
+                "icon": "flight",
+                "label": "Round trip flight"
+            },
+            {
+                "icon": "hotel",
+                "label": "8 nights hotel"
+            },
+            {
+                "icon": "transfer",
+                "label": "Private inter-city transport"
+            }
         ]
     },
     "travellers": [
-        { "firstName": "Xavier", "lastName": "Crespo", "isMainGuest": true },
-        { "firstName": "Carlos", "lastName": "Silvestri", "isMainGuest": false },
-        { "firstName": "Lamin", "lastName": "Yamal", "isMainGuest": false }
+        {
+            "firstName": "Xavier",
+            "lastName": "Crespo",
+            "isMainGuest": true,
+            "isVerified": true
+        },
+        {
+            "firstName": "Carlos",
+            "lastName": "Silvestri",
+            "isMainGuest": false,
+            "isVerified": true
+        },
+        {
+            "firstName": "Lamin",
+            "lastName": "Yamal",
+            "isMainGuest": false,
+            "isVerified": true
+        }
     ],
     "products": [
         {
@@ -28,25 +54,62 @@
             "description": "Return flights between Jeddah and Riyadh, economy class.",
             "productType": "flight",
             "inventoryType": "static",
-            "tags": [{ "icon": "flight", "label": "Flight" }],
+            "tags": [
+                {
+                    "icon": "flight",
+                    "label": "Flight"
+                }
+            ],
             "status": "confirmed",
             "isMandatory": true,
             "flightInfo": {
                 "isCabinUpgradeAvailable": true,
                 "legs": [
                     {
-                        "departure": { "time": "2026-07-16T08:30:00Z", "airportCode": "JED", "airportName": "King Abdulaziz International Airport", "cityName": "Jeddah", "countryName": "Saudi Arabia" },
-                        "arrival": { "time": "2026-07-16T10:15:00Z", "airportCode": "RUH", "airportName": "King Khalid International Airport", "cityName": "Riyadh", "countryName": "Saudi Arabia" },
-                        "airline": { "code": "SV", "name": "Saudia", "logoUrl": "https://cdn.almatar.com/airlines/SV.png" },
+                        "departure": {
+                            "time": "2026-07-16T08:30:00Z",
+                            "airportCode": "JED",
+                            "airportName": "King Abdulaziz International Airport",
+                            "cityName": "Jeddah",
+                            "countryName": "Saudi Arabia"
+                        },
+                        "arrival": {
+                            "time": "2026-07-16T10:15:00Z",
+                            "airportCode": "RUH",
+                            "airportName": "King Khalid International Airport",
+                            "cityName": "Riyadh",
+                            "countryName": "Saudi Arabia"
+                        },
+                        "airline": {
+                            "code": "SV",
+                            "name": "Saudia",
+                            "logoUrl": "https://cdn.almatar.com/airlines/SV.png"
+                        },
                         "flightNumber": "SV-1430",
                         "cabin": "Economy",
                         "duration": "1h 45m",
                         "stops": 0
                     },
                     {
-                        "departure": { "time": "2026-07-24T18:45:00Z", "airportCode": "RUH", "airportName": "King Khalid International Airport", "cityName": "Riyadh", "countryName": "Saudi Arabia" },
-                        "arrival": { "time": "2026-07-24T20:30:00Z", "airportCode": "JED", "airportName": "King Abdulaziz International Airport", "cityName": "Jeddah", "countryName": "Saudi Arabia" },
-                        "airline": { "code": "SV", "name": "Saudia", "logoUrl": "https://cdn.almatar.com/airlines/SV.png" },
+                        "departure": {
+                            "time": "2026-07-24T18:45:00Z",
+                            "airportCode": "RUH",
+                            "airportName": "King Khalid International Airport",
+                            "cityName": "Riyadh",
+                            "countryName": "Saudi Arabia"
+                        },
+                        "arrival": {
+                            "time": "2026-07-24T20:30:00Z",
+                            "airportCode": "JED",
+                            "airportName": "King Abdulaziz International Airport",
+                            "cityName": "Jeddah",
+                            "countryName": "Saudi Arabia"
+                        },
+                        "airline": {
+                            "code": "SV",
+                            "name": "Saudia",
+                            "logoUrl": "https://cdn.almatar.com/airlines/SV.png"
+                        },
                         "flightNumber": "SV-1431",
                         "cabin": "Economy",
                         "duration": "1h 45m",
@@ -60,7 +123,12 @@
             "description": "Palace-style luxury in the heart of Riyadh.",
             "productType": "hotel",
             "inventoryType": "static",
-            "tags": [{ "icon": "hotel", "label": "Stay" }],
+            "tags": [
+                {
+                    "icon": "hotel",
+                    "label": "Stay"
+                }
+            ],
             "status": "confirmed",
             "isMandatory": true,
             "hotelInfo": {
@@ -71,7 +139,26 @@
                 "checkIn": "2026-07-16",
                 "checkOut": "2026-07-21",
                 "nights": 5,
-                "room": { "name": "Deluxe City View", "beds": "1 king bed", "sleeps": 2 }
+                "room": {
+                    "name": "Deluxe City View",
+                    "beds": "1 king bed",
+                    "sleeps": 2
+                },
+                "boardBasis": "Half Board",
+                "amenities": [
+                    {
+                        "icon": "meal",
+                        "label": "Breakfast"
+                    },
+                    {
+                        "icon": "transfer",
+                        "label": "Transfer to the hotel"
+                    },
+                    {
+                        "icon": "wifi",
+                        "label": "Wifi"
+                    }
+                ]
             }
         },
         {
@@ -79,7 +166,12 @@
             "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
             "productType": "addon",
             "inventoryType": "static",
-            "tags": [{ "icon": "ticket", "label": "Ticket" }],
+            "tags": [
+                {
+                    "icon": "ticket",
+                    "label": "Ticket"
+                }
+            ],
             "status": "confirmed",
             "isMandatory": true,
             "addonInfo": {
@@ -89,30 +181,91 @@
                 "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
                 "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
             }
+        },
+        {
+            "title": "Fast Pass — Skip the Line",
+            "description": "Skip the regular queues on the main rides.",
+            "productType": "addon",
+            "inventoryType": "static",
+            "tags": [
+                {
+                    "icon": "ticket",
+                    "label": "Ticket"
+                }
+            ],
+            "status": "confirmed",
+            "isMandatory": false,
+            "quantity": 2,
+            "addonInfo": {
+                "id": 901,
+                "key": "fast-pass",
+                "title": "Fast Pass — Skip the Line",
+                "description": "Skip the regular queues on the main rides.",
+                "image": null
+            }
         }
     ],
     "payment": {
         "paymentId": "a3f1c2d4-7b8e-4e21-9c55-1f0e6d2b9a77",
         "currency": "SAR",
-        "totalPaid": 6340,
+        "totalPaid": 6640,
         "status": "success",
         "breakdown": [
             {
                 "title": "Package price",
                 "items": [
-                    { "label": "1x Adult", "quantity": 1, "amount": 3000 },
-                    { "label": "1x Child", "quantity": 1, "amount": 2000 },
-                    { "label": "1x Infant", "quantity": 1, "amount": 500 }
+                    {
+                        "label": "Round-trip flight",
+                        "amount": 0
+                    },
+                    {
+                        "label": "1x Adult",
+                        "quantity": 1,
+                        "amount": 3000
+                    },
+                    {
+                        "label": "1x Child",
+                        "quantity": 1,
+                        "amount": 2000
+                    },
+                    {
+                        "label": "1x Infant",
+                        "quantity": 1,
+                        "amount": 500
+                    }
                 ]
             },
             {
                 "title": "Cabin upgrade",
                 "items": [
-                    { "label": "Premium Economy", "description": "420 × 2 travelers • Both flights", "unitAmount": 420, "quantity": 2, "amount": 840 }
+                    {
+                        "label": "Premium Economy",
+                        "description": "420 × 2 travelers • Both flights",
+                        "unitAmount": 420,
+                        "quantity": 2,
+                        "amount": 840
+                    }
                 ]
             },
-            { "title": "Total to pay", "note": "Tax included", "amount": 6340 }
-        ]
+            {
+                "title": "Add-ons",
+                "items": [
+                    {
+                        "label": "Fast Pass — Skip the Line × 2",
+                        "amount": 300
+                    }
+                ]
+            },
+            {
+                "title": "Total to pay",
+                "note": "Tax included",
+                "amount": 6640
+            }
+        ],
+        "paymentMethod": {
+            "brand": "Visa",
+            "last4": "4629"
+        }
     },
     "cancellationPolicies": [
         {

@@ -46,6 +46,8 @@ struct CartTraveller: Codable, Sendable, Hashable {
     let firstName: String
     let lastName: String
     let isMainGuest: Bool
+    /// `true` once the traveller's documents were verified.
+    let isVerified: Bool?
 
     var fullName: String { "\(firstName) \(lastName)" }
 }
@@ -59,6 +61,15 @@ struct CartPayment: Codable, Sendable, Hashable {
     /// e.g. "success".
     let status: String?
     let breakdown: [PriceBreakdownSection]?
+    /// The card used to pay, when the API returns it.
+    let paymentMethod: CartPaymentMethod?
+}
+
+struct CartPaymentMethod: Codable, Sendable, Hashable {
+    /// e.g. "Visa".
+    let brand: String?
+    /// Last four digits of the card, e.g. "4629".
+    let last4: String?
 }
 
 // MARK: - Icons
@@ -74,7 +85,8 @@ extension JourneySnapshotItem {
         "meal": "fork.knife",
         "visa": "doc.text",
         "guide": "person.fill",
-        "activity": "star"
+        "activity": "star",
+        "wifi": "wifi"
     ]
 
     /// Value for `RemoteIconView`: the URL as is, or the SF Symbol for a known icon key.

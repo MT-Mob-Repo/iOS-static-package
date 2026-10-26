@@ -10,24 +10,23 @@ import AlmatarSystemDesignSDK
 struct PackageSummaryRow: Hashable {
     let label: String
     let value: String
-    /// Shows the value as a highlighted pill (e.g. the package tier).
+    /// Shows the value as a highlighted pill (e.g. the park access).
     var isBadge: Bool = false
 }
 
-/// Hero image, label / value rows and the list of items included in the package.
+/// Label / value rows, the items included in the package and the add-ons the customer picked.
 struct PackageSummaryView: View {
     private enum Layout {
-        static let imageHeight: CGFloat = 160
-        static let includeIconSize: CGFloat = 18
-        static let includeIconContainerSize: CGFloat = 32
-        static let borderWidth: CGFloat = 1
-        static let badgeBackgroundOpacity: Double = 0.08
+        static let iconSize: CGFloat = 18
+        static let iconContainerSize: CGFloat = 32
     }
 
     let title: String
     let rows: [PackageSummaryRow]
     let includesTitle: String
     let includes: [JourneySnapshotItem]
+    let addonsTitle: String
+    let addons: [JourneySnapshotItem]
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
@@ -38,35 +37,15 @@ struct PackageSummaryView: View {
             }
 
             if !includes.isEmpty {
-                Rectangle()
-                    .fill(AlmatarColors.borderDefaultCard)
-                    .frame(height: Layout.borderWidth)
+                itemsList(title: includesTitle, items: includes)
+            }
 
-                includesList
+            if !addons.isEmpty {
+                ConfirmationDivider()
+                itemsList(title: addonsTitle, items: addons)
             }
         }
         .confirmationCard()
-    }
-
-    private func heroImage(_ url: URL) -> some View {
-        // Fixed-size container so a filled image never widens the card.
-        Color.clear
-            .frame(maxWidth: .infinity)
-            .frame(height: Layout.imageHeight)
-            .overlay(
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    default:
-                        AlmatarColors.surfaceCardSecondary
-                    }
-                }
-            )
-            .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
-            .accessibilityHidden(true)
     }
 
     private func rowView(_ row: PackageSummaryRow) -> some View {
@@ -78,10 +57,10 @@ struct PackageSummaryView: View {
             Spacer(minLength: Spacing.small)
 
             if row.isBadge {
-                badge(row.value)
+                ConfirmationSuccessBadge(title: row.value, showsCheckmark: true)
             } else {
                 Text(row.value)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .multilineTextAlignment(.trailing)
                     .fixedSize(horizontal: false, vertical: true)
@@ -89,26 +68,16 @@ struct PackageSummaryView: View {
         }
     }
 
-    private func badge(_ value: String) -> some View {
-        Text(value.uppercased())
-            .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.medium))
-            .foregroundStyle(AlmatarColors.textComplementaryGreen)
-            .padding(.horizontal, Spacing.small)
-            .padding(.vertical, Spacing.xxxSmall)
-            .background(AlmatarColors.surfaceSuccessLight)
-            .clipShape(Capsule())
-    }
-
-    private var includesList: some View {
+    private func itemsList(title: String, items: [JourneySnapshotItem]) -> some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            Text(includesTitle)
+            Text(title)
                 .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
-            ForEach(includes, id: \.self) { item in
+            ForEach(items) { item in
                 HStack(spacing: Spacing.small) {
-                    RemoteIconView(icon: item.iconName, size: Layout.includeIconSize, tint: AlmatarColors.iconPrimaryInteractive)
-                        .frame(width: Layout.includeIconContainerSize, height: Layout.includeIconContainerSize)
+                    RemoteIconView(icon: item.iconName, size: Layout.iconSize, tint: AlmatarColors.iconPrimaryInteractive)
+                        .frame(width: Layout.iconContainerSize, height: Layout.iconContainerSize)
                         .background(AlmatarColors.surfaceBrandSecondary)
                         .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
 

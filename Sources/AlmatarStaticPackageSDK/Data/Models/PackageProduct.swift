@@ -25,6 +25,8 @@ struct PackageProduct: Codable, Sendable, Hashable {
     let status: String?
     /// Mandatory products are included in the package price and cannot be removed.
     let isMandatory: Bool
+    /// Number of visitors the product was booked for (add-ons).
+    let quantity: Int?
     let flightInfo: FlightInfo?
     let hotelInfo: HotelInfo?
     let addonInfo: AddonInfo?
@@ -114,6 +116,10 @@ struct HotelInfo: Codable, Sendable, Hashable {
     let checkOut: String?
     let nights: Int?
     let room: HotelRoom?
+    /// e.g. "Half Board".
+    let boardBasis: String?
+    /// e.g. Breakfast, Transfer to the hotel, Wifi.
+    let amenities: [PackageProductTag]?
 }
 
 struct HotelRoom: Codable, Sendable, Hashable {

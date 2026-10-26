@@ -29,7 +29,7 @@ struct ConfirmationHotelDetailsView: View {
         static let imageHeight: CGFloat = 160
         static let starIcon = "star.fill"
         static let starSize: CGFloat = 12
-        static let starTint = AlmatarColors.iconComplementaryGreen
+        static let starTint = AlmatarColors.iconComplementaryYellow
         static let amenityIconSize: CGFloat = 14
         static let borderWidth: CGFloat = 1
     }
@@ -73,6 +73,7 @@ struct ConfirmationHotelDetailsView: View {
                 (strings.checkIn, hotel.checkIn),
                 (strings.checkOut, hotel.checkOut)
             )
+            ConfirmationDivider()
             infoGrid(
                 (strings.roomType, hotel.roomType),
                 (strings.boardBasis, hotel.boardBasis)

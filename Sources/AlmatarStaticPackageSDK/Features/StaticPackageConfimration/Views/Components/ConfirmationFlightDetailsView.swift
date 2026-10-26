@@ -12,6 +12,8 @@ struct ConfirmationFlightDetailsView: View {
         static let icon = "airplane"
         static let pathWidth: CGFloat = 90
         static let pathDotSize: CGFloat = 6
+        static let titleDotSize: CGFloat = 4
+        static let titleSeparator = " · "
         static let locationLineLimit = 2
     }
 
@@ -35,9 +37,7 @@ struct ConfirmationFlightDetailsView: View {
     private func legView(_ leg: PackageScheduleFlightLeg) -> some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
-                Text(leg.route)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
-                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                routeTitle(leg.route)
                 if let subtitle = leg.subtitle.nonEmpty {
                     Text(subtitle)
                         .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
@@ -53,6 +53,25 @@ struct ConfirmationFlightDetailsView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
+    }
+
+    /// "Departure • Thu 16 Jul 2026" with a small gray dot between the parts.
+    private func routeTitle(_ route: String) -> some View {
+        let parts = route.components(separatedBy: Layout.titleSeparator)
+        return HStack(spacing: Spacing.xSmall) {
+            ForEach(Array(parts.enumerated()), id: \.offset) { index, part in
+                if index > 0 {
+                    Circle()
+                        .fill(AlmatarColors.iconOnSurfaceTertirary)
+                        .frame(width: Layout.titleDotSize, height: Layout.titleDotSize)
+                }
+                Text(part)
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(parts.joined(separator: ", "))
     }
 
     private func endpoint(time: String?, location: String, alignment: HorizontalAlignment) -> some View {

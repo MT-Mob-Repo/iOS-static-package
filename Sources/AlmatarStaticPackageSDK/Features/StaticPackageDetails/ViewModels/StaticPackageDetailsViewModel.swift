@@ -401,7 +401,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             guard let addon = product.addonInfo else { return nil }
             return PackageScheduleCard(
                 imageUrl: addon.image,
-                title: addon.title,
+                title: addon.title ?? "",
                 rating: nil,
                 details: nil,
                 description: addon.description,

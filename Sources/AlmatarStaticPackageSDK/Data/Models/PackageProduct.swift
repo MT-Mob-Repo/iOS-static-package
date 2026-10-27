@@ -127,9 +127,9 @@ struct HotelRoom: Codable, Sendable, Hashable {
 // MARK: - Add-on
 
 struct AddonInfo: Codable, Sendable, Hashable {
-    let id: Int
+    let id: Int?
     let key: String?
-    let title: String
+    let title: String?
     let description: String?
     let image: String?
 }

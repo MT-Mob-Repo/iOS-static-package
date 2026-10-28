@@ -170,6 +170,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     private let packageId: String
     /// Cart from `POST v1/packages/book`; created on "Go to payment" when missing.
     private var cartId: String
+    /// Order from `POST v1/packages/orders`, created on "Go to payment" once the details are valid.
+    private(set) var order: PackageOrder?
     private let repository: StaticPackagesRepositoryProtocol
     private let startPayment: (PackagePaymentRequest) async -> PaymentResult
     private let onPaymentFinished: () -> Void
@@ -295,7 +297,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return details.price?.finalAmount ?? 0.0
     }
 
-    /// Validates the visitors' details, books the package, then opens the host app's payment flow.
+    /// Validates the visitors' details, creates the order, books the package, then opens the host app's payment flow.
     func goToPaymentTapped() async {
         guard !isStartingPayment, paymentAmount != nil else { return }
         isStartingPayment = true
@@ -313,6 +315,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 paymentErrorMessage = genericErrorMessage
                 return
             }
+            order = try await repository.createOrder(cartId: cartId)
             let cartId = try await currentCartId()
             // TODO: Confirm bookingId / bookingKey mapping with the payment team; the book API returns only `cartId`.
             let request = PackagePaymentRequest(

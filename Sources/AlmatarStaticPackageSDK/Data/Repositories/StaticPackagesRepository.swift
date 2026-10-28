@@ -11,12 +11,16 @@ protocol StaticPackagesRepositoryProtocol: Sendable {
     func allocateCart(cartId: String, request: CartAllocationRequest) async throws -> CartAllocation
     /// `true` when the visitors' details are accepted for the cart.
     func validateInfo(request: ValidateInfoRequest) async throws -> Bool
+    /// Creates the order for the cart.
+    func createOrder(cartId: String) async throws -> PackageOrder
 }
 
 enum StaticPackagesEndpoint {
     static let bookPackage = "api/v1/packages/book"
     /// `POST v1/packages/validate-info`
     static let validateInfo = "api/v1/packages/validate-info"
+    /// `POST v1/packages/orders`
+    static let orders = "api/v1/packages/orders"
     static let packageCartPrefix = "api/v1/packages/carts/"
     /// `GET v1/packages/carts/{id}`
     static func packageCart(id: String) -> String { packageCartPrefix + id }
@@ -74,6 +78,18 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
             baseURL: baseURL,
             path: StaticPackagesEndpoint.validateInfo,
             body: request
+        )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
+    }
+
+    func createOrder(cartId: String) async throws -> PackageOrder {
+        let response: BaseNetworkResponse<PackageOrder> = try await networkClient.post(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.orders,
+            body: CreateOrderRequest(cartId: cartId)
         )
         guard let data = response.data else {
             throw NetworkError.noData

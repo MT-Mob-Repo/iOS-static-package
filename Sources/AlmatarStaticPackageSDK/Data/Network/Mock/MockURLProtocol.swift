@@ -23,7 +23,8 @@ final class MockURLProtocol: URLProtocol {
         ({ $0.hasPrefix(StaticPackagesEndpoint.packageCartPrefix) && $0.hasSuffix(StaticPackagesEndpoint.allocateSuffix) }, "cart_allocate"),
         ({ $0.hasPrefix(StaticPackagesEndpoint.packageCartPrefix) }, "package_details"),
         ({ $0.hasPrefix(StaticPackagesEndpoint.bookPackage) }, "book_package"),
-        ({ $0.hasPrefix(StaticPackagesEndpoint.validateInfo) }, "validate_info")
+        ({ $0.hasPrefix(StaticPackagesEndpoint.validateInfo) }, "validate_info"),
+        ({ $0.hasPrefix(StaticPackagesEndpoint.orders) }, "create_order")
     ]
 
     override class func canInit(with request: URLRequest) -> Bool { true }

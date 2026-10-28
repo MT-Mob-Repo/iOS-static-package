@@ -15,6 +15,8 @@ struct PackageProducts: Codable, Sendable, Hashable {
 /// One product in the package (flight, hotel or add-on).
 /// Only the info object matching `productType` is expected to be present.
 struct PackageProduct: Codable, Sendable, Hashable {
+    /// Sent as `option.productId` when allocating the cart.
+    let productId: FlexibleID?
     let title: String
     let description: String?
     let productType: PackageProductType
@@ -62,11 +64,42 @@ struct ProductOptionsSection: Codable, Sendable, Hashable {
 }
 
 struct ProductOption: Codable, Sendable, Hashable {
+    /// Sent as `option.optionId` when allocating the cart; the cart API sends it as `id`.
+    let optionId: FlexibleID?
     let title: String
     let subTitle: String?
     let price: Double?
     let currency: String?
     let isAvailable: Bool?
+    /// `true` when this option is allocated in the cart.
+    let selected: Bool?
+
+    private enum CodingKeys: String, CodingKey {
+        case optionId, id, title, subTitle, price, currency, isAvailable, selected
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        optionId = try container.decodeIfPresent(FlexibleID.self, forKey: .optionId)
+            ?? container.decodeIfPresent(FlexibleID.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        subTitle = try container.decodeIfPresent(String.self, forKey: .subTitle)
+        price = try container.decodeIfPresent(Double.self, forKey: .price)
+        currency = try container.decodeIfPresent(String.self, forKey: .currency)
+        isAvailable = try container.decodeIfPresent(Bool.self, forKey: .isAvailable)
+        selected = try container.decodeIfPresent(Bool.self, forKey: .selected)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(optionId, forKey: .optionId)
+        try container.encode(title, forKey: .title)
+        try container.encodeIfPresent(subTitle, forKey: .subTitle)
+        try container.encodeIfPresent(price, forKey: .price)
+        try container.encodeIfPresent(currency, forKey: .currency)
+        try container.encodeIfPresent(isAvailable, forKey: .isAvailable)
+        try container.encodeIfPresent(selected, forKey: .selected)
+    }
 }
 
 // MARK: - Flight

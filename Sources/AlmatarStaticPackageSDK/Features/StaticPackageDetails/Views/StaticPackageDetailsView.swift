@@ -39,7 +39,7 @@ struct StaticPackageDetailsView: View {
                     includedTitle: viewModel.priceIncludedTitle,
                     breakdownSections: viewModel.priceBreakdownSections,
                     buttonTitle: viewModel.goToPaymentTitle,
-                    isLoading: viewModel.isStartingPayment
+                    isLoading: viewModel.isStartingPayment || viewModel.isUpdatingCart
                 ) {
                     Task { await viewModel.goToPaymentTapped() }
                 }

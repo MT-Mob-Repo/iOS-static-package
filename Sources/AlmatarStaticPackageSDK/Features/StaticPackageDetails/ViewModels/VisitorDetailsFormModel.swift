@@ -78,8 +78,8 @@ final class VisitorDetailsFormModel: ObservableObject {
     @Published private var phoneCountryNames: [String: String] = [:]
     /// Drives the design-system fields to show their errors, e.g. when trying to continue.
     @Published var shouldValidate = false
-    /// The group in the order visitors were added; always starts with the lead adult.
-    @Published private(set) var visitors: [Visitor] = [Visitor(id: UUID(), type: .adults)]
+    /// The group in the order visitors were added; starts empty (zero travellers).
+    @Published private(set) var visitors: [Visitor] = []
     /// Visitor cards that are open; a newly added visitor opens automatically.
     @Published var expandedVisitorIds: Set<UUID> = []
 
@@ -97,9 +97,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         phoneCodes = [:]
         phoneCountryNames = [:]
         shouldValidate = false
-        let lead = Visitor(id: UUID(), type: .adults)
-        visitors = [lead]
-        expandedVisitorIds = [lead.id]
+        visitors = []
+        expandedVisitorIds = []
 
         for section in form?.sections ?? [] where isPickerSection(section) {
             guard let field = section.fields.first else { continue }
@@ -388,8 +387,9 @@ final class VisitorDetailsFormModel: ObservableObject {
         sections.first(where: isTravellersSection)
     }
 
+    /// The first adult added is the lead visitor, even when a child or infant was added before.
     func isLead(_ visitor: Visitor) -> Bool {
-        visitor.id == visitors.first?.id
+        visitor.id == visitors.first(where: { $0.type == .adults })?.id
     }
 
     /// The visitor's own copy of the travellers fields. Values are stored under its own section key,
@@ -509,6 +509,25 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    /// Matches the group to the given counts, e.g. the cart's travellers.
+    /// Visitors already in the group keep their details; extra ones are removed from the end
+    /// (the lead adult last) and missing ones are added with their cards open.
+    func setTravellerCounts(_ counts: [Traveller: Int]) {
+        for traveller in Traveller.allCases {
+            let target = max(0, counts[traveller] ?? 0)
+            let current = visitors.filter { $0.type == traveller }
+            if current.count > target {
+                delete(Array(current.suffix(current.count - target)))
+            } else if current.count < target {
+                for _ in current.count..<target {
+                    let visitor = Visitor(id: UUID(), type: traveller)
+                    visitors.append(visitor)
+                    expandedVisitorIds.insert(visitor.id)
+                }
+            }
+        }
+    }
+
     /// Adds a visitor of the given type and opens their card.
     func increment(_ traveller: Traveller) {
         guard canIncrement(traveller) else { return }
@@ -519,8 +538,9 @@ final class VisitorDetailsFormModel: ObservableObject {
 
     // MARK: - Validation & output
 
-    /// `true` when every required field has a valid value, for every visitor.
+    /// `true` when the group has a lead adult and every required field has a valid value, for every visitor.
     var isValid: Bool {
+        guard count(.adults) > 0 else { return false }
         let otherSectionsValid = sections.filter { !isTravellersSection($0) }.allSatisfy { section in
             section.fields.allSatisfy { isFieldValid($0, in: section) }
         }

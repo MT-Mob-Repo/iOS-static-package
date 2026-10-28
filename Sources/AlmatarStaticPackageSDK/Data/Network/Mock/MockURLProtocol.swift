@@ -22,7 +22,8 @@ final class MockURLProtocol: URLProtocol {
     private static let routes: [(matches: (String) -> Bool, fileName: String)] = [
         ({ $0.hasPrefix(StaticPackagesEndpoint.packageCartPrefix) && $0.hasSuffix(StaticPackagesEndpoint.allocateSuffix) }, "cart_allocate"),
         ({ $0.hasPrefix(StaticPackagesEndpoint.packageCartPrefix) }, "package_details"),
-        ({ $0.hasPrefix(StaticPackagesEndpoint.bookPackage) }, "book_package")
+        ({ $0.hasPrefix(StaticPackagesEndpoint.bookPackage) }, "book_package"),
+        ({ $0.hasPrefix(StaticPackagesEndpoint.validateInfo) }, "validate_info")
     ]
 
     override class func canInit(with request: URLRequest) -> Bool { true }

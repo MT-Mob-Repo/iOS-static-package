@@ -295,7 +295,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         return details.price?.finalAmount ?? 0.0
     }
 
-    /// Books the package if needed, then opens the host app's payment flow.
+    /// Validates the visitors' details, books the package, then opens the host app's payment flow.
     func goToPaymentTapped() async {
         guard !isStartingPayment, paymentAmount != nil else { return }
         isStartingPayment = true
@@ -307,6 +307,12 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         guard allocatedCounts == currentTravellerCounts, let amount = paymentAmount else { return }
 
         do {
+            guard try await validateVisitorDetails() else {
+                // Show the field errors in the form along with the alert.
+                visitorForm.shouldValidate = true
+                paymentErrorMessage = genericErrorMessage
+                return
+            }
             let cartId = try await currentCartId()
             // TODO: Confirm bookingId / bookingKey mapping with the payment team; the book API returns only `cartId`.
             let request = PackagePaymentRequest(
@@ -323,6 +329,12 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             let apiMessages = (error as? NetworkError)?.apiMessages ?? []
             paymentErrorMessage = apiMessages.isEmpty ? genericErrorMessage : apiMessages.joined(separator: "\n")
         }
+    }
+
+    /// Calls `POST v1/packages/validate-info` with the visitors form; `true` when the details are accepted.
+    private func validateVisitorDetails() async throws -> Bool {
+        let request = ValidateInfoRequest(cartId: cartId, sections: visitorForm.validateInfoSections)
+        return try await repository.validateInfo(request: request)
     }
 
     private func currentCartId() async throws -> String {

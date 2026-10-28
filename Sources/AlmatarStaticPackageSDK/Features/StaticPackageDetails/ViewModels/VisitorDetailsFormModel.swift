@@ -58,6 +58,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let visitorTypeKey = "type"
         static let maxTravellers = 9
         static let apiDateFormat = "yyyy-MM-dd"
+        /// Appended to a listed date ("yyyy-MM-dd") to send it as a UTC date-time.
+        static let apiDateTimeSuffix = "T00:00:00.000Z"
         static let displayDateFormat = "dd MMM yyyy"
         static let dayMonthTemplate = "d MMM"
         static let monthKeyFormat = "yyyy-MM"
@@ -579,14 +581,28 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    /// Sections for `POST v1/packages/validate-info`: every other section's values,
+    /// and one entry per visitor (in group order) under the travellers section key.
+    var validateInfoSections: [String: ValidateInfoRequest.Section] {
+        var result = submissionValues.mapValues { ValidateInfoRequest.Section.single($0) }
+        if let travellers = travellersSection {
+            result[travellers.section] = .multiple(visitors.compactMap { section(for: $0).map(fieldValues) })
+        }
+        return result
+    }
+
+    /// Phone numbers include the dial code; listed dates (e.g. departure date) are sent as UTC date-times.
     private func fieldValues(_ section: DynamicFormSection) -> [String: String] {
         var result: [String: String] = [:]
         for field in section.fields {
             let current = value(section, field)
             guard !current.isEmpty else { continue }
-            if case .phone = kind(of: field) {
+            switch kind(of: field) {
+            case .phone:
                 result[field.field] = phoneCode(section, field) + current.filter(\.isNumber)
-            } else {
+            case .dateList:
+                result[field.field] = apiDateFormatter.date(from: current) != nil ? current + Constants.apiDateTimeSuffix : current
+            default:
                 result[field.field] = current
             }
         }

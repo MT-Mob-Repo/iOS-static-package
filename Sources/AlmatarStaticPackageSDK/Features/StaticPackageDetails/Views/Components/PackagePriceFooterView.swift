@@ -28,6 +28,9 @@ struct PackagePriceFooterView: View {
     let breakdownSections: [PriceBreakdownSection]
     let buttonTitle: String
     var isLoading = false
+    /// Whether the button is disabled for the current form state, e.g. until the travellers' details are complete.
+    /// Evaluated on every form change, since this view observes the form.
+    var isButtonDisabled: (VisitorDetailsFormModel) -> Bool = { _ in false }
     let onButtonTap: () -> Void
 
     @State private var isBreakdownExpanded = false
@@ -61,7 +64,12 @@ struct PackagePriceFooterView: View {
                 .padding(.horizontal, Spacing.screenHorizontal)
             }
 
-            PrimaryButton(buttonTitle, isLoading: isLoading, action: onButtonTap)
+            PrimaryButton(
+                buttonTitle,
+                isLoading: isLoading,
+                isDisabled: isButtonDisabled(form),
+                action: onButtonTap
+            )
                 .padding(.horizontal, Spacing.screenHorizontal)
         }
         .padding(.top, Spacing.small)

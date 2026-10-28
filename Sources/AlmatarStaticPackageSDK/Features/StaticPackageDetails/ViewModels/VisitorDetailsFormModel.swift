@@ -540,6 +540,11 @@ final class VisitorDetailsFormModel: ObservableObject {
 
     // MARK: - Validation & output
 
+    /// `true` when the group has a lead adult and every visitor's details are filled in and valid.
+    var areTravellersComplete: Bool {
+        count(.adults) > 0 && visitors.allSatisfy(isComplete)
+    }
+
     /// `true` when the group has a lead adult and every required field has a valid value, for every visitor.
     var isValid: Bool {
         guard count(.adults) > 0 else { return false }

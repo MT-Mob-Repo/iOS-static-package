@@ -299,7 +299,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     /// Validates the visitors' details, creates the order, books the package, then opens the host app's payment flow.
     func goToPaymentTapped() async {
-        guard !isStartingPayment, paymentAmount != nil else { return }
+        guard !isStartingPayment, paymentAmount != nil, visitorForm.areTravellersComplete else { return }
         isStartingPayment = true
         defer { isStartingPayment = false }
 

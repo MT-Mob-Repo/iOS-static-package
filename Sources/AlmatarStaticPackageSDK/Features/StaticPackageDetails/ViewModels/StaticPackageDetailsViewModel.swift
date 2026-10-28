@@ -245,7 +245,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     func optionsDetailText(visitorCount: Int) -> String? {
         let amount = optionsAmount(visitorCount: visitorCount)
         guard amount > 0 else { return nil }
-        let titles = selectedProductOptions.keys.sorted().compactMap { optionsSection(forProductAt: $0)?.title.nonEmpty }
+        let titles = selectedOptions.compactMap { optionsSection(forProductAt: $0.productIndex)?.title.nonEmpty }
         let label = titles.isEmpty ? LocalizedKey.selectOptions.localized() : titles.joined(separator: ", ")
         return "+ \(CurrencyManager.shared.formatPrice(value: amount, currencyCode: packageDetails?.price?.currency)) • \(label)"
     }
@@ -255,12 +255,16 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// The product whose options screen is open, by its index in the products list.
     @Published var optionsProductIndex: Int?
 
-    /// The option chosen for each product, by product index.
-    @Published private(set) var selectedProductOptions: [Int: ProductOption] = [:]
+    /// The option the cart holds for each product (marked `selected`), in product order.
+    private var selectedOptions: [(productIndex: Int, option: ProductOption)] {
+        (packageInfo?.products?.items ?? []).enumerated().compactMap { index, product in
+            product.optionsSection?.options?.first(where: \.selected).map { (index, $0) }
+        }
+    }
 
-    /// Chosen options cost per visitor, for the whole group.
+    /// Selected options cost per visitor, for the whole group.
     func optionsAmount(visitorCount: Int) -> Double {
-        selectedProductOptions.values.reduce(0) { $0 + ($1.price ?? 0) } * Double(visitorCount)
+        selectedOptions.reduce(0) { $0 + ($1.option.price ?? 0) } * Double(visitorCount)
     }
 
     func optionsSection(forProductAt index: Int) -> ProductOptionsSection? {
@@ -280,7 +284,6 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         guard let section = optionsSection(forProductAt: productIndex) else { return nil }
         return ProductOptionsViewModel(
             section: section,
-            selectedOption: selectedProductOptions[productIndex],
             visitorForm: visitorForm,
             cartPrice: packageDetails?.price,
             allocateOption: { [weak self] option in
@@ -429,10 +432,9 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             productId: productId,
             optionId: option?.optionId?.value
         )
+        // The reloaded cart marks the allocated option as `selected`.
         let succeeded = await enqueueAllocation { viewModel in
-            guard await viewModel.allocate(request) else { return false }
-            viewModel.selectedProductOptions[productIndex] = option
-            return true
+            await viewModel.allocate(request)
         }.value
         guard !succeeded else { return nil }
         // The options screen shows the error itself, not this screen's alert behind it.

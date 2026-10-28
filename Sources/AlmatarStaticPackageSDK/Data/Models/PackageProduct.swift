@@ -71,11 +71,13 @@ struct ProductOption: Codable, Sendable, Hashable {
     let price: Double?
     let currency: String?
     let isAvailable: Bool?
-    /// `true` when this option is allocated in the cart.
-    let selected: Bool?
+    /// `true` when this option is allocated in the cart; `false` when missing.
+    let selected: Bool
+    /// `true` for the option the product comes with when none is selected; `false` when missing.
+    let isDefault: Bool
 
     private enum CodingKeys: String, CodingKey {
-        case optionId, id, title, subTitle, price, currency, isAvailable, selected
+        case optionId, id, title, subTitle, price, currency, isAvailable, selected, isDefault
     }
 
     init(from decoder: Decoder) throws {
@@ -87,7 +89,8 @@ struct ProductOption: Codable, Sendable, Hashable {
         price = try container.decodeIfPresent(Double.self, forKey: .price)
         currency = try container.decodeIfPresent(String.self, forKey: .currency)
         isAvailable = try container.decodeIfPresent(Bool.self, forKey: .isAvailable)
-        selected = try container.decodeIfPresent(Bool.self, forKey: .selected)
+        selected = try container.decodeIfPresent(Bool.self, forKey: .selected) ?? false
+        isDefault = try container.decodeIfPresent(Bool.self, forKey: .isDefault) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
@@ -98,7 +101,8 @@ struct ProductOption: Codable, Sendable, Hashable {
         try container.encodeIfPresent(price, forKey: .price)
         try container.encodeIfPresent(currency, forKey: .currency)
         try container.encodeIfPresent(isAvailable, forKey: .isAvailable)
-        try container.encodeIfPresent(selected, forKey: .selected)
+        try container.encode(selected, forKey: .selected)
+        try container.encode(isDefault, forKey: .isDefault)
     }
 }
 

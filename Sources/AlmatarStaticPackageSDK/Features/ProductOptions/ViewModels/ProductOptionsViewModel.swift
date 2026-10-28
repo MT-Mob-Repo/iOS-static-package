@@ -33,7 +33,6 @@ final class ProductOptionsViewModel: ObservableObject {
 
     init(
         section: ProductOptionsSection,
-        selectedOption: ProductOption?,
         visitorForm: VisitorDetailsFormModel,
         cartPrice: CartPrice?,
         allocateOption: @escaping (ProductOption?) async -> String?,
@@ -44,10 +43,9 @@ final class ProductOptionsViewModel: ObservableObject {
         self.cartPrice = cartPrice
         self.allocateOption = allocateOption
         self.currentCartPrice = currentCartPrice
-        // Keep the previous choice, else the option the cart marks as selected, else the included one.
-        let initial = selectedOption
-            ?? section.options?.first { $0.selected == true }
-            ?? section.options?.first { Self.isIncluded($0) }
+        // The option the cart marks as selected, else the product's default one.
+        let initial = section.options?.first(where: \.selected)
+            ?? section.options?.first(where: \.isDefault)
         self.selectedOption = initial
         self.allocatedOption = initial
     }

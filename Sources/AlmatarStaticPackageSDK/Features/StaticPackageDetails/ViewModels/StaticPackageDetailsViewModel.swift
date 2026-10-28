@@ -276,19 +276,17 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     func makeProductOptionsViewModel(productIndex: Int) -> ProductOptionsViewModel? {
         guard let section = optionsSection(forProductAt: productIndex) else { return nil }
-        let currentOption = selectedProductOptions[productIndex]
-        let currentOptionAmount = (currentOption?.price ?? 0) * Double(visitorForm.visitors.count)
         return ProductOptionsViewModel(
             section: section,
-            selectedOption: currentOption,
+            selectedOption: selectedProductOptions[productIndex],
             visitorForm: visitorForm,
-            // The cart already includes this product's current option; the options screen adds its own choice.
-            baseAmount: (packageDetails?.price?.finalAmount ?? 0) - currentOptionAmount,
-            currency: packageDetails?.price?.currency,
-            breakdownSections: priceBreakdownSections
-        ) { [weak self] option in
-            self?.productOptionConfirmed(option, productIndex: productIndex)
-        }
+            cartPrice: packageDetails?.price,
+            allocateOption: { [weak self] option in
+                guard let self else { return nil }
+                return await self.allocateOption(option, productIndex: productIndex)
+            },
+            currentCartPrice: { [weak self] in self?.packageDetails?.price }
+        )
     }
 
     /// The cart total; travellers and options are priced by the cart allocation.
@@ -305,7 +303,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
         // Pay the price of the group shown on screen: send any traveller change still waiting.
         syncTravellerCounts()
-        await allocationTask?.value
+        _ = await allocationTask?.value
         guard allocatedCounts == currentTravellerCounts, let amount = paymentAmount else { return }
 
         do {
@@ -351,7 +349,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// Traveller counts of the group when they were last sent to the cart.
     private var requestedCounts: [VisitorDetailsFormModel.Traveller: Int] = [:]
     /// The last queued allocation; allocations run one after another, in the order they were made.
-    private var allocationTask: Task<Void, Never>?
+    private var allocationTask: Task<Bool, Never>?
     /// Allocations queued or running; the cart's travellers are applied when it drops to zero.
     private var queuedAllocations = 0
     /// `true` when an allocation succeeded but the cart could not be reloaded, so `packageDetails` is out of date.
@@ -392,56 +390,59 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         for traveller in VisitorDetailsFormModel.Traveller.allCases {
             enqueueAllocation { viewModel in
                 let quantity = viewModel.visitorForm.count(traveller)
-                guard viewModel.allocatedCounts[traveller] != quantity else { return }
+                guard viewModel.allocatedCounts[traveller] != quantity else { return true }
                 let request = CartAllocationRequest.traveller(
                     packageId: viewModel.packageId,
                     type: traveller.allocationType,
                     quantity: quantity
                 )
-                if await viewModel.allocate(request) {
-                    viewModel.allocatedCounts[traveller] = quantity
-                }
+                guard await viewModel.allocate(request) else { return false }
+                viewModel.allocatedCounts[traveller] = quantity
+                return true
             }
         }
     }
 
-    /// Keeps the chosen option and allocates it; the previous choice comes back if the cart cannot be updated.
-    private func productOptionConfirmed(_ option: ProductOption?, productIndex: Int) {
-        let previous = selectedProductOptions[productIndex]
-        selectedProductOptions[productIndex] = option
-        // Until something is chosen, the cart holds the included (free) option.
-        let allocatedOption = previous ?? optionsSection(forProductAt: productIndex)?.options?.first { ($0.price ?? 0) == 0 }
-        guard option != allocatedOption else { return }
-
+    /// Allocates an option picked on the options screen, after any allocation already queued,
+    /// then reloads the cart. Returns the error message when the cart could not be updated, else `nil`.
+    private func allocateOption(_ option: ProductOption?, productIndex: Int) async -> String? {
         guard let productId = packageInfo?.products?.items?[safe: productIndex]?.productId?.value else {
-            selectedProductOptions[productIndex] = previous
-            paymentErrorMessage = genericErrorMessage
-            return
+            return genericErrorMessage
         }
         let request = CartAllocationRequest.option(
             packageId: packageId,
             productId: productId,
             optionId: option?.optionId?.value
         )
-        enqueueAllocation { viewModel in
-            if !(await viewModel.allocate(request)) {
-                viewModel.selectedProductOptions[productIndex] = previous
-            }
-        }
+        let succeeded = await enqueueAllocation { viewModel in
+            guard await viewModel.allocate(request) else { return false }
+            viewModel.selectedProductOptions[productIndex] = option
+            return true
+        }.value
+        guard !succeeded else { return nil }
+        // The options screen shows the error itself, not this screen's alert behind it.
+        let message = paymentErrorMessage ?? genericErrorMessage
+        paymentErrorMessage = nil
+        return message
     }
 
-    private func enqueueAllocation(_ operation: @escaping @MainActor (StaticPackageDetailsViewModel) async -> Void) {
+    /// Runs the operation after every allocation already queued; its result says whether the cart was updated.
+    @discardableResult
+    private func enqueueAllocation(_ operation: @escaping @MainActor (StaticPackageDetailsViewModel) async -> Bool) -> Task<Bool, Never> {
         let previous = allocationTask
         queuedAllocations += 1
-        allocationTask = Task { [weak self] in
-            await previous?.value
-            guard let self else { return }
-            await operation(self)
+        let task = Task { [weak self] () -> Bool in
+            _ = await previous?.value
+            guard let self else { return false }
+            let succeeded = await operation(self)
             self.queuedAllocations -= 1
             if self.queuedAllocations == 0 {
                 self.applyCartTravellers()
             }
+            return succeeded
         }
+        allocationTask = task
+        return task
     }
 
     /// Once every queued allocation is done, takes the traveller counts from the reloaded cart:

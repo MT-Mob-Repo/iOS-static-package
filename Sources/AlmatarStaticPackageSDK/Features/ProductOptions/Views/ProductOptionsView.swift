@@ -58,14 +58,25 @@ struct ProductOptionsView: View {
                 priceDetailsTitle: viewModel.priceDetailsTitle,
                 includedTitle: viewModel.includedTitle,
                 breakdownSections: viewModel.breakdownSections,
-                buttonTitle: viewModel.continueTitle
+                buttonTitle: viewModel.continueTitle,
+                // The choice is already in the cart; wait for it to be re-priced before going back.
+                isLoading: viewModel.isUpdatingCart
             ) {
-                viewModel.continueTapped()
                 dismiss()
             }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
         .defaultToolbar(title: "")
+        .alert(viewModel.errorMessage ?? "", isPresented: isShowingError) {
+            Button(viewModel.okTitle, role: .cancel) {}
+        }
+    }
+
+    private var isShowingError: Binding<Bool> {
+        Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )
     }
 
     // MARK: - Note

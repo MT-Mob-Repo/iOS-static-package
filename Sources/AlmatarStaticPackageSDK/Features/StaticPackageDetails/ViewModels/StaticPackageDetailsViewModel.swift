@@ -566,7 +566,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 room: nil,
                 statusLabel: nil,
                 flight: PackageScheduleFlight(
-                    legs: flightInfo.legs.map(flightLeg),
+                    legs: flightInfo.legs.map { flightLeg($0, isUpgraded: isUpgraded(product)) },
                     isUpgradeAvailable: !(product.optionsSection?.options ?? []).isEmpty,
                     upgradeTitle: product.optionsSection?.ctaText.nonEmpty
                 )
@@ -598,12 +598,17 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
-    private func flightLeg(_ leg: FlightLeg) -> PackageScheduleFlightLeg {
+    /// `true` when the product's selected option is not its default one, e.g. an upgraded cabin.
+    private func isUpgraded(_ product: PackageProduct) -> Bool {
+        guard let selected = product.optionsSection?.options?.first(where: \.selected) else { return false }
+        return !selected.isDefault
+    }
+
+    private func flightLeg(_ leg: FlightLeg, isUpgraded: Bool) -> PackageScheduleFlightLeg {
         let subtitle = [leg.flightNumber.nonEmpty, leg.cabin.nonEmpty].compactMap { $0 }
         let durationInfo = [leg.duration.nonEmpty, stopsText(leg.stops)].compactMap { $0 }
         return PackageScheduleFlightLeg(
-            // TODO: Map once the API returns the upgraded cabin state per leg.
-            isUpgraded: false,
+            isUpgraded: isUpgraded,
             airlineLogoUrl: leg.airline?.logoUrl,
             route: LocalizedKey.flightRoute.localized(with: cityName(leg.departure), cityName(leg.arrival)),
             subtitle: subtitle.isEmpty ? nil : subtitle.joined(separator: Constants.separator),

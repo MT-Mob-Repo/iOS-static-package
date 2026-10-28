@@ -314,7 +314,7 @@ struct PackageScheduleView: View {
     private var upgradedBadge: some View {
         Text(upgradedTitle.uppercased())
             .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.semibold))
-            .foregroundStyle(AlmatarColors.textHighlightStatic)
+            .foregroundStyle(AlmatarColors.textPrimaryInteractive)
             .padding(.horizontal, Spacing.small)
             .padding(.vertical, Spacing.xxSmall)
             .background(AlmatarColors.surfaceSecondaryBase)

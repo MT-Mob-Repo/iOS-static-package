@@ -449,14 +449,15 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
-    /// Every visitor except the lead can be removed.
+    /// Whether the visitor's card offers "Remove visitor": every visitor except the lead.
+    /// The lead is removed with the adults counter only, once they are the last adult.
     func canRemove(_ visitor: Visitor) -> Bool {
         !isLead(visitor) && visitors.contains(visitor)
     }
 
-    /// Removes the visitor and their entered details.
+    /// Removes the visitor and their entered details. Removing the last adult also removes every infant.
     func remove(_ visitor: Visitor) {
-        guard canRemove(visitor) else { return }
+        guard visitors.contains(visitor) else { return }
         delete([visitor])
         dropInfantsAboveAdults()
     }
@@ -491,10 +492,10 @@ final class VisitorDetailsFormModel: ObservableObject {
         visitors.filter { $0.type == traveller }.count
     }
 
-    /// The visitor the counter's minus button removes: the last one of that type, never the lead.
+    /// The visitor the counter's minus button removes: the last one of that type,
+    /// so the lead adult only once they are the last adult (the count can go down to 0).
     func lastRemovableVisitor(of traveller: Traveller) -> Visitor? {
-        guard let last = visitors.last(where: { $0.type == traveller }), canRemove(last) else { return nil }
-        return last
+        visitors.last(where: { $0.type == traveller })
     }
 
     func canDecrement(_ traveller: Traveller) -> Bool {

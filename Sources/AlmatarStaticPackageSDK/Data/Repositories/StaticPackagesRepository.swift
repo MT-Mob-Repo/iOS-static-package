@@ -31,7 +31,7 @@ enum StaticPackagesEndpoint {
     /// `POST v1/packages/carts/{id}/allocate`
     static func allocateCart(id: String) -> String { packageCart(id: id) + allocateSuffix }
 
-    static let orderPrefix = "api/v1/orders/"
+    static let orderPrefix = "api/v1/packages/orders/"
     static func cart(id: String) -> String { orderPrefix + id }
 }
 

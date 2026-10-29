@@ -25,14 +25,19 @@ public final class AlmatarStaticPackageSDK {
     public weak var delegate: AlmatarStaticPackageSDKProtocol?
 
     /// Called when the user taps "Go to My Trips" on the booking confirmation screen.
+    /// When the SDK presented the confirmation, it is closed first, so the host app can navigate right away.
     public var onGoToMyTrips: (() -> Void)?
 
     /// Called when the user taps "Back to Home" on the booking confirmation screen.
+    /// When the SDK presented the confirmation, it is closed first, so the host app can navigate right away.
     public var onBackToHome: (() -> Void)?
 
     /// Called with the order id when the user taps "Receipt" on the booking confirmation screen.
     /// The button is hidden while this is `nil`.
     public var onViewReceipt: ((_ orderId: String) -> Void)?
+
+    /// The booking confirmation the SDK presented after payment, while it is on screen.
+    private weak var confirmationController: UIViewController?
 
     private init() {}
 
@@ -105,20 +110,54 @@ public final class AlmatarStaticPackageSDK {
                 guard let self else { return .failure(.validation(message: "")) }
                 return await self.startPayment(request)
             },
-            onPaymentFinished: { [weak self] in
-                self?.dismissFlow()
+            onPaymentFinished: { [weak self] orderId in
+                self?.presentPackageBookingConfirmation(id: orderId)
             }
         )
         return StaticPackageDetailsView(viewModel: viewModel)
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
-    /// Returns the Package Booking Confirmation screen for the given cart, in the configured language.
+    /// Returns the Package Booking Confirmation screen for the given order, in the configured language,
+    /// for host apps that show it themselves. The buttons call `onGoToMyTrips` / `onBackToHome` directly.
     public func getPackageBookingConfirmationView(id: String) -> some View {
+        makeBookingConfirmationView(
+            id: id,
+            onGoToMyTrips: { [weak self] in self?.onGoToMyTrips?() },
+            onBackToHome: { [weak self] in self?.onBackToHome?() }
+        )
+    }
+
+    /// Presents the Package Booking Confirmation full screen on top of everything (navigation bars,
+    /// sheets and the package screens). "Go to My Trips" and "Back to Home" close it,
+    /// then call `onGoToMyTrips` / `onBackToHome`.
+    public func presentPackageBookingConfirmation(id: String) {
+        let view = makeBookingConfirmationView(
+            id: id,
+            onGoToMyTrips: { [weak self] in
+                self?.closeBookingConfirmation { self?.onGoToMyTrips?() }
+            },
+            onBackToHome: { [weak self] in
+                self?.closeBookingConfirmation { self?.onBackToHome?() }
+            }
+        )
+        confirmationController = TopViewControllerPresenter.present(view)
+    }
+
+    private func closeBookingConfirmation(then action: @escaping () -> Void) {
+        TopViewControllerPresenter.dismiss(confirmationController, completion: action)
+        confirmationController = nil
+    }
+
+    private func makeBookingConfirmationView(
+        id: String,
+        onGoToMyTrips: @escaping () -> Void,
+        onBackToHome: @escaping () -> Void
+    ) -> some View {
         let viewModel = PackageBookingConfimrationViewModel(
             id: id,
             repository: makeStaticPackagesRepository(),
-            onGoToMyTrips: { [weak self] in self?.onGoToMyTrips?() },
-            onBackToHome: { [weak self] in self?.onBackToHome?() },
+            onGoToMyTrips: onGoToMyTrips,
+            onBackToHome: onBackToHome,
             onViewReceipt: onViewReceipt == nil ? nil : { [weak self] orderId in self?.onViewReceipt?(orderId) }
         )
         return PackageBookingConfimrationView(viewModel: viewModel)

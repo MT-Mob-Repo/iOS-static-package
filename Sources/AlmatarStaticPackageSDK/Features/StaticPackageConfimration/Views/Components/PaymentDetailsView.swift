@@ -122,24 +122,3 @@ struct PaymentDetailsView: View {
     }
 
 }
-
-#Preview {
-    PaymentDetailsView(
-        title: "Payment Details",
-        sections: [
-            PriceBreakdownSection(title: "Package price", note: nil, amount: nil, items: [
-                PriceBreakdownItem(label: "Round-trip flight", description: nil, unitAmount: nil, quantity: nil, amount: 0)
-            ]),
-            PriceBreakdownSection(title: "Cabin upgrade", note: nil, amount: nil, items: [
-                PriceBreakdownItem(label: "Premium Economy", description: nil, unitAmount: nil, quantity: nil, amount: 300)
-            ])
-        ],
-        includedTitle: "Included",
-        amountText: { "SAR \(Int($0))" },
-        totalTitle: "Total Paid",
-        total: "SAR 7,790",
-        paidViaText: "Paid via Visa ending 4629",
-        paidStatusTitle: "Paid in full"
-    )
-    .padding(Spacing.screenHorizontal)
-}

@@ -174,14 +174,14 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     private(set) var order: PackageOrder?
     private let repository: StaticPackagesRepositoryProtocol
     private let startPayment: (PackagePaymentRequest) async -> PaymentResult
-    private let onPaymentFinished: () -> Void
+    private let onPaymentFinished: (_ orderId: String) -> Void
 
     init(
         packageId: String,
         cartId: String,
         repository: StaticPackagesRepositoryProtocol,
         startPayment: @escaping (PackagePaymentRequest) async -> PaymentResult,
-        onPaymentFinished: @escaping () -> Void
+        onPaymentFinished: @escaping (_ orderId: String) -> Void
     ) {
         self.packageId = packageId
         self.cartId = cartId
@@ -352,7 +352,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     private func handlePaymentResult(_ result: PaymentResult) {
         switch result {
         case .success(.success), .success(.pending):
-            onPaymentFinished()
+            onPaymentFinished(order?.orderId ?? "")
         case .success(.failed):
             paymentErrorMessage = genericErrorMessage
         case .failure(.paymentFailed(let reason)), .failure(.validation(let reason)):

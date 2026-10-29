@@ -1,0 +1,16 @@
+{
+  "data": {
+    "cartId": "6ae1bd53c8f9651c969da574",
+    "expiresAt": "2026-10-28T12:16:09.844Z",
+    "price": {
+      "finalAmount": 2600,
+      "currency": "SAR",
+      "breakdown": [
+        { "title": "Package price", "items": [ { "label": "1x Adult", "quantity": 1, "unitAmount": 2600, "totalAmount": 2600 } ] },
+        { "title": "Total to pay", "note": null, "amount": 2600 }
+      ]
+    }
+  },
+  "status": 200,
+  "errors": null
+}

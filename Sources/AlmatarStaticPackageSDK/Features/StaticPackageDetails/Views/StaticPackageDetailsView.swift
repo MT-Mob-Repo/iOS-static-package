@@ -30,18 +30,22 @@ struct StaticPackageDetailsView: View {
                
 
             if viewModel.packageDetails != nil {
-                PackagePriceFooterView(
-                    form: viewModel.visitorForm,
-                    totalLabel: viewModel.totalPriceLabel(visitorCount:),
-                    amount: viewModel.totalPriceAmountText(visitorCount:),
-                    detail: viewModel.optionsDetailText(visitorCount:),
-                    priceDetailsTitle: viewModel.priceDetailsTitle,
-                    includedTitle: viewModel.priceIncludedTitle,
-                    breakdownSections: viewModel.priceBreakdownSections,
-                    buttonTitle: viewModel.goToPaymentTitle,
-                    isLoading: viewModel.isStartingPayment
-                ) {
-                    Task { await viewModel.goToPaymentTapped() }
+                // Hidden until at least one traveller is added.
+                VisitorsAddedContainer(form: viewModel.visitorForm) {
+                    PackagePriceFooterView(
+                        form: viewModel.visitorForm,
+                        totalLabel: viewModel.totalPriceLabel(visitorCount:),
+                        amount: viewModel.totalPriceAmountText(visitorCount:),
+                        detail: viewModel.optionsDetailText(visitorCount:),
+                        priceDetailsTitle: viewModel.priceDetailsTitle,
+                        includedTitle: viewModel.priceIncludedTitle,
+                        breakdownSections: viewModel.priceBreakdownSections,
+                        buttonTitle: viewModel.goToPaymentTitle,
+                        isLoading: viewModel.isStartingPayment || viewModel.isUpdatingCart,
+                        isButtonDisabled: { !$0.areTravellersComplete }
+                    ) {
+                        Task { await viewModel.goToPaymentTapped() }
+                    }
                 }
             }
         }
@@ -191,3 +195,16 @@ struct StaticPackageDetailsView: View {
     .environment(\.layoutDirection, .rightToLeft)
 }
 */
+
+/// Shows its content only once the visitors form has at least one traveller.
+/// Observes the form directly, since the screen's view model doesn't republish its changes.
+private struct VisitorsAddedContainer<Content: View>: View {
+    @ObservedObject var form: VisitorDetailsFormModel
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        if !form.visitors.isEmpty {
+            content()
+        }
+    }
+}

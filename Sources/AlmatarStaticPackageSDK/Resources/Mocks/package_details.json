@@ -1,482 +1,269 @@
 {
-  "status" : 200,
-  "data" : {
-    "expiresAt" : "2026-10-25T18:25:15.370Z",
-    "packageInfo" : {
-      "images" : [
-        "https://cdn.alpha.alm6ar.com/packages/riyadh-gallery-1-1792662374012.jpg",
-        "https://cdn.alpha.alm6ar.com/packages/riyadh-gallery-2-1792662374456.jpg",
-        "https://cdn.alpha.alm6ar.com/packages/riyadh-gallery-3-1792662375571.jpg"
-      ],
-      "highlights" : {
-        "title" : "Why this package",
-        "items" : [
-          {
-            "label" : "Handpicked hotel",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-star-1792662341413.png",
-            "value" : "5-star stay in a prime location"
-          },
-          {
-            "label" : "Direct flights",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-plane-1792662338482.png",
-            "value" : "Return flights on Saudia"
-          },
-          {
-            "label" : "Local guide",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-guide-1792662341064.png",
-            "value" : "Certified guide on every tour"
-          }
-        ]
-      },
-      "products" : {
-        "title" : "Your Trip",
-        "subtitle" : "Flight, hotel and extras included",
-        "items" : [
-          {
-            "status" : "allocated",
-            "productType" : "hotel",
-            "inventoryType" : "static",
-            "title" : "Riyadh Hotel Stay",
-            "optionsSection" : {
-              "title" : "Options",
-              "options" : [
-                {
-                  "currency" : "SAR",
-                  "title" : "Extra Bed",
-                  "subTitle" : "A comfortable extra bed for your stay.",
-                  "price" : 100
-                },
-                {
-                  "currency" : "SAR",
-                  "title" : "Breakfast",
-                  "subTitle" : "Daily buffet breakfast for two.",
-                  "price" : 80
-                }
-              ],
-              "note" : "Select your preferred options.",
-              "ctaText" : "Select Options"
-            },
-            "hotelInfo" : {
-              "nights" : 2,
-              "city" : "Riyadh",
-              "room" : {
-                "name" : "Deluxe Double Room",
-                "beds" : "King bed",
-                "sleeps" : 2
-              },
-              "checkOut" : "2027-02-06",
-              "imageUrl" : "https://cdn.alpha.alm6ar.com/packages/riyadh-hotel-1-1792662377005.jpg",
-              "starRating" : 5,
-              "tagline" : "Business Gate district",
-              "checkIn" : "2027-02-04"
-            },
-            "description" : "2 nights in the city centre",
-            "tags" : [
-              {
-                "label" : "Best value",
-                "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-star-1792662341413.png"
-              }
-            ],
-            "isMandatory" : true
-          },
-          {
-            "status" : "allocated",
-            "productType" : "flight",
-            "inventoryType" : "static",
-            "title" : "Jeddah to Riyadh Flight",
-            "optionsSection" : {
-              "title" : "Options",
-              "options" : [
-                {
-                  "currency" : "SAR",
-                  "title" : "Extra Baggage",
-                  "subTitle" : "An extra 23 kg checked bag.",
-                  "price" : 150
-                },
-                {
-                  "currency" : "SAR",
-                  "title" : "Seat Selection",
-                  "subTitle" : "Choose your preferred seat.",
-                  "price" : 60
-                }
-              ],
-              "note" : "Select your preferred options.",
-              "ctaText" : "Select Options"
-            },
-            "description" : "Direct return flights on Saudia",
-            "flightInfo" : {
-              "legs" : [
-                {
-                  "arrival" : {
-                    "cityName" : "Riyadh",
-                    "countryName" : "Saudi Arabia",
-                    "airportCode" : "RUH",
-                    "time" : "2027-02-04T07:30:00.000Z",
-                    "airportName" : "King Khalid International"
-                  },
-                  "departure" : {
-                    "cityName" : "Jeddah",
-                    "countryName" : "Saudi Arabia",
-                    "airportCode" : "JED",
-                    "time" : "2027-02-04T06:00:00.000Z",
-                    "airportName" : "King Abdulaziz International"
-                  },
-                  "duration" : "1h 30m",
-                  "flightNumber" : "SV1450",
-                  "cabin" : "Economy",
-                  "stops" : 0,
-                  "airline" : {
-                    "name" : "Saudia",
-                    "logoUrl" : "https://cdn.alpha.alm6ar.com/packages/airline-sv-1792662350275.png",
-                    "code" : "SV"
-                  }
-                }
-              ]
-            },
-            "tags" : [
-              {
-                "label" : "Direct",
-                "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-plane-1792662338482.png"
-              }
-            ],
-            "isMandatory" : true
-          },
-          {
-            "status" : "allocated",
-            "productType" : "addon",
-            "inventoryType" : null,
-            "addonInfo" : {
-              "id" : 2906716,
-              "key" : "a35bd2aa-fe37-4556-81dd-85902757b332",
-              "title" : "refundable add-on",
-              "description" : "refundable add-on",
-              "image" : "https://almatar-backend-uploads.s3.eu-west-1.amazonaws.com/gift/68af8944-4fd5-444c-b0fe-e301fd9988a2-flights_600x600.png"
-            },
-            "title" : "refundable add-on",
-            "optionsSection" : null,
-            "description" : "Included travel add-on",
-            "tags" : [
-              {
-                "label" : "Included",
-                "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-check-1792662349887.png"
-              }
-            ],
-            "isMandatory" : true
-          }
-        ]
-      },
-      "cancellationPolicies" : [
+  "status": 200,
+  "data": {
+    "cartId": "68d7f1c4a9e2b30f5c1a77de",
+    "expiresAt": "2026-07-01T14:32:00.000Z",
+    "price": {
+      "finalAmount": 6340,
+      "currency": "SAR",
+      "breakdown": [
         {
-          "title" : "Free cancellation",
-          "until" : "2027-01-05",
-          "note" : "Full refund, except visa fee",
-          "window" : "30+ days before departure",
-          "refundableAmountPercentage" : 100
+          "title": "Package price",
+          "items": [
+            { "label": "1x Adult", "quantity": 1, "amount": 3000 },
+            { "label": "1x Child", "quantity": 1, "amount": 2000 },
+            { "label": "1x Infant", "quantity": 1, "amount": 500 }
+          ]
         },
         {
-          "title" : "Partial refund",
-          "until" : "2027-02-01",
-          "note" : "Half refund",
-          "window" : "3+ days before departure",
-          "refundableAmountPercentage" : 50
-        },
-        {
-          "title" : "No refund",
-          "until" : "2027-02-04",
-          "note" : "No refund within 72 hours",
-          "window" : "Before departure",
-          "refundableAmountPercentage" : 0
-        }
-      ],
-      "packageId" : "6ad9dc02e669dec493c33793",
-      "duration" : "3 Days",
-      "itinerary" : {
-        "title" : "Itinerary",
-        "subtitle" : "Your day-by-day plan",
-        "downloadUrl" : "https://cdn.alpha.alm6ar.com/packages/riyadh-hero-web-1792662372164.jpg",
-        "days" : [
-          {
-            "title" : "Diriyah & Bujairi",
-            "day" : 1,
-            "image" : "https://cdn.alpha.alm6ar.com/packages/riyadh-day-1-1792662375969.jpg",
-            "description" : "Day 1 of your Riyadh City Break."
-          },
-          {
-            "title" : "Edge of the World",
-            "day" : 2,
-            "image" : "https://cdn.alpha.alm6ar.com/packages/riyadh-day-2-1792662376317.jpg",
-            "description" : "Day 2 of your Riyadh City Break."
-          },
-          {
-            "title" : "Boulevard & Departure",
-            "day" : 3,
-            "image" : "https://cdn.alpha.alm6ar.com/packages/riyadh-day-3-1792662376666.jpg",
-            "description" : "Day 3 of your Riyadh City Break."
-          }
-        ]
-      },
-      "includedServices" : {
-        "title" : "Included Services",
-        "items" : [
-          {
-            "title" : "Airport transfer",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-car-1792662348367.png",
-            "description" : "Private car both ways"
-          },
-          {
-            "title" : "Daily breakfast",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-coffee-1792662348757.png",
-            "description" : "Served at the hotel"
-          },
-          {
-            "title" : "Travel insurance",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-shield-1792662345363.png",
-            "description" : "Medical cover for the whole trip"
-          },
-          {
-            "title" : "Free Wi-Fi",
-            "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-wifi-1792662343562.png",
-            "description" : "In the hotel and on the bus"
-          }
-        ],
-        "description" : "Everything below is part of your booking",
-        "subtitle" : "Included in your package"
-      },
-      "name" : "Riyadh City Break",
-      "journeySnapshot" : [
-        {
-          "label" : "Return flights",
-          "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-plane-1792662338482.png"
-        },
-        {
-          "label" : "2 nights hotel",
-          "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-hotel-1792662338962.png"
-        },
-        {
-          "label" : "Airport transfers",
-          "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-bus-1792662340213.png"
-        },
-        {
-          "label" : "Guided tours",
-          "icon" : "https://cdn.alpha.alm6ar.com/packages/icon-guide-1792662341064.png"
-        }
-      ]
-    },
-    "cartId" : "6ade1f5a5ed469e6b401021f",
-    "price" : {
-      "finalAmount" : 2600,
-      "currency" : "SAR",
-      "breakdown" : [
-        {
-          "title" : "Package price",
-          "items" : [
+          "title": "Cabin upgrade",
+          "items": [
             {
-              "label" : "1x Adult",
-              "quantity" : 1,
-              "amount" : 2600
+              "label": "Premium Economy",
+              "description": "420 × 2 travelers • Both flights",
+              "unitAmount": 420,
+              "quantity": 2,
+              "amount": 840
             }
           ]
         },
         {
-          "title" : "Total to pay",
-          "amount" : 2600,
-          "note" : null
+          "title": "Total to pay",
+          "note": "Tax included",
+          "amount": 6340
         }
       ]
     },
-    "dynamicForm" : {
-      "title" : "Traveller Details",
-      "subtitle" : "Tell us who is travelling and when",
-      "sections" : [
-        {
-          "fields" : [
-            {
-              "label" : "First name",
-              "options" : [
-
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "firstName",
-              "dataType" : "string"
-            },
-            {
-              "label" : "Last name",
-              "options" : [
-
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "lastName",
-              "dataType" : "string"
-            },
-            {
-              "label" : "Email",
-              "options" : [
-
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "email",
-              "dataType" : "email"
-            },
-            {
-              "label" : "Phone number",
-              "options" : [
-
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "phoneNumber",
-              "dataType" : "phone"
-            },
-            {
-              "label" : "Date of birth",
-              "options" : [
-
-              ],
-              "dateConfigs" : {
-                "to" : "2026-10-01",
-                "options" : [
-
-                ],
-                "type" : "range",
-                "from" : "1930-01-01"
-              },
-              "required" : true,
-              "field" : "dateOfBirth",
-              "dataType" : "date"
-            },
-            {
-              "label" : "Passport number",
-              "options" : [
-
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "passportNumber",
-              "dataType" : "string"
-            },
-            {
-              "label" : "Iqama number",
-              "options" : [
-
-              ],
-              "dateConfigs" : null,
-              "required" : false,
-              "field" : "iqamaNumber",
-              "dataType" : "number"
-            },
-            {
-              "label" : "Nationality",
-              "options" : [
+    "packageInfo": {
+      "packageId": "6ab3f963bb7b185457c9eed7",
+      "name": "Six Flags Qiddiya City",
+      "duration": "7 nights",
+      "images": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSdEBjLdClgWsAQkW2mPrWy3bCt0kWlL7cOliFKvLJvg&s=10",
+        "https://img.magnific.com/free-photo/green-park_1417-1592.jpg?semt=ais_hybrid&w=740&q=80",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSdEBjLdClgWsAQkW2mPrWy3bCt0kWlL7cOliFKvLJvg&s=10",
+        "https://img.magnific.com/free-photo/green-park_1417-1592.jpg?semt=ais_hybrid&w=740&q=80"
+      ],
+      "journeySnapshot": [
+        { "icon": "https://img.icons8.com/fluent-systems-regular/1200/map-marker.jpg", "label": "Qiddiya City, SA" },
+        { "icon": "https://www.shutterstock.com/image-vector/one-day-icon-black-260nw-1288712284.jpg", "label": "1 Day Pass" },
+        { "icon": "https://img.icons8.com/fluent-systems-regular/1200/map-marker.jpg", "label": "1 Day Pass" }
+      ],
+      "highlights": {
+        "title": "Park Highlights",
+        "items": [
+          { "icon": "https://img.icons8.com/fluent-systems-regular/1200/map-marker.jpg", "label": "Thrills", "value": "Record-breaking coasters" },
+          { "icon": "https://www.shutterstock.com/image-vector/one-day-icon-black-260nw-1288712284.jpg", "label": "Water Fun", "value": "Splash Island water park" },
+          { "icon": "https://img.icons8.com/fluent-systems-regular/1200/map-marker.jpg", "label": "Dining", "value": "Themed restaurants" },
+          { "icon": "https://www.shutterstock.com/image-vector/one-day-icon-black-260nw-1288712284.jpg", "label": "Shows", "value": "Live entertainment" },
+          { "icon": "https://img.icons8.com/fluent-systems-regular/1200/map-marker.jpg", "label": "Family", "value": "Kids' play zones" },
+          { "icon": "https://www.shutterstock.com/image-vector/one-day-icon-black-260nw-1288712284.jpg", "label": "Night", "value": "Fireworks display" }
+        ]
+      },
+      "products": {
+        "title": "Your Park Day",
+        "subtitle": "Six Flags Qiddiya City day itinerary",
+        "items": [
+          {
+            "productId": "181",
+            "title": "Round trip flight",
+            "description": "Return flights between Jeddah and Riyadh, economy class.",
+            "productType": "flight",
+            "inventoryType": "static",
+            "tags": [{ "icon": "https://media.istockphoto.com/id/1414160809/vector/airplane-icon-plane-flight-pictogram-transport-symbol-travel.jpg?s=612x612&w=0&k=20&c=BtgJVW1RQ9a4i8sTMm-Uk-HAFI2sNbDFQVvHbPKbQA4=", "label": "Flight" }],
+            "status": "allocated",
+            "isMandatory": true,
+            "optionsSection": {
+              "ctaText": "Select Options",
+              "title": "Options",
+              "note": "Select your preferred options.",
+              "options": [
                 {
-                  "name" : "Saudi Arabia",
-                  "code" : "SA"
+                  "optionId": "182",
+                  "title": "Extra Baggage",
+                  "subTitle": "An extra 23 kg checked bag.",
+                  "price": 150,
+                  "currency": "SAR"
                 },
                 {
-                  "name" : "Egypt",
-                  "code" : "EG"
-                },
-                {
-                  "name" : "United Arab Emirates",
-                  "code" : "AE"
-                },
-                {
-                  "name" : "Pakistan",
-                  "code" : "PK"
+                  "optionId": "183",
+                  "title": "Seat Selection",
+                  "subTitle": "Choose your preferred seat.",
+                  "price": 60,
+                  "currency": "SAR"
                 }
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "nationality",
-              "dataType" : "string"
+              ]
             },
-            {
-              "label" : "Gender",
-              "options" : [
-                "male",
-                "female"
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "gender",
-              "dataType" : "string"
-            }
-          ],
-          "section" : "passenger",
-          "title" : "Passengers",
-          "isMultiple" : true
-        },
-        {
-          "fields" : [
-            {
-              "label" : "Departure date",
-              "options" : [
-
-              ],
-              "dateConfigs" : {
-                "to" : null,
-                "options" : [
-                  {
-                    "date" : "2026-12-10",
-                    "returnDate" : "2026-12-12"
-                  },
-                  {
-                    "date" : "2026-12-17",
-                    "returnDate" : "2026-12-19"
-                  },
-                  {
-                    "date" : "2026-12-24",
-                    "returnDate" : "2026-12-26"
-                  },
-                  {
-                    "date" : "2027-01-07",
-                    "returnDate" : "2027-01-09"
-                  }
-                ],
-                "type" : "list",
-                "from" : null
-              },
-              "required" : true,
-              "field" : "departureDate",
-              "dataType" : "date"
-            }
-          ],
-          "section" : "departureDate",
-          "title" : "Departure Date",
-          "isMultiple" : false
-        },
-        {
-          "fields" : [
-            {
-              "label" : "Departure city",
-              "options" : [
+            "flightInfo": {
+              "isCabinUpgradeAvailable": true,
+              "legs": [
                 {
-                  "name" : "Riyadh",
-                  "code" : "RUH"
+                  "departure": {
+                    "time": "2026-07-16T08:30:00Z",
+                    "airportCode": "JED",
+                    "airportName": "King Abdulaziz International Airport",
+                    "cityName": "Jeddah",
+                    "countryName": "Saudi Arabia"
+                  },
+                  "arrival": {
+                    "time": "2026-07-16T10:15:00Z",
+                    "airportCode": "RUH",
+                    "airportName": "King Khalid International Airport",
+                    "cityName": "Riyadh",
+                    "countryName": "Saudi Arabia"
+                  },
+                  "airline": { "code": "SV", "name": "Saudia", "logoUrl": "https://cdn.almatar.com/airlines/SV.png" },
+                  "flightNumber": "SV-1430",
+                  "cabin": "Economy",
+                  "duration": "1h 45m",
+                  "stops": 0
                 },
                 {
-                  "name" : "Jeddah",
-                  "code" : "JED"
-                },
-                {
-                  "name" : "Dammam",
-                  "code" : "DMM"
+                  "departure": {
+                    "time": "2026-07-24T18:45:00Z",
+                    "airportCode": "RUH",
+                    "airportName": "King Khalid International Airport",
+                    "cityName": "Riyadh",
+                    "countryName": "Saudi Arabia"
+                  },
+                  "arrival": {
+                    "time": "2026-07-24T20:30:00Z",
+                    "airportCode": "JED",
+                    "airportName": "King Abdulaziz International Airport",
+                    "cityName": "Jeddah",
+                    "countryName": "Saudi Arabia"
+                  },
+                  "airline": { "code": "SV", "name": "Saudia", "logoUrl": "https://cdn.almatar.com/airlines/SV.png" },
+                  "flightNumber": "SV-1431",
+                  "cabin": "Economy",
+                  "duration": "1h 45m",
+                  "stops": 0
                 }
-              ],
-              "dateConfigs" : null,
-              "required" : true,
-              "field" : "departureCity",
-              "dataType" : "string"
+              ]
             }
-          ],
-          "section" : "departureCity",
-          "title" : "Departure City",
-          "isMultiple" : false
+          },
+          {
+            "productId": "191",
+            "title": "The Ritz-Carlton, Riyadh",
+            "description": "Palace-style luxury in the heart of Riyadh.",
+            "productType": "hotel",
+            "inventoryType": "static",
+            "tags": [{ "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpwwrFsr8As5UlEEFJdUcaswqsUjTghj5yNiG5cxEQSMJSGnuL8W2I-_k&s=10", "label": "Stay" }],
+            "status": "allocated",
+            "isMandatory": true,
+            "hotelInfo": {
+              "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/ritz-carlton.jpg",
+              "starRating": 4.9,
+              "tagline": "Palace-style luxury",
+              "city": "Riyadh",
+              "checkIn": "2026-07-16",
+              "checkOut": "2026-07-21",
+              "nights": 5,
+              "room": { "name": "Deluxe City View", "beds": "1 king bed", "sleeps": 2 }
+            }
+          },
+          {
+            "productId": "201",
+            "title": "Splash Island & Kids' Play",
+            "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+            "productType": "addon",
+            "inventoryType": "static",
+            "tags": [{ "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXMgwGp9X4QUPXS0EgLAu6c6nfW9WzImbdUXC31gvwIA&s=10", "label": "Ticket" }],
+            "status": "allocated",
+            "isMandatory": true,
+            "addonInfo": {
+              "id": 813,
+              "key": "splash-island-kids-play",
+              "title": "Splash Island & Kids' Play",
+              "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+              "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
+            }
+          }
+        ]
+      },
+      "itinerary": {
+        "title": "Itinerary",
+        "subtitle": "Your step-by-step guide to an unforgettable day at Six Flags Qiddiya City",
+        "downloadUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/itinerary.pdf",
+        "days": [
+          {
+            "day": 1,
+            "title": "Morning – Arrival & First Rides",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSdEBjLdClgWsAQkW2mPrWy3bCt0kWlL7cOliFKvLJvg&s=10",
+            "description": "Start your day at Six Flags Qiddiya City with early access to the park's headline rides. Beat the crowds on Falcon's Flight — the world's fastest coaster — before the queues build. Start your day at Six Flags Qiddiya City with early access to the park's headline rides. Beat the crowds on Falcon's Flight — the world's fastest coaster — before the queues build."
+          },
+          {
+            "day": 2,
+            "title": "Afternoon – Splash Island",
+            "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/itinerary/day-2.jpg",
+            "description": "Cool off at Splash Island with water slides and lazy rivers, while the kids explore the interactive play zones."
+          },
+          {
+            "day": 3,
+            "title": "Evening – Shows & Fireworks",
+            "image": null,
+            "description": "Grab your reserved seats for the live shows, then end the day with the fireworks display."
+          }
+        ]
+      },
+      "includedServices": {
+        "title": "Included Services",
+        "description": "Confirm or customize your configuration below",
+        "subtitle": "Included in Your Pass",
+        "items": [
+          { "icon": "rides", "title": "All-Day Ride Access", "description": "Unlimited access to all roller coasters and attractions." },
+          { "icon": "seat", "title": "Reserved Show Seating", "description": "Priority seating for all live shows and entertainment." },
+          { "icon": "map", "title": "Park Map & Guide", "description": "Digital and physical guide to help you plan your day." }
+        ]
+      },
+      "cancellationPolicies": [
+        {
+          "title": "Free cancellation",
+          "window": "30+ days before departure",
+          "until": "2026-04-17",
+          "note": "Full refund, except visa fee",
+          "refundableAmountPercentage": 100
         }
       ]
-    }
-  },
-  "errors" : null
+    },
+    "dynamicForm": {
+      "title": "Traveller Details",
+      "subtitle": "Tell us who is travelling and when",
+      "sections": [
+        {
+          "section": "passenger",
+          "title": "Passengers",
+          "isMultiple": true,
+          "fields": [
+            { "field": "firstName", "label": "First name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
+            { "field": "lastName", "label": "Last name", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
+            { "field": "email", "label": "Email", "required": true, "dataType": "email", "options": [], "dateConfigs": null },
+            { "field": "phoneNumber", "label": "Phone number", "required": true, "dataType": "phone", "options": [], "dateConfigs": null },
+            { "field": "dateOfBirth", "label": "Date of birth", "required": true, "dataType": "date", "options": [], "dateConfigs": { "type": "range", "from": "1930-01-01", "to": "2026-10-01", "options": [] } },
+            { "field": "passportNumber", "label": "Passport number", "required": true, "dataType": "string", "options": [], "dateConfigs": null },
+            { "field": "iqamaNumber", "label": "Iqama number", "required": false, "dataType": "number", "options": [], "dateConfigs": null },
+            { "field": "nationality", "label": "Nationality", "required": true, "dataType": "string", "options": [ { "code": "SA", "name": "Saudi Arabia" }, { "code": "EG", "name": "Egypt" }, { "code": "AE", "name": "United Arab Emirates" }, { "code": "PK", "name": "Pakistan" } ], "dateConfigs": null },
+            { "field": "gender", "label": "Gender", "required": true, "dataType": "string", "options": [ "male", "female" ], "dateConfigs": null }
+          ]
+        },
+        {
+          "section": "departureDate",
+          "title": "Departure Date",
+          "isMultiple": false,
+          "fields": [
+            { "field": "departureDate", "label": "Departure date", "required": true, "dataType": "date", "options": [], "dateConfigs": { "type": "range", "from": "2026-11-15", "to": "2027-05-31", "options": [] } }
+          ]
+        },
+        {
+          "section": "departureCity",
+          "title": "Departure City",
+          "isMultiple": false,
+          "fields": [
+            { "field": "departureCity", "label": "Departure city", "required": true, "dataType": "string", "options": [ { "code": "RUH", "name": "Riyadh" }, { "code": "JED", "name": "Jeddah" }, { "code": "DMM", "name": "Dammam" } ], "dateConfigs": null }
+          ]
+        }
+      ]
+    },
+    "travellers": { "adults": 1, "children": 0, "infants": 0 }
+  }
 }

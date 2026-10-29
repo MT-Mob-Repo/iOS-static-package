@@ -154,7 +154,7 @@ public final class AlmatarStaticPackageSDK {
         return await withCheckedContinuation { continuation in
             delegate.startPayment(
                 bookingId: request.bookingId,
-                bookingKey: request.bookingKey,
+                paymentId: request.paymentId,
                 amountInSar: request.amountInSar,
                 productType: request.productType,
                 cancellationTiers: request.cancellationTiers

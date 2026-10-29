@@ -221,10 +221,14 @@ final class NetworkClient: @unchecked Sendable {
                 (data, response) = try await session.data(for: request)
             }
 
+            if let body = String(data: data, encoding: .utf8) {
+                print("📦 Response Body:\n\(body)")
+            }
+            
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }
-
+            
             guard (200...299).contains(httpResponse.statusCode) else {
                 let messages = parseErrorMessages(from: data)
                 throw NetworkError.httpError(statusCode: httpResponse.statusCode, messages: messages)

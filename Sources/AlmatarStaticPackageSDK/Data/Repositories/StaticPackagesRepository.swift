@@ -13,6 +13,8 @@ protocol StaticPackagesRepositoryProtocol: Sendable {
     func validateInfo(request: ValidateInfoRequest) async throws -> Bool
     /// Creates the order for the cart.
     func createOrder(cartId: String) async throws -> PackageOrder
+    
+    func fetchCart(id: String) async throws -> PackageCart
 }
 
 enum StaticPackagesEndpoint {
@@ -24,9 +26,13 @@ enum StaticPackagesEndpoint {
     static let packageCartPrefix = "api/v1/packages/carts/"
     /// `GET v1/packages/carts/{id}`
     static func packageCart(id: String) -> String { packageCartPrefix + id }
+    
     static let allocateSuffix = "/allocate"
     /// `POST v1/packages/carts/{id}/allocate`
     static func allocateCart(id: String) -> String { packageCart(id: id) + allocateSuffix }
+
+    static let orderPrefix = "api/v1/orders/"
+    static func cart(id: String) -> String { orderPrefix + id }
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -90,6 +96,17 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
             baseURL: baseURL,
             path: StaticPackagesEndpoint.orders,
             body: CreateOrderRequest(cartId: cartId)
+        )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
+    }
+    
+    func fetchCart(id: String) async throws -> PackageCart {
+        let response: BaseNetworkResponse<PackageCart> = try await networkClient.get(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.cart(id: id)
         )
         guard let data = response.data else {
             throw NetworkError.noData

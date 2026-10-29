@@ -52,6 +52,48 @@ enum LocalizedKey: String {
     case perTicket = "packages_list.per_ticket"
     case book = "packages_list.book"
 
+    // MARK: Package Booking Confirmation
+    case bookingConfirmedTitle = "package_booking_confirmation.title"
+    case bookingConfirmedSubtitle = "package_booking_confirmation.subtitle"
+    case bookingId = "package_booking_confirmation.booking_id"
+    case copyBookingId = "package_booking_confirmation.copy_booking_id"
+    case packageSummary = "package_booking_confirmation.package_summary"
+    case package = "package_booking_confirmation.package"
+    case destination = "package_booking_confirmation.destination"
+    case duration = "package_booking_confirmation.duration"
+    case tier = "package_booking_confirmation.tier"
+    case packageIncludes = "package_booking_confirmation.package_includes"
+    case paymentDetails = "package_booking_confirmation.payment_details"
+    case totalPaid = "package_booking_confirmation.total_paid"
+    case freeCancellation = "package_booking_confirmation.free_cancellation"
+    case nonRefundable = "package_booking_confirmation.non_refundable"
+    case refundPercentage = "package_booking_confirmation.refund_percentage"
+    case goToMyTrips = "package_booking_confirmation.go_to_my_trips"
+    case backToHome = "package_booking_confirmation.back_to_home"
+    case textCopied = "package_booking_confirmation.text_copied"
+    case bookingCancellationPolicy = "package_booking_confirmation.cancellation_policy"
+    case dates = "package_booking_confirmation.dates"
+    case confirmationVisitors = "package_booking_confirmation.visitors"
+    case oneVisitor = "package_booking_confirmation.one_visitor"
+    case visitorsCount = "package_booking_confirmation.visitors_count"
+    case parkAccess = "package_booking_confirmation.park_access"
+    case yourAddons = "package_booking_confirmation.your_addons"
+    case mainVisitor = "package_booking_confirmation.main_visitor"
+    case verified = "package_booking_confirmation.verified"
+    case flightDetails = "package_booking_confirmation.flight_details"
+    case departure = "package_booking_confirmation.departure"
+    case returnFlight = "package_booking_confirmation.return"
+    case hotelDetails = "package_booking_confirmation.hotel_details"
+    case checkIn = "package_booking_confirmation.check_in"
+    case checkOut = "package_booking_confirmation.check_out"
+    case roomType = "package_booking_confirmation.room_type"
+    case boardBasis = "package_booking_confirmation.board_basis"
+    case whatsIncluded = "package_booking_confirmation.whats_included"
+    case includedAmount = "package_booking_confirmation.included"
+    case paidVia = "package_booking_confirmation.paid_via"
+    case paidInFull = "package_booking_confirmation.paid_in_full"
+    case receipt = "package_booking_confirmation.receipt"
+    case shareItinerary = "package_booking_confirmation.share_itinerary"
     // MARK: Common
     case genericError = "common.generic_error"
     case retry = "common.retry"
@@ -103,6 +145,12 @@ enum LocalizedKey: String {
     @MainActor
     func localized(with arguments: CVarArg...) -> String {
         String(format: localized(), locale: nil, arguments: arguments)
+    }
+
+    /// Localized format string filled with `arguments`.
+    @MainActor
+    func localized(_ arguments: CVarArg...) -> String {
+        String(format: localized(), arguments: arguments)
     }
 }
 

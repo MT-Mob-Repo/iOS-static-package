@@ -24,6 +24,16 @@ public final class AlmatarStaticPackageSDK {
     /// Held weakly, so the host app must keep a strong reference to it.
     public weak var delegate: AlmatarStaticPackageSDKProtocol?
 
+    /// Called when the user taps "Go to My Trips" on the booking confirmation screen.
+    public var onGoToMyTrips: (() -> Void)?
+
+    /// Called when the user taps "Back to Home" on the booking confirmation screen.
+    public var onBackToHome: (() -> Void)?
+
+    /// Called with the order id when the user taps "Receipt" on the booking confirmation screen.
+    /// The button is hidden while this is `nil`.
+    public var onViewReceipt: ((_ orderId: String) -> Void)?
+
     private init() {}
 
     // MARK: - Configuration
@@ -102,7 +112,19 @@ public final class AlmatarStaticPackageSDK {
         return StaticPackageDetailsView(viewModel: viewModel)
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
-
+    /// Returns the Package Booking Confirmation screen for the given cart, in the configured language.
+    public func getPackageBookingConfirmationView(id: String) -> some View {
+        let viewModel = PackageBookingConfimrationViewModel(
+            id: id,
+            repository: makeStaticPackagesRepository(),
+            onGoToMyTrips: { [weak self] in self?.onGoToMyTrips?() },
+            onBackToHome: { [weak self] in self?.onBackToHome?() },
+            onViewReceipt: onViewReceipt == nil ? nil : { [weak self] orderId in self?.onViewReceipt?(orderId) }
+        )
+        return PackageBookingConfimrationView(viewModel: viewModel)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+    
     /// Returns the list of package cards for a section provided by the host app.
     /// "Book" creates a cart for the package, then pushes its details screen,
     /// so the view must be shown inside a `NavigationStack`.

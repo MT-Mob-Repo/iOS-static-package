@@ -14,7 +14,7 @@ public protocol AlmatarStaticPackageSDKProtocol: AnyObject {
     ///   `PackageCancellationPolicyView` on the payment screen; `nil` when the package has none.
     func startPayment(
         bookingId: String,
-        bookingKey: String,
+        paymentId: String,
         amountInSar: Float,
         productType: String,
         cancellationTiers: [CancellationPolicyTier]?,
@@ -46,7 +46,7 @@ struct PackagePaymentRequest: Sendable, Equatable {
     static let productType = "package"
 
     let bookingId: String
-    let bookingKey: String
+    let paymentId: String
     let amountInSar: Float
     let productType: String
     let cancellationTiers: [CancellationPolicyTier]?

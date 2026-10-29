@@ -322,8 +322,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             let cartId = try await currentCartId()
             // TODO: Confirm bookingId / bookingKey mapping with the payment team; the book API returns only `cartId`.
             let request = PackagePaymentRequest(
-                bookingId: cartId,
-                bookingKey: cartId,
+                bookingId: order?.orderId ?? "",
+                paymentId: order?.paymentId ?? "",
                 amountInSar: Float(amount),
                 productType: PackagePaymentRequest.productType,
                 cancellationTiers: cancellationTiers.isEmpty ? nil : cancellationTiers

@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import Combine
 
 @MainActor
 final class StaticPackageDetailsViewModel: ObservableObject {
@@ -24,6 +25,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         static let apiDateFormat = "yyyy-MM-dd"
         static let posixLocale = Locale(identifier: "en_US_POSIX")
         static let utc = TimeZone(identifier: "UTC")!
+        /// Waits for the traveller counter to settle so repeated taps send one request.
+        static let travellerSyncDelay: RunLoop.SchedulerTimeType.Stride = .milliseconds(400)
     }
 
     @Published private(set) var state: State = .idle
@@ -32,8 +35,13 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     @Published private(set) var addedActivityIds: Set<Int> = []
     /// `true` while booking or while the host app's payment flow is open.
     @Published private(set) var isStartingPayment = false
-    /// Set when payment cannot start or fails; shown as an alert.
+    /// Set when payment cannot start or fails, or the cart cannot be updated; shown as an alert.
     @Published var paymentErrorMessage: String?
+    /// Number of cart allocations in flight; see `isUpdatingCart`.
+    @Published private var pendingAllocations = 0
+
+    /// `true` while the cart is re-priced after a traveller or option change.
+    var isUpdatingCart: Bool { pendingAllocations > 0 }
 
     /// State of the "Visitor Details" form; observed directly by its view.
     let visitorForm = VisitorDetailsFormModel()
@@ -162,6 +170,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     private let packageId: String
     /// Cart from `POST v1/packages/book`; created on "Go to payment" when missing.
     private var cartId: String
+    /// Order from `POST v1/packages/orders`, created on "Go to payment" once the details are valid.
+    private(set) var order: PackageOrder?
     private let repository: StaticPackagesRepositoryProtocol
     private let startPayment: (PackagePaymentRequest) async -> PaymentResult
     private let onPaymentFinished: () -> Void
@@ -178,6 +188,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         self.repository = repository
         self.startPayment = startPayment
         self.onPaymentFinished = onPaymentFinished
+        observeTravellerCounts()
     }
 
     func loadPackageDetails() async {
@@ -185,6 +196,13 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         do {
             let details = try await repository.fetchPackageDetails(cartId: cartId)
             visitorForm.configure(with: details.dynamicForm)
+            // The form starts with the travellers the cart is priced for.
+            if let travellers = details.travellers {
+                visitorForm.setTravellerCounts(Self.cartTravellerCounts(travellers))
+            }
+            allocatedCounts = currentTravellerCounts
+            requestedCounts = currentTravellerCounts
+            cartNeedsReload = false
             state = .loaded(details)
         } catch is CancellationError {
             state = .idle
@@ -216,20 +234,18 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
-    /// e.g. "6,000"; the cart total plus the chosen product options. `nil` until the price is loaded.
+    /// e.g. "6,000"; the cart total, which already includes the allocated travellers and options.
+    /// `nil` until the price is loaded.
     func totalPriceAmountText(visitorCount: Int) -> String? {
         guard let price = packageDetails?.price else { return nil }
-        return CurrencyManager.shared.formatPrice(
-            value: price.finalAmount + optionsAmount(visitorCount: visitorCount),
-            currencyCode: price.currency
-        )
+        return CurrencyManager.shared.formatPrice(value: price.finalAmount, currencyCode: price.currency)
     }
 
     /// e.g. "+ 1,680 SAR • Cabin upgrade"; `nil` when no paid option is chosen.
     func optionsDetailText(visitorCount: Int) -> String? {
         let amount = optionsAmount(visitorCount: visitorCount)
         guard amount > 0 else { return nil }
-        let titles = selectedProductOptions.keys.sorted().compactMap { optionsSection(forProductAt: $0)?.title.nonEmpty }
+        let titles = selectedOptions.compactMap { optionsSection(forProductAt: $0.productIndex)?.title.nonEmpty }
         let label = titles.isEmpty ? LocalizedKey.selectOptions.localized() : titles.joined(separator: ", ")
         return "+ \(CurrencyManager.shared.formatPrice(value: amount, currencyCode: packageDetails?.price?.currency)) • \(label)"
     }
@@ -239,12 +255,16 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// The product whose options screen is open, by its index in the products list.
     @Published var optionsProductIndex: Int?
 
-    /// The option chosen for each product, by product index.
-    @Published private(set) var selectedProductOptions: [Int: ProductOption] = [:]
+    /// The option the cart holds for each product (marked `selected`), in product order.
+    private var selectedOptions: [(productIndex: Int, option: ProductOption)] {
+        (packageInfo?.products?.items ?? []).enumerated().compactMap { index, product in
+            product.optionsSection?.options?.first(where: \.selected).map { (index, $0) }
+        }
+    }
 
-    /// Chosen options cost per visitor, for the whole group.
+    /// Selected options cost per visitor, for the whole group.
     func optionsAmount(visitorCount: Int) -> Double {
-        selectedProductOptions.values.reduce(0) { $0 + ($1.price ?? 0) } * Double(visitorCount)
+        selectedOptions.reduce(0) { $0 + ($1.option.price ?? 0) } * Double(visitorCount)
     }
 
     func optionsSection(forProductAt index: Int) -> ProductOptionsSection? {
@@ -262,35 +282,43 @@ final class StaticPackageDetailsViewModel: ObservableObject {
 
     func makeProductOptionsViewModel(productIndex: Int) -> ProductOptionsViewModel? {
         guard let section = optionsSection(forProductAt: productIndex) else { return nil }
-        let otherOptions = selectedProductOptions.filter { $0.key != productIndex }
-        let otherOptionsPerVisitor = otherOptions.values.reduce(0) { $0 + ($1.price ?? 0) }
         return ProductOptionsViewModel(
             section: section,
-            selectedOption: selectedProductOptions[productIndex],
             visitorForm: visitorForm,
-            // The options screen adds its own choice on top of the cart and the other products' choices.
-            baseAmount: (packageDetails?.price?.finalAmount ?? 0) + otherOptionsPerVisitor * Double(visitorForm.visitors.count),
-            currency: packageDetails?.price?.currency,
-            breakdownSections: priceBreakdownSections
-        ) { [weak self] option in
-            self?.selectedProductOptions[productIndex] = option
-        }
+            cartPrice: packageDetails?.price,
+            allocateOption: { [weak self] option in
+                guard let self else { return nil }
+                return await self.allocateOption(option, productIndex: productIndex)
+            },
+            currentCartPrice: { [weak self] in self?.packageDetails?.price }
+        )
     }
 
-    /// Package price plus the optional itinerary activities the customer added, in SAR.
-    /// The cart total plus the chosen product options for the whole group.
+    /// The cart total; travellers and options are priced by the cart allocation.
     var paymentAmount: Double? {
         guard let details = packageDetails else { return nil }
-        return (details.price?.finalAmount ?? 0.0) + optionsAmount(visitorCount: visitorForm.visitors.count)
+        return details.price?.finalAmount ?? 0.0
     }
 
-    /// Books the package if needed, then opens the host app's payment flow.
+    /// Validates the visitors' details, creates the order, books the package, then opens the host app's payment flow.
     func goToPaymentTapped() async {
-        guard !isStartingPayment, let amount = paymentAmount else { return }
+        guard !isStartingPayment, paymentAmount != nil, visitorForm.areTravellersComplete else { return }
         isStartingPayment = true
         defer { isStartingPayment = false }
 
+        // Pay the price of the group shown on screen: send any traveller change still waiting.
+        syncTravellerCounts()
+        _ = await allocationTask?.value
+        guard allocatedCounts == currentTravellerCounts, let amount = paymentAmount else { return }
+
         do {
+            guard try await validateVisitorDetails() else {
+                // Show the field errors in the form along with the alert.
+                visitorForm.shouldValidate = true
+                paymentErrorMessage = genericErrorMessage
+                return
+            }
+            order = try await repository.createOrder(cartId: cartId)
             let cartId = try await currentCartId()
             // TODO: Confirm bookingId / bookingKey mapping with the payment team; the book API returns only `cartId`.
             let request = PackagePaymentRequest(
@@ -309,6 +337,12 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
+    /// Calls `POST v1/packages/validate-info` with the visitors form; `true` when the details are accepted.
+    private func validateVisitorDetails() async throws -> Bool {
+        let request = ValidateInfoRequest(cartId: cartId, sections: visitorForm.validateInfoSections)
+        return try await repository.validateInfo(request: request)
+    }
+
     private func currentCartId() async throws -> String {
         let booking = try await repository.bookPackage(packageId: packageId)
         cartId = booking.cartId
@@ -323,6 +357,157 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             paymentErrorMessage = genericErrorMessage
         case .failure(.paymentFailed(let reason)), .failure(.validation(let reason)):
             paymentErrorMessage = reason.isEmpty ? genericErrorMessage : reason
+        }
+    }
+
+    // MARK: - Cart allocation
+
+    /// Traveller counts the cart is currently priced for.
+    private var allocatedCounts: [VisitorDetailsFormModel.Traveller: Int] = [:]
+    /// Traveller counts of the group when they were last sent to the cart.
+    private var requestedCounts: [VisitorDetailsFormModel.Traveller: Int] = [:]
+    /// The last queued allocation; allocations run one after another, in the order they were made.
+    private var allocationTask: Task<Bool, Never>?
+    /// Allocations queued or running; the cart's travellers are applied when it drops to zero.
+    private var queuedAllocations = 0
+    /// `true` when an allocation succeeded but the cart could not be reloaded, so `packageDetails` is out of date.
+    private var cartNeedsReload = false
+    private var cancellables = Set<AnyCancellable>()
+
+    private var currentTravellerCounts: [VisitorDetailsFormModel.Traveller: Int] {
+        Self.travellerCounts(visitorForm.visitors)
+    }
+
+    nonisolated private static func cartTravellerCounts(_ travellers: CartTravellers) -> [VisitorDetailsFormModel.Traveller: Int] {
+        [.adults: travellers.adults ?? 0, .children: travellers.children ?? 0, .infants: travellers.infants ?? 0]
+    }
+
+    nonisolated private static func travellerCounts(_ visitors: [VisitorDetailsFormModel.Visitor]) -> [VisitorDetailsFormModel.Traveller: Int] {
+        Dictionary(uniqueKeysWithValues: VisitorDetailsFormModel.Traveller.allCases.map { traveller in
+            (traveller, visitors.filter { $0.type == traveller }.count)
+        })
+    }
+
+    /// Re-prices the cart whenever the group changes, from the counters or "Remove visitor".
+    private func observeTravellerCounts() {
+        visitorForm.$visitors
+            .map(Self.travellerCounts)
+            .removeDuplicates()
+            .debounce(for: Constants.travellerSyncDelay, scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                Task { @MainActor in self?.syncTravellerCounts() }
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Sends one allocation per traveller type whose count differs from the cart,
+    /// e.g. removing an adult can also remove an infant.
+    private func syncTravellerCounts() {
+        guard packageDetails != nil else { return }
+        requestedCounts = currentTravellerCounts
+        for traveller in VisitorDetailsFormModel.Traveller.allCases {
+            enqueueAllocation { viewModel in
+                let quantity = viewModel.visitorForm.count(traveller)
+                guard viewModel.allocatedCounts[traveller] != quantity else { return true }
+                let request = CartAllocationRequest.traveller(
+                    packageId: viewModel.packageId,
+                    type: traveller.allocationType,
+                    quantity: quantity
+                )
+                guard await viewModel.allocate(request) else { return false }
+                viewModel.allocatedCounts[traveller] = quantity
+                return true
+            }
+        }
+    }
+
+    /// Allocates an option picked on the options screen, after any allocation already queued,
+    /// then reloads the cart. Returns the error message when the cart could not be updated, else `nil`.
+    private func allocateOption(_ option: ProductOption?, productIndex: Int) async -> String? {
+        guard let productId = packageInfo?.products?.items?[safe: productIndex]?.productId?.value else {
+            return genericErrorMessage
+        }
+        let request = CartAllocationRequest.option(
+            packageId: packageId,
+            productId: productId,
+            optionId: option?.optionId?.value
+        )
+        // The reloaded cart marks the allocated option as `selected`.
+        let succeeded = await enqueueAllocation { viewModel in
+            await viewModel.allocate(request)
+        }.value
+        guard !succeeded else { return nil }
+        // The options screen shows the error itself, not this screen's alert behind it.
+        let message = paymentErrorMessage ?? genericErrorMessage
+        paymentErrorMessage = nil
+        return message
+    }
+
+    /// Runs the operation after every allocation already queued; its result says whether the cart was updated.
+    @discardableResult
+    private func enqueueAllocation(_ operation: @escaping @MainActor (StaticPackageDetailsViewModel) async -> Bool) -> Task<Bool, Never> {
+        let previous = allocationTask
+        queuedAllocations += 1
+        let task = Task { [weak self] () -> Bool in
+            _ = await previous?.value
+            guard let self else { return false }
+            let succeeded = await operation(self)
+            self.queuedAllocations -= 1
+            if self.queuedAllocations == 0 {
+                self.applyCartTravellers()
+            }
+            return succeeded
+        }
+        allocationTask = task
+        return task
+    }
+
+    /// Once every queued allocation is done, takes the traveller counts from the reloaded cart:
+    /// they become the allocated counts, and the visitors form is updated to match them
+    /// unless the user changed the group again since it was sent (that change is synced next).
+    private func applyCartTravellers() {
+        guard !cartNeedsReload, let travellers = packageDetails?.travellers else { return }
+        let cartCounts = Self.cartTravellerCounts(travellers)
+        allocatedCounts = cartCounts
+        guard currentTravellerCounts == requestedCounts, currentTravellerCounts != cartCounts else { return }
+        visitorForm.setTravellerCounts(cartCounts)
+        requestedCounts = currentTravellerCounts
+    }
+
+    /// Calls `POST carts/{cartId}/allocate`, then reloads the cart (`GET carts/{cartId}`) to refresh the screen.
+    /// Returns `false` and shows the error when the cart could not be updated.
+    private func allocate(_ request: CartAllocationRequest) async -> Bool {
+        pendingAllocations += 1
+        defer { pendingAllocations -= 1 }
+        do {
+            // The allocation response is not used; the screen shows the cart reloaded from the API.
+            _ = try await repository.allocateCart(cartId: cartId, request: request)
+            await reloadCart()
+            return true
+        } catch is CancellationError {
+            return false
+        } catch {
+            let apiMessages = (error as? NetworkError)?.apiMessages ?? []
+            paymentErrorMessage = apiMessages.isEmpty ? genericErrorMessage : apiMessages.joined(separator: "\n")
+            return false
+        }
+    }
+
+    /// Shows the cart as read from `GET carts/{cartId}` after an allocation.
+    /// The visitors form is not reconfigured, so the group and entered details stay as filled in.
+    /// If the reload fails, the current screen stays and the error is shown.
+    private func reloadCart() async {
+        do {
+            let details = try await repository.fetchPackageDetails(cartId: cartId)
+            cartId = details.cartId
+            cartNeedsReload = false
+            state = .loaded(details)
+        } catch is CancellationError {
+            cartNeedsReload = true
+        } catch {
+            cartNeedsReload = true
+            let apiMessages = (error as? NetworkError)?.apiMessages ?? []
+            paymentErrorMessage = apiMessages.isEmpty ? genericErrorMessage : apiMessages.joined(separator: "\n")
         }
     }
 
@@ -381,7 +566,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 room: nil,
                 statusLabel: nil,
                 flight: PackageScheduleFlight(
-                    legs: flightInfo.legs.map(flightLeg),
+                    legs: flightInfo.legs.map { flightLeg($0, isUpgraded: isUpgraded(product)) },
                     isUpgradeAvailable: !(product.optionsSection?.options ?? []).isEmpty,
                     upgradeTitle: product.optionsSection?.ctaText.nonEmpty
                 )
@@ -413,12 +598,17 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         }
     }
 
-    private func flightLeg(_ leg: FlightLeg) -> PackageScheduleFlightLeg {
+    /// `true` when the product's selected option is not its default one, e.g. an upgraded cabin.
+    private func isUpgraded(_ product: PackageProduct) -> Bool {
+        guard let selected = product.optionsSection?.options?.first(where: \.selected) else { return false }
+        return !selected.isDefault
+    }
+
+    private func flightLeg(_ leg: FlightLeg, isUpgraded: Bool) -> PackageScheduleFlightLeg {
         let subtitle = [leg.flightNumber.nonEmpty, leg.cabin.nonEmpty].compactMap { $0 }
         let durationInfo = [leg.duration.nonEmpty, stopsText(leg.stops)].compactMap { $0 }
         return PackageScheduleFlightLeg(
-            // TODO: Map once the API returns the upgraded cabin state per leg.
-            isUpgraded: false,
+            isUpgraded: isUpgraded,
             airlineLogoUrl: leg.airline?.logoUrl,
             route: LocalizedKey.flightRoute.localized(with: cityName(leg.departure), cityName(leg.arrival)),
             subtitle: subtitle.isEmpty ? nil : subtitle.joined(separator: Constants.separator),
@@ -548,6 +738,17 @@ final class StaticPackageDetailsViewModel: ObservableObject {
           formatter.dateFormat = Constants.apiDateFormat
           return formatter.date(from: value)
       }
+}
+
+private extension VisitorDetailsFormModel.Traveller {
+    /// Traveller `type` in the allocate request.
+    var allocationType: String {
+        switch self {
+        case .adults: return "adult"
+        case .children: return "child"
+        case .infants: return "infant"
+        }
+    }
 }
 
 extension String {

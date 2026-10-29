@@ -58,6 +58,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let visitorTypeKey = "type"
         static let maxTravellers = 9
         static let apiDateFormat = "yyyy-MM-dd"
+        /// Appended to a listed date ("yyyy-MM-dd") to send it as a UTC date-time.
+        static let apiDateTimeSuffix = "T00:00:00.000Z"
         static let displayDateFormat = "dd MMM yyyy"
         static let dayMonthTemplate = "d MMM"
         static let monthKeyFormat = "yyyy-MM"
@@ -78,8 +80,8 @@ final class VisitorDetailsFormModel: ObservableObject {
     @Published private var phoneCountryNames: [String: String] = [:]
     /// Drives the design-system fields to show their errors, e.g. when trying to continue.
     @Published var shouldValidate = false
-    /// The group in the order visitors were added; always starts with the lead adult.
-    @Published private(set) var visitors: [Visitor] = [Visitor(id: UUID(), type: .adults)]
+    /// The group in the order visitors were added; starts empty (zero travellers).
+    @Published private(set) var visitors: [Visitor] = []
     /// Visitor cards that are open; a newly added visitor opens automatically.
     @Published var expandedVisitorIds: Set<UUID> = []
 
@@ -97,9 +99,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         phoneCodes = [:]
         phoneCountryNames = [:]
         shouldValidate = false
-        let lead = Visitor(id: UUID(), type: .adults)
-        visitors = [lead]
-        expandedVisitorIds = [lead.id]
+        visitors = []
+        expandedVisitorIds = []
 
         for section in form?.sections ?? [] where isPickerSection(section) {
             guard let field = section.fields.first else { continue }
@@ -388,8 +389,9 @@ final class VisitorDetailsFormModel: ObservableObject {
         sections.first(where: isTravellersSection)
     }
 
+    /// The first adult added is the lead visitor, even when a child or infant was added before.
     func isLead(_ visitor: Visitor) -> Bool {
-        visitor.id == visitors.first?.id
+        visitor.id == visitors.first(where: { $0.type == .adults })?.id
     }
 
     /// The visitor's own copy of the travellers fields. Values are stored under its own section key,
@@ -447,14 +449,15 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
-    /// Every visitor except the lead can be removed.
+    /// Whether the visitor's card offers "Remove visitor": every visitor except the lead.
+    /// The lead is removed with the adults counter only, once they are the last adult.
     func canRemove(_ visitor: Visitor) -> Bool {
         !isLead(visitor) && visitors.contains(visitor)
     }
 
-    /// Removes the visitor and their entered details.
+    /// Removes the visitor and their entered details. Removing the last adult also removes every infant.
     func remove(_ visitor: Visitor) {
-        guard canRemove(visitor) else { return }
+        guard visitors.contains(visitor) else { return }
         delete([visitor])
         dropInfantsAboveAdults()
     }
@@ -489,10 +492,10 @@ final class VisitorDetailsFormModel: ObservableObject {
         visitors.filter { $0.type == traveller }.count
     }
 
-    /// The visitor the counter's minus button removes: the last one of that type, never the lead.
+    /// The visitor the counter's minus button removes: the last one of that type,
+    /// so the lead adult only once they are the last adult (the count can go down to 0).
     func lastRemovableVisitor(of traveller: Traveller) -> Visitor? {
-        guard let last = visitors.last(where: { $0.type == traveller }), canRemove(last) else { return nil }
-        return last
+        visitors.last(where: { $0.type == traveller })
     }
 
     func canDecrement(_ traveller: Traveller) -> Bool {
@@ -509,6 +512,25 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    /// Matches the group to the given counts, e.g. the cart's travellers.
+    /// Visitors already in the group keep their details; extra ones are removed from the end
+    /// (the lead adult last) and missing ones are added with their cards open.
+    func setTravellerCounts(_ counts: [Traveller: Int]) {
+        for traveller in Traveller.allCases {
+            let target = max(0, counts[traveller] ?? 0)
+            let current = visitors.filter { $0.type == traveller }
+            if current.count > target {
+                delete(Array(current.suffix(current.count - target)))
+            } else if current.count < target {
+                for _ in current.count..<target {
+                    let visitor = Visitor(id: UUID(), type: traveller)
+                    visitors.append(visitor)
+                    expandedVisitorIds.insert(visitor.id)
+                }
+            }
+        }
+    }
+
     /// Adds a visitor of the given type and opens their card.
     func increment(_ traveller: Traveller) {
         guard canIncrement(traveller) else { return }
@@ -519,8 +541,14 @@ final class VisitorDetailsFormModel: ObservableObject {
 
     // MARK: - Validation & output
 
-    /// `true` when every required field has a valid value, for every visitor.
+    /// `true` when the group has a lead adult and every visitor's details are filled in and valid.
+    var areTravellersComplete: Bool {
+        count(.adults) > 0 && visitors.allSatisfy(isComplete)
+    }
+
+    /// `true` when the group has a lead adult and every required field has a valid value, for every visitor.
     var isValid: Bool {
+        guard count(.adults) > 0 else { return false }
         let otherSectionsValid = sections.filter { !isTravellersSection($0) }.allSatisfy { section in
             section.fields.allSatisfy { isFieldValid($0, in: section) }
         }
@@ -559,14 +587,28 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    /// Sections for `POST v1/packages/validate-info`: every other section's values,
+    /// and one entry per visitor (in group order) under the travellers section key.
+    var validateInfoSections: [String: ValidateInfoRequest.Section] {
+        var result = submissionValues.mapValues { ValidateInfoRequest.Section.single($0) }
+        if let travellers = travellersSection {
+            result[travellers.section] = .multiple(visitors.compactMap { section(for: $0).map(fieldValues) })
+        }
+        return result
+    }
+
+    /// Phone numbers include the dial code; listed dates (e.g. departure date) are sent as UTC date-times.
     private func fieldValues(_ section: DynamicFormSection) -> [String: String] {
         var result: [String: String] = [:]
         for field in section.fields {
             let current = value(section, field)
             guard !current.isEmpty else { continue }
-            if case .phone = kind(of: field) {
+            switch kind(of: field) {
+            case .phone:
                 result[field.field] = phoneCode(section, field) + current.filter(\.isNumber)
-            } else {
+            case .dateList:
+                result[field.field] = apiDateFormatter.date(from: current) != nil ? current + Constants.apiDateTimeSuffix : current
+            default:
                 result[field.field] = current
             }
         }

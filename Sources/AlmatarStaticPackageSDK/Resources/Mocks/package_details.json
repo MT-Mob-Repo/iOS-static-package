@@ -65,6 +65,7 @@
         "subtitle": "Six Flags Qiddiya City day itinerary",
         "items": [
           {
+            "productId": "181",
             "title": "Round trip flight",
             "description": "Return flights between Jeddah and Riyadh, economy class.",
             "productType": "flight",
@@ -78,12 +79,14 @@
               "note": "Select your preferred options.",
               "options": [
                 {
+                  "optionId": "182",
                   "title": "Extra Baggage",
                   "subTitle": "An extra 23 kg checked bag.",
                   "price": 150,
                   "currency": "SAR"
                 },
                 {
+                  "optionId": "183",
                   "title": "Seat Selection",
                   "subTitle": "Choose your preferred seat.",
                   "price": 60,
@@ -140,6 +143,7 @@
             }
           },
           {
+            "productId": "191",
             "title": "The Ritz-Carlton, Riyadh",
             "description": "Palace-style luxury in the heart of Riyadh.",
             "productType": "hotel",
@@ -159,6 +163,7 @@
             }
           },
           {
+            "productId": "201",
             "title": "Splash Island & Kids' Play",
             "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
             "productType": "addon",
@@ -258,6 +263,7 @@
           ]
         }
       ]
-    }
+    },
+    "travellers": { "adults": 1, "children": 0, "infants": 0 }
   }
 }

@@ -18,10 +18,13 @@ final class MockURLProtocol: URLProtocol {
         static let delay: TimeInterval = 0.5
     }
 
-    /// Maps an endpoint path prefix to a mock file name in `Resources/Mocks`.
-    private static let routes: [(pathPrefix: String, fileName: String)] = [
-        (StaticPackagesEndpoint.packageCartPrefix, "package_details"),
-        (StaticPackagesEndpoint.bookPackage, "book_package")
+    /// Maps an endpoint path to a mock file name in `Resources/Mocks`; the first match wins.
+    private static let routes: [(matches: (String) -> Bool, fileName: String)] = [
+        ({ $0.hasPrefix(StaticPackagesEndpoint.packageCartPrefix) && $0.hasSuffix(StaticPackagesEndpoint.allocateSuffix) }, "cart_allocate"),
+        ({ $0.hasPrefix(StaticPackagesEndpoint.packageCartPrefix) }, "package_details"),
+        ({ $0.hasPrefix(StaticPackagesEndpoint.bookPackage) }, "book_package"),
+        ({ $0.hasPrefix(StaticPackagesEndpoint.validateInfo) }, "validate_info"),
+        ({ $0.hasPrefix(StaticPackagesEndpoint.orders) }, "create_order")
     ]
 
     override class func canInit(with request: URLRequest) -> Bool { true }
@@ -60,7 +63,7 @@ final class MockURLProtocol: URLProtocol {
 
     private static func mockData(for url: URL) -> Data? {
         let path = url.path.hasPrefix("/") ? String(url.path.dropFirst()) : url.path
-        guard let route = routes.first(where: { path.hasPrefix($0.pathPrefix) }),
+        guard let route = routes.first(where: { $0.matches(path) }),
               let fileURL = Bundle.module.url(forResource: route.fileName, withExtension: Constants.fileExtension) else {
             return nil
         }

@@ -65,8 +65,37 @@ struct PriceBreakdownSection: Codable, Sendable, Hashable {
     let title: String
     /// e.g. "Tax included".
     let note: String?
+    /// The section total; the cart API sends it as `total`.
     let amount: Double?
     let items: [PriceBreakdownItem]?
+
+    private enum CodingKeys: String, CodingKey {
+        case title, note, amount, total, items
+    }
+
+    init(title: String, note: String?, amount: Double?, items: [PriceBreakdownItem]?) {
+        self.title = title
+        self.note = note
+        self.amount = amount
+        self.items = items
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        title = try container.decode(String.self, forKey: .title)
+        note = try container.decodeIfPresent(String.self, forKey: .note)
+        amount = try container.decodeIfPresent(Double.self, forKey: .amount)
+            ?? container.decodeIfPresent(Double.self, forKey: .total)
+        items = try container.decodeIfPresent([PriceBreakdownItem].self, forKey: .items)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(title, forKey: .title)
+        try container.encodeIfPresent(note, forKey: .note)
+        try container.encodeIfPresent(amount, forKey: .amount)
+        try container.encodeIfPresent(items, forKey: .items)
+    }
 }
 
 struct PriceBreakdownItem: Codable, Sendable, Hashable {

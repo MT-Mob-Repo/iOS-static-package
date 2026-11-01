@@ -319,8 +319,6 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 return
             }
             order = try await repository.createOrder(cartId: cartId)
-            let cartId = try await currentCartId()
-            // TODO: Confirm bookingId / bookingKey mapping with the payment team; the book API returns only `cartId`.
             let request = PackagePaymentRequest(
                 bookingId: order?.orderId ?? "",
                 paymentId: order?.paymentId ?? "",
@@ -342,13 +340,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         let request = ValidateInfoRequest(cartId: cartId, sections: visitorForm.validateInfoSections)
         return try await repository.validateInfo(request: request)
     }
-
-    private func currentCartId() async throws -> String {
-        let booking = try await repository.bookPackage(packageId: packageId)
-        cartId = booking.cartId
-        return booking.cartId
-    }
-
+    
     private func handlePaymentResult(_ result: PaymentResult) {
         switch result {
         case .success(.success), .success(.pending):

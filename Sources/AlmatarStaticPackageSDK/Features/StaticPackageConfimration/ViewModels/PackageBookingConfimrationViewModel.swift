@@ -27,7 +27,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
         static let separator = " • "
         static let titleSeparator = " · "
         static let addonIcon = "ticket"
-        static let paidStatus = "success"
+        static let paidStatuses: Set<String> = ["success", "succeeded"]
         static let maxStars = 5
     }
 
@@ -129,37 +129,45 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     // MARK: - Package Summary
 
     func summaryRows(for cart: PackageCart) -> [PackageSummaryRow] {
-        let summary = cart.packageSummary
-        var rows = [PackageSummaryRow(label: LocalizedKey.package.localized(), value: summary.title)]
-        if let destination = summary.destination.nonEmpty {
+        var rows = [PackageSummaryRow(label: LocalizedKey.package.localized(), value: cart.packageInfo.name)]
+        // The cart API has no destination / start-end dates, so derive them from the booked hotel stay.
+        let hotelInfos = cart.packageProducts.filter { $0.productType == .hotel }.compactMap(\.hotelInfo)
+        if let destination = hotelInfos.first?.city.nonEmpty {
             rows.append(PackageSummaryRow(label: LocalizedKey.destination.localized(), value: destination))
         }
-        if let dates = formattedDateRange(from: summary.startDate, to: summary.endDate) {
+        let startDate = hotelInfos.compactMap(\.checkIn).min()
+        let endDate = hotelInfos.compactMap(\.checkOut).max()
+        if let dates = formattedDateRange(from: startDate, to: endDate) {
             rows.append(PackageSummaryRow(label: LocalizedKey.dates.localized(), value: dates))
         }
         if let visitors = visitorsCountText(cart.travellers?.count) {
             rows.append(PackageSummaryRow(label: LocalizedKey.confirmationVisitors.localized(), value: visitors))
         }
-        if let badge = summary.badges?.first.nonEmpty {
-            rows.append(PackageSummaryRow(label: LocalizedKey.parkAccess.localized(), value: badge, isBadge: true))
-        }
         return rows
     }
 
     func includes(for cart: PackageCart) -> [JourneySnapshotItem] {
-        cart.packageSummary.includes ?? []
+        cart.packageInfo.journeySnapshot ?? []
     }
 
     /// Optional add-ons the customer picked, e.g. "Fast Pass — Skip the Line • 2 visitors".
     func addons(for cart: PackageCart) -> [JourneySnapshotItem] {
-        (cart.products ?? [])
+        cart.packageProducts
             .filter { $0.productType == .addon && !$0.isMandatory }
             .map { product in
                 let title = product.addonInfo?.title ?? product.title
-                let label = [title, visitorsCountText(product.quantity)].compactMap { $0 }.joined(separator: Constants.separator)
+                let quantity = product.quantity ?? bookedQuantity(of: product, in: cart)
+                let label = [title, visitorsCountText(quantity)].compactMap { $0 }.joined(separator: Constants.separator)
                 let icon = product.tags?.first?.icon.nonEmpty ?? Constants.addonIcon
                 return JourneySnapshotItem(icon: icon, label: label)
             }
+    }
+
+    /// Quantity booked for `product`, matched by add-on id in `cart.products`.
+    private func bookedQuantity(of product: PackageProduct, in cart: PackageCart) -> Int? {
+        let addonId = product.addonInfo?.id.map { String($0) }
+        guard let id = addonId ?? product.productId?.value else { return nil }
+        return cart.products?.first { $0.addonInfo?.id?.value == id || $0.option?.id?.value == id }?.addonInfo?.quantity
     }
 
     // MARK: - Visitors
@@ -175,7 +183,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     /// First leg is the departure, last leg the return.
     /// `route` holds the leg title, e.g. "Departure · Thu 16 Jul 2026".
     func flightLegs(for cart: PackageCart) -> [PackageScheduleFlightLeg] {
-        let legs = (cart.products ?? [])
+        let legs = cart.packageProducts
             .filter { $0.productType == .flight }
             .flatMap { $0.flightInfo?.legs ?? [] }
         return legs.enumerated().map { index, leg in
@@ -206,7 +214,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     // MARK: - Hotels
 
     func hotels(for cart: PackageCart) -> [ConfirmationHotel] {
-        (cart.products ?? []).enumerated().compactMap { index, product in
+        cart.packageProducts.enumerated().compactMap { index, product in
             guard product.productType == .hotel, let hotel = product.hotelInfo else { return nil }
             return ConfirmationHotel(
                 id: index,
@@ -248,7 +256,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     }
 
     func isPaidInFull(_ cart: PackageCart) -> Bool {
-        cart.payment.status?.lowercased() == Constants.paidStatus
+        Constants.paidStatuses.contains(cart.payment.status?.lowercased() ?? "")
     }
 
     // MARK: - Cancellation
@@ -269,7 +277,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
 
     /// Plain-text itinerary shared from "Share Itinerary".
     func shareText(for cart: PackageCart) -> String {
-        var lines = [cart.packageSummary.title, "\(bookingIdTitle): \(cart.bookingReference)"]
+        var lines = [cart.packageInfo.name, "\(bookingIdTitle): \(cart.bookingReference)"]
         lines += summaryRows(for: cart).dropFirst().map { "\($0.label): \($0.value)" }
         for leg in flightLegs(for: cart) {
             let times = [leg.departureTime, leg.arrivalTime].compactMap { $0 }.joined(separator: Constants.dateRangeSeparator)

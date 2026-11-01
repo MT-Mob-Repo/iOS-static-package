@@ -326,6 +326,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
                 productType: PackagePaymentRequest.productType,
                 cancellationTiers: cancellationTiers.isEmpty ? nil : cancellationTiers
             )
+            isStartingPayment = false
             handlePaymentResult(await startPayment(request))
         } catch is CancellationError {
             return

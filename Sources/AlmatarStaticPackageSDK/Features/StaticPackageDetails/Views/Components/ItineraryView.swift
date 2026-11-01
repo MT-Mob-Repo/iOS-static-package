@@ -168,6 +168,8 @@ struct ItineraryView: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: CornerRadius.large))
             .accessibilityHidden(true)
+            .clipped()
+            .contentShape(Rectangle())
     }
 
     // MARK: - Activity

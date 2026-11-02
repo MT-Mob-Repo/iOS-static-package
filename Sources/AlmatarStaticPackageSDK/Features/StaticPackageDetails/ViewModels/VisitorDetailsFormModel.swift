@@ -115,6 +115,81 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    /// Fills the form with the details already saved on the cart, e.g. `PackageDetails.sections`.
+    /// Call after `configure(with:)` and setting the traveller counts. Each saved passenger fills the next
+    /// visitor of its `type` (or the next visitor when it has none); when the group is still empty,
+    /// a visitor is added per saved passenger. Filled-in visitors' cards start closed.
+    func prefill(with saved: [String: VisitorFormSection]?) {
+        guard let saved, !saved.isEmpty else { return }
+
+        for section in sections where !isTravellersSection(section) {
+            guard let savedValues = saved[section.section]?.values else { continue }
+            apply(savedValues, to: section)
+        }
+
+        guard let travellers = travellersSection,
+              let entries = saved[travellers.section]?.entries,
+              !entries.isEmpty else { return }
+
+        if visitors.isEmpty {
+            for entry in entries.prefix(Constants.maxTravellers) {
+                visitors.append(Visitor(id: UUID(), type: savedType(entry) ?? .adults))
+            }
+        }
+
+        var unfilled = visitors
+        for entry in entries {
+            let type = savedType(entry)
+            guard let index = unfilled.firstIndex(where: { type == nil || $0.type == type }) else { continue }
+            let visitor = unfilled.remove(at: index)
+            if let section = section(for: visitor) {
+                apply(entry, to: section)
+            }
+        }
+        expandedVisitorIds = Set(visitors.filter { !isComplete($0) }.map(\.id))
+    }
+
+    private func savedType(_ entry: [String: String]) -> Traveller? {
+        entry[Constants.visitorTypeKey].flatMap(Traveller.init(apiType:))
+    }
+
+    /// Stores saved values the way the fields keep them: phone numbers split into dial code and number,
+    /// dates as "yyyy-MM-dd", choices as the option's own code.
+    private func apply(_ savedValues: [String: String], to section: DynamicFormSection) {
+        for field in section.fields {
+            guard let saved = savedValues[field.field]?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !saved.isEmpty else { continue }
+            switch kind(of: field) {
+            case .phone:
+                let (code, number) = Self.splitPhone(saved)
+                if let code { setPhoneCode(code, section, field) }
+                setValue(number, section, field)
+            case .date, .dateList:
+                let day = String(saved.prefix(Constants.apiDateFormat.count))
+                setValue(apiDateFormatter.date(from: day) != nil ? day : saved, section, field)
+            case .dropdown(let options), .segmented(let options):
+                let option = options.first { $0.code.caseInsensitiveCompare(saved) == .orderedSame }
+                setValue(option?.code ?? saved, section, field)
+            case .text, .email, .number:
+                setValue(saved, section, field)
+            }
+        }
+    }
+
+    /// e.g. "+2001093103001" → ("+20", "01093103001"), using the longest matching country calling code.
+    /// Without a leading "+", only the digits are returned and the field keeps its dial code.
+    nonisolated static func splitPhone(_ phone: String) -> (code: String?, number: String) {
+        let digits = phone.filter(\.isNumber)
+        guard phone.hasPrefix("+") else { return (nil, digits) }
+        for length in stride(from: 3, through: 1, by: -1) where digits.count > length {
+            let prefix = String(digits.prefix(length))
+            if PhoneCallingCodes.all.contains(prefix) {
+                return ("+" + prefix, String(digits.dropFirst(length)))
+            }
+        }
+        return (nil, digits)
+    }
+
     // MARK: - Layout
 
     /// A section with a single choice field and no title is shown as a collapsed selection row
@@ -586,22 +661,23 @@ final class VisitorDetailsFormModel: ObservableObject {
         return result
     }
 
-    /// One entry per visitor in group order, with its type, e.g. `["type": "adults", "firstName": ...]`.
+    /// One entry per visitor in group order, with its type, e.g. `["type": "adult", "firstName": ...]`.
     var visitorSubmissions: [[String: String]] {
         visitors.compactMap { visitor in
             guard let section = section(for: visitor) else { return nil }
             var entry = fieldValues(section)
-            entry[Constants.visitorTypeKey] = visitor.type.rawValue
+            entry[Constants.visitorTypeKey] = visitor.type.apiType
             return entry
         }
     }
 
     /// Sections for `POST v1/packages/validate-info`: every other section's values,
-    /// and one entry per visitor (in group order) under the travellers section key.
+    /// and one entry per visitor (in group order) under the travellers section key,
+    /// each with its `type`: "adult", "child" or "infant".
     var validateInfoSections: [String: ValidateInfoRequest.Section] {
         var result = submissionValues.mapValues { ValidateInfoRequest.Section.single($0) }
         if let travellers = travellersSection {
-            result[travellers.section] = .multiple(visitors.compactMap { section(for: $0).map(fieldValues) })
+            result[travellers.section] = .multiple(visitorSubmissions)
         }
         return result
     }
@@ -676,6 +752,22 @@ final class VisitorDetailsFormModel: ObservableObject {
 // MARK: - Traveller strings
 
 extension VisitorDetailsFormModel.Traveller {
+    /// From the API `type`, e.g. "adult"; also accepts the plural, e.g. "adults".
+    init?(apiType: String) {
+        let type = apiType.lowercased()
+        guard let match = Self.allCases.first(where: { $0.apiType == type || $0.rawValue == type }) else { return nil }
+        self = match
+    }
+
+    /// Value sent as a visitor's `type` to the API.
+    var apiType: String {
+        switch self {
+        case .adults: return "adult"
+        case .children: return "child"
+        case .infants: return "infant"
+        }
+    }
+
     /// e.g. "Adult", used in "Adult 2".
     @MainActor
     var singularTitle: String {
@@ -694,4 +786,23 @@ private struct OptionalValueValidator: Validator {
     func validate(value: String) -> (Bool, String?) {
         value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? (true, nil) : wrapped.validate(value: value)
     }
+}
+
+/// Country calling codes (ITU E.164), used to split a saved "+<code><number>" phone value.
+private enum PhoneCallingCodes {
+    static let all: Set<String> = {
+        var codes: Set<String> = [
+            "1", "7", "20", "27", "30", "31", "32", "33", "34", "36", "39", "40", "41", "43", "44", "45", "46",
+            "47", "48", "49", "51", "52", "53", "54", "55", "56", "57", "58", "60", "61", "62", "63", "64", "65",
+            "66", "81", "82", "84", "86", "90", "91", "92", "93", "94", "95", "98",
+            "211", "212", "213", "216", "218", "290", "291", "297", "298", "299", "420", "421", "423",
+            "670", "850", "852", "853", "855", "856", "880", "886", "992", "993", "994", "995", "996", "998"
+        ]
+        let ranges = [220...258, 260...269, 350...359, 370...389, 500...509, 590...599,
+                      672...692, 960...968, 970...977]
+        for range in ranges {
+            codes.formUnion(range.map(String.init))
+        }
+        return codes
+    }()
 }

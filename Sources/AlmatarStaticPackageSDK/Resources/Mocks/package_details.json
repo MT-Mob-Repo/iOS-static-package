@@ -264,6 +264,24 @@
         }
       ]
     },
-    "travellers": { "adults": 1, "children": 0, "infants": 0 }
+    "travellers": { "adults": 1, "children": 0, "infants": 0 },
+    "sections": {
+      "passenger": [
+        {
+          "title": "mr",
+          "firstName": "Samar",
+          "lastName": "Mostaf",
+          "nationality": "SA",
+          "email": "Sa@al.com",
+          "phoneNumber": "+2001093103001",
+          "iqamaNumber": "123466777",
+          "passportNumber": "1234e53435",
+          "gender": "male",
+          "dateOfBirth": "1990-11-02"
+        }
+      ],
+      "departureDate": { "departureDate": "2026-10-28T00:00:00.000Z" },
+      "departureCity": { "departureCity": "RUH" }
+    }
   }
 }

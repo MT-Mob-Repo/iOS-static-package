@@ -200,6 +200,8 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             if let travellers = details.travellers {
                 visitorForm.setTravellerCounts(Self.cartTravellerCounts(travellers))
             }
+            // Shows the passengers already saved on the cart, with their details filled in.
+            visitorForm.prefill(with: details.sections)
             allocatedCounts = currentTravellerCounts
             requestedCounts = currentTravellerCounts
             cartNeedsReload = false

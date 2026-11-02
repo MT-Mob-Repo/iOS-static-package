@@ -16,6 +16,9 @@ struct PackageDetails: Codable, Sendable, Identifiable {
     let dynamicForm: DynamicForm?
     /// Traveller counts the cart is priced for.
     let travellers: CartTravellers?
+    /// Visitors form details already saved on the cart, keyed by section,
+    /// e.g. `"passenger": [{ "firstName": "Sara", ... }]`, `"departureCity": { "departureCity": "RUH" }`.
+    let sections: [String: VisitorFormSection]?
 
     var id: String { cartId }
 }

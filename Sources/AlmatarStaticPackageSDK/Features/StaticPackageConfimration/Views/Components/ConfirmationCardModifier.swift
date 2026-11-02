@@ -102,10 +102,10 @@ struct ConfirmationLabeledValue: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xxSmall) {
             Text(label)
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                .modifier(AppTextModifier(size: Typography.Size.small))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
             Text(value)
-                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold))
+                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .fixedSize(horizontal: false, vertical: true)
         }

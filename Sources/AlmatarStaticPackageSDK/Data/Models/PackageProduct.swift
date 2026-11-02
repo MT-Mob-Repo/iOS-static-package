@@ -157,7 +157,7 @@ struct HotelInfo: Codable, Sendable, Hashable {
     /// e.g. "Half Board".
     let boardBasis: String?
     /// e.g. Breakfast, Transfer to the hotel, Wifi.
-    let amenities: [PackageProductTag]?
+    let tags: [PackageProductTag]?
 }
 
 struct HotelRoom: Codable, Sendable, Hashable {

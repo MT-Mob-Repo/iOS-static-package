@@ -62,7 +62,7 @@ struct ConfirmationFlightDetailsView: View {
             ForEach(Array(parts.enumerated()), id: \.offset) { index, part in
                 if index > 0 {
                     Circle()
-                        .fill(AlmatarColors.iconOnSurfaceTertirary)
+                        .fill(AlmatarColors.iconOnSurfacePrimaryDisabled)
                         .frame(width: Layout.titleDotSize, height: Layout.titleDotSize)
                 }
                 Text(part)
@@ -78,11 +78,11 @@ struct ConfirmationFlightDetailsView: View {
         VStack(alignment: alignment, spacing: Spacing.xxSmall) {
             if let time {
                 Text(time)
-                    .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.bold))
+                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
             }
             Text(location)
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                .modifier(AppTextModifier(size: Typography.Size.small))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
                 .multilineTextAlignment(alignment == .leading ? .leading : .trailing)
                 .lineLimit(Layout.locationLineLimit)
@@ -114,7 +114,8 @@ struct ConfirmationFlightDetailsView: View {
 
     private var pathDot: some View {
         Circle()
-            .fill(AlmatarColors.iconOnSurfaceTertirary)
+            .fill(AlmatarColors.iconOnSurfacePrimaryDisabled)
             .frame(width: Layout.pathDotSize, height: Layout.pathDotSize)
     }
 }
+

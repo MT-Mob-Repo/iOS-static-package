@@ -48,8 +48,7 @@ struct PaymentDetailsView: View {
 
                 Spacer(minLength: Spacing.small)
 
-                Text(total)
-                    .modifier(AppTextModifier(size: Typography.Size.xLarge, fontWeight: Typography.Weight.bold))
+                SUITextPrice(text: total, modifier: AppTextModifier(size: Typography.Size.xLarge, fontWeight: Typography.Weight.bold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
             }
 
@@ -89,9 +88,14 @@ struct PaymentDetailsView: View {
 
             Spacer(minLength: Spacing.small)
 
-            Text(item.amount == 0 ? includedTitle : amountText(item.amount))
-                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            if item.amount == 0 {
+                Text(includedTitle)
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            } else {
+                SUITextPrice(text: amountText(item.amount), modifier: AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+            }
         }
     }
 
@@ -113,7 +117,14 @@ struct PaymentDetailsView: View {
             Spacer(minLength: Spacing.small)
 
             if let paidStatusTitle {
-                ConfirmationSuccessBadge(title: paidStatusTitle)
+                Text(paidStatusTitle.uppercased())
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
+                    .lineLimit(1)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, Spacing.small)
+                    .padding(.vertical, Spacing.xxxSmall)
+                    .background(AlmatarColors.surfaceSuccessDark)
+                    .clipShape(Capsule())
             }
         }
         .padding(Spacing.small)

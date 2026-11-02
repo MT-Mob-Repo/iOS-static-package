@@ -143,11 +143,6 @@ struct PackageBookingConfimrationView: View {
                 }
                 .buttonStyle(.plain)
             }
-
-            ShareLink(item: viewModel.shareText(for: cart)) {
-                outlinedActionLabel(title: viewModel.shareItineraryTitle, icon: Layout.shareIcon)
-            }
-            .buttonStyle(.plain)
         }
     }
 

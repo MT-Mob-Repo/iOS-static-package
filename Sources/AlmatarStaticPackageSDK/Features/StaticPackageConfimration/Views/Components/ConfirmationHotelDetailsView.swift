@@ -113,7 +113,7 @@ struct ConfirmationHotelDetailsView: View {
             ForEach(0..<hotel.stars, id: \.self) { _ in
                 Image(systemName: Layout.starIcon)
                     .font(.system(size: Layout.starSize))
-                    .foregroundStyle(Layout.starTint)
+                    .foregroundStyle(Color(red: 0.99, green: 0.76, blue: 0.06))
             }
         }
         .accessibilityElement(children: .ignore)

@@ -44,9 +44,7 @@ struct ConfirmationVisitorsView: View {
 
             Spacer(minLength: Spacing.small)
 
-            if visitor.isVerified == true {
-                ConfirmationSuccessBadge(title: verifiedTitle, showsCheckmark: true)
-            }
+            ConfirmationSuccessBadge(title: verifiedTitle, showsCheckmark: true)
         }
     }
 }

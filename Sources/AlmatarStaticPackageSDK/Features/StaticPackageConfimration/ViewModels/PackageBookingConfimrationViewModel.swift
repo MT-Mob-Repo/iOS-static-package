@@ -153,7 +153,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     /// Optional add-ons the customer picked, e.g. "Fast Pass — Skip the Line • 2 visitors".
     func addons(for cart: PackageCart) -> [JourneySnapshotItem] {
         cart.packageProducts
-            .filter { $0.productType == .addon && !$0.isMandatory }
+            .filter { $0.productType == .addon }
             .map { product in
                 let title = product.addonInfo?.title ?? product.title
                 let quantity = product.quantity ?? bookedQuantity(of: product, in: cart)
@@ -226,7 +226,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
                 checkOut: formattedDate(hotel.checkOut),
                 roomType: (hotel.room?.name).nonEmpty,
                 boardBasis: hotel.boardBasis.nonEmpty,
-                amenities: (hotel.amenities ?? []).map { JourneySnapshotItem(icon: $0.icon ?? "", label: $0.label) }
+                amenities: (hotel.tags ?? []).map { JourneySnapshotItem(icon: $0.icon ?? "", label: $0.label) }
             )
         }
     }

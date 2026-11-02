@@ -26,8 +26,6 @@ struct PackageBookingConfimrationView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             actions
-                .padding(.horizontal, Spacing.screenHorizontal)
-                .padding(.bottom, Spacing.screenBottom)
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
@@ -143,11 +141,6 @@ struct PackageBookingConfimrationView: View {
                 }
                 .buttonStyle(.plain)
             }
-
-            ShareLink(item: viewModel.shareText(for: cart)) {
-                outlinedActionLabel(title: viewModel.shareItineraryTitle, icon: Layout.shareIcon)
-            }
-            .buttonStyle(.plain)
         }
     }
 
@@ -191,10 +184,10 @@ struct PackageBookingConfimrationView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, Spacing.medium)
                     .background(AlmatarColors.surfaceSecondaryBase)
-                    .clipShape(RoundedRectangle(cornerRadius: CornerRadius.xLarge))
-                    .contentShape(RoundedRectangle(cornerRadius: CornerRadius.xLarge))
+                    .clipShape(Capsule())
             }
             .buttonStyle(.plain)
+            .padding(.horizontal, Spacing.screenHorizontal)
         }
     }
 }

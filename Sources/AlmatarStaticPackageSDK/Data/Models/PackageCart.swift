@@ -62,8 +62,6 @@ struct CartTraveller: Codable, Sendable, Hashable {
     let firstName: String
     let lastName: String
     let isMainGuest: Bool
-    /// `true` once the traveller's documents were verified.
-    let isVerified: Bool?
 
     var fullName: String { "\(firstName) \(lastName)" }
 }

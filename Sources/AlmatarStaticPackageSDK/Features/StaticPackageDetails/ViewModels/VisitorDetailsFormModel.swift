@@ -409,14 +409,7 @@ final class VisitorDetailsFormModel: ObservableObject {
 
     /// Full name once entered, otherwise e.g. "Adult 2".
     func displayName(_ visitor: Visitor) -> String {
-        if let section = section(for: visitor) {
-            let name = [Constants.firstNameField, Constants.lastNameField]
-                .compactMap { key in section.fields.first { $0.field == key } }
-                .map { value(section, $0).trimmingCharacters(in: .whitespacesAndNewlines) }
-                .filter { !$0.isEmpty }
-                .joined(separator: " ")
-            if !name.isEmpty { return name }
-        }
+        if let name = enteredName(visitor) { return name }
         let position = visitors.filter { $0.type == visitor.type }.firstIndex(of: visitor).map { $0 + 1 } ?? 1
         return "\(visitor.type.singularTitle) \(position)"
     }
@@ -427,6 +420,22 @@ final class VisitorDetailsFormModel: ObservableObject {
     }
 
     /// e.g. "Visitor 2", by position in the whole group.
+    /// The visitor's first and last name as entered so far; `nil` when neither is filled in.
+    func enteredName(_ visitor: Visitor) -> String? {
+        guard let section = section(for: visitor) else { return nil }
+        let name = [Constants.firstNameField, Constants.lastNameField]
+            .compactMap { key in section.fields.first { $0.field == key } }
+            .map { value(section, $0).trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        return name.isEmpty ? nil : name
+    }
+
+    /// Full name once entered, otherwise e.g. "Visitor 2"; used in the remove confirmation and toast.
+    func nameOrNumberTitle(_ visitor: Visitor) -> String {
+        enteredName(visitor) ?? visitorNumberTitle(visitor)
+    }
+
     func visitorNumberTitle(_ visitor: Visitor) -> String {
         let number = (visitors.firstIndex(of: visitor) ?? 0) + 1
         return LocalizedKey.visitorNumber.localized(with: number)

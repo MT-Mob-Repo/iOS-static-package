@@ -58,16 +58,17 @@ struct PackageScheduleView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
-            Text(title)
-                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
-
-            if let subTitle = subTitle.nonEmpty {
-                Text(subTitle)
-                    .modifier(AppTextModifier(size: Typography.Size.regular))
-                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+            VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+                Text(title)
+                    .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                
+                if let subTitle = subTitle.nonEmpty {
+                    Text(subTitle)
+                        .modifier(AppTextModifier(size: Typography.Size.regular))
+                        .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                }
             }
-
             fixedPriceView
 
             VStack(alignment: .leading, spacing: Spacing.zero) {

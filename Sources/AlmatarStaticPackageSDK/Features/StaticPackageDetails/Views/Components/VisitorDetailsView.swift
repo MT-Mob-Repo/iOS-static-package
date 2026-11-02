@@ -366,12 +366,13 @@ struct VisitorDetailsView: View {
     private func removeVisitorPopup(_ visitor: VisitorDetailsFormModel.Visitor) -> some View {
         ConfirmationPopup(
             title: LocalizedKey.removeVisitorSheetTitle.localized(),
-            message: LocalizedKey.removeVisitorMessage.localized(with: form.visitorNumberTitle(visitor)),
+            message: LocalizedKey.removeVisitorMessage.localized(with: form.nameOrNumberTitle(visitor)),
             cancelTitle: cancelTitle,
             confirmTitle: removeTitle,
             isDestructive: true,
             onConfirm: {
-                let name = form.visitorNumberTitle(visitor)
+                // Read before the visitor and their details are removed.
+                let name = form.nameOrNumberTitle(visitor)
                 withAnimation(.easeInOut) { form.remove(visitor) }
                 toastMessage = ToastMessage(text: LocalizedKey.visitorRemoved.localized(with: name))
             }

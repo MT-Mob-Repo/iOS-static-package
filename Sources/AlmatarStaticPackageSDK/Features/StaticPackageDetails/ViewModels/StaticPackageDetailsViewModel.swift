@@ -157,7 +157,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
             return CancellationPolicyTier(
                 id: index,
                 title: policy.title.nonEmpty ?? "",
-                window: "\(policy.window.nonEmpty ?? "") \(LocalizedKey.until.localized()) \(policy.until.nonEmpty ?? "")",
+                window: "\(policy.window.nonEmpty ?? "") \(LocalizedKey.until.localized()) \(policy.formattedUntil.nonEmpty ?? "")",
                 note: policy.note.nonEmpty
             )
         }

@@ -335,8 +335,8 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
 
     private func tierWindow(for policy: CancellationPolicy) -> String? {
         let window = policy.window.nonEmpty
-        guard let until = policy.until.nonEmpty else { return window }
-        let untilText = "\(LocalizedKey.until.localized()) \(formattedDate(until) ?? until)"
+        guard let until = policy.formattedUntil.nonEmpty else { return window }
+        let untilText = "\(LocalizedKey.until.localized()) \(until)"
         guard let window else { return untilText }
         return "\(window)\(Constants.separator)\(untilText)"
     }

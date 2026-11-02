@@ -17,6 +17,26 @@ struct CancellationPolicy: Codable, Sendable, Hashable {
     let note: String?
     /// 100 is a full refund, 0 is no refund.
     let refundableAmountPercentage: Int
+
+    /// `until` for display in the SDK language, e.g. "Fri, 17 Apr"; `nil` when missing or not a valid date.
+    @MainActor
+    var formattedUntil: String? {
+        guard let until = until.nonEmpty else { return nil }
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+        parser.timeZone = TimeZone(identifier: "UTC")
+        parser.dateFormat = "yyyy-MM-dd"
+        guard let date = parser.date(from: until) else { return nil }
+
+        let language = AlmatarStaticPackageSDK.shared.configuration.language
+        let formatter = DateFormatter()
+        // Latin digits in Arabic too, as in the other package dates.
+        formatter.locale = Locale(identifier: language.rawValue + "@numbers=latn")
+        formatter.timeZone = parser.timeZone
+        // Localized so each language uses its own comma.
+        formatter.dateFormat = "EEE, d MMM"
+        return formatter.string(from: date)
+    }
 }
 
 extension CancellationPolicy {

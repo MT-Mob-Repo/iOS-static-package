@@ -46,7 +46,7 @@ struct PackageBookingConfimrationView: View {
                         title: viewModel.titleText,
                         subtitle: viewModel.subtitleText,
                         bookingIdTitle: viewModel.bookingIdTitle,
-                        bookingId: cart.bookingReference,
+                        bookingId: cart.bookingReference ?? "",
                         copyAccessibilityLabel: viewModel.copyBookingIdTitle)
 
                     PackageSummaryView(

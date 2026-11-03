@@ -117,19 +117,22 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     }
 
     func receiptTapped() {
-        guard let cart else { return }
-        onViewReceipt?(cart.orderId)
+        guard let orderId = cart?.orderId.nonEmpty else { return }
+        onViewReceipt?(orderId)
     }
 
     func copyBookingIdTapped() {
-        guard let cart else { return }
-        UIPasteboard.general.string = cart.bookingReference
+        guard let bookingReference = cart?.bookingReference.nonEmpty else { return }
+        UIPasteboard.general.string = bookingReference
     }
 
     // MARK: - Package Summary
 
     func summaryRows(for cart: PackageCart) -> [PackageSummaryRow] {
-        var rows = [PackageSummaryRow(label: LocalizedKey.package.localized(), value: cart.packageInfo.name)]
+        var rows: [PackageSummaryRow] = []
+        if let name = (cart.packageInfo?.name).nonEmpty {
+            rows.append(PackageSummaryRow(label: LocalizedKey.package.localized(), value: name))
+        }
         // The cart API has no destination / start-end dates, so derive them from the booked hotel stay.
         let hotelInfos = cart.packageProducts.filter { $0.productType == .hotel }.compactMap(\.hotelInfo)
         if let destination = hotelInfos.first?.city.nonEmpty {
@@ -147,7 +150,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     }
 
     func includes(for cart: PackageCart) -> [JourneySnapshotItem] {
-        cart.packageInfo.journeySnapshot ?? []
+        cart.packageInfo?.journeySnapshot ?? []
     }
 
     /// Optional add-ons the customer picked, e.g. "Fast Pass — Skip the Line • 2 visitors".
@@ -235,28 +238,28 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
 
     /// Priced items grouped by breakdown section, as returned by the API.
     func paymentSections(for cart: PackageCart) -> [PriceBreakdownSection] {
-        cart.payment.breakdown ?? []
+        cart.payment?.breakdown ?? []
     }
 
     /// e.g. "SAR 300".
     func formattedAmount(_ amount: Double, for cart: PackageCart) -> String {
-        formattedPrice(Decimal(amount), currency: cart.payment.currency)
+        formattedPrice(Decimal(amount), currency: currency(for: cart))
     }
 
     func formattedTotal(for cart: PackageCart) -> String {
-        formattedPrice(cart.payment.totalPaid, currency: cart.payment.currency)
+        formattedPrice(cart.payment?.totalPaid ?? 0, currency: currency(for: cart))
     }
 
     /// e.g. "Paid via Visa ending 4629".
     func paidViaText(for cart: PackageCart) -> String? {
-        guard let method = cart.payment.paymentMethod,
+        guard let method = cart.payment?.paymentMethod,
               let brand = method.brand.nonEmpty,
               let last4 = method.last4.nonEmpty else { return nil }
         return LocalizedKey.paidVia.localized(with: brand, last4)
     }
 
     func isPaidInFull(_ cart: PackageCart) -> Bool {
-        Constants.paidStatuses.contains(cart.payment.status?.lowercased() ?? "")
+        Constants.paidStatuses.contains(cart.payment?.status?.lowercased() ?? "")
     }
 
     // MARK: - Cancellation
@@ -277,7 +280,9 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
 
     /// Plain-text itinerary shared from "Share Itinerary".
     func shareText(for cart: PackageCart) -> String {
-        var lines = [cart.packageInfo.name, "\(bookingIdTitle): \(cart.bookingReference)"]
+        var lines: [String] = []
+        if let name = (cart.packageInfo?.name).nonEmpty { lines.append(name) }
+        if let reference = cart.bookingReference.nonEmpty { lines.append("\(bookingIdTitle): \(reference)") }
         lines += summaryRows(for: cart).dropFirst().map { "\($0.label): \($0.value)" }
         for leg in flightLegs(for: cart) {
             let times = [leg.departureTime, leg.arrivalTime].compactMap { $0 }.joined(separator: Constants.dateRangeSeparator)
@@ -309,6 +314,11 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     private var shortDateFormatter: DateFormatter { dateFormatter(template: Constants.shortDateTemplate) }
     /// e.g. "Thu 16 Jul 2026".
     private var fullDateFormatter: DateFormatter { dateFormatter(template: Constants.fullDateTemplate) }
+
+    /// The payment currency, else the SDK's selected currency.
+    private func currency(for cart: PackageCart) -> String {
+        (cart.payment?.currency).nonEmpty ?? AlmatarStaticPackageSDK.shared.currency
+    }
 
     private func formattedPrice(_ amount: Decimal, currency: String) -> String {
         let value = amount.formatted(

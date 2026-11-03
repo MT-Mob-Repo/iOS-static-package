@@ -7,27 +7,27 @@ import Foundation
 
 /// A booked package order returned by `GET v1/partner/packages/carts/{cartId}`.
 struct PackageCart: Codable, Sendable, Identifiable {
-    let orderId: String
+    let orderId: String?
     /// Reference shown to the customer, e.g. "300000733".
-    let bookingReference: String
+    let bookingReference: String?
     /// e.g. "confirmed".
     let status: String?
     let failureReason: String?
     /// ISO 8601 date-time the order was booked at.
     let bookedAt: String?
     /// Full package content (same shape as the details screen), including product details.
-    let packageInfo: PackageInfo
+    let packageInfo: PackageInfo?
     let travellers: [CartTraveller]?
     /// The products booked in this order, with the option picked for each.
     let products: [CartProduct]?
-    let payment: CartPayment
+    let payment: CartPayment?
     /// Refund tiers, ordered from the earliest cancellation window.
     let cancellationPolicies: [CancellationPolicy]?
 
-    var id: String { orderId }
+    var id: String { orderId ?? "" }
 
     /// Rich product details (flight legs, hotel info...) from `packageInfo.products.items`.
-    var packageProducts: [PackageProduct] { packageInfo.products?.items ?? [] }
+    var packageProducts: [PackageProduct] { packageInfo?.products?.items ?? [] }
 }
 
 // MARK: - Booked Products
@@ -35,7 +35,7 @@ struct PackageCart: Codable, Sendable, Identifiable {
 /// One booked product in `PackageCart.products`.
 struct CartProduct: Codable, Sendable, Hashable {
     let title: String?
-    let type: PackageProductType
+    let productType: PackageProductType?
     let status: String?
     let option: CartProductOption?
     let addonInfo: CartProductAddonInfo?

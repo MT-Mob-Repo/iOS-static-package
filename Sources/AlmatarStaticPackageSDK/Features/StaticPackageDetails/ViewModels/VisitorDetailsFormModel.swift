@@ -41,9 +41,9 @@ final class VisitorDetailsFormModel: ObservableObject {
     private enum Constants {
         static let segmentedMaxOptions = 3
         static let segmentedMaxTitleLength = 8
-        static let travellersSection = "passenger"
+        static let travellersSection: DynamicFormSectionType = .passenger
         /// Shown, but not changeable by the user.
-        static let readOnlySections: Set<String> = ["departureCity"]
+        static let readOnlySections: Set<DynamicFormSectionType> = [.departureCity]
         static let firstNameField = "firstName"
         static let lastNameField = "lastName"
         static let passportNumberField = "passportNumber"
@@ -123,12 +123,12 @@ final class VisitorDetailsFormModel: ObservableObject {
         guard let saved, !saved.isEmpty else { return }
 
         for section in sections where !isTravellersSection(section) {
-            guard let savedValues = saved[section.section]?.values else { continue }
+            guard let savedValues = saved[section.section.rawValue]?.values else { continue }
             apply(savedValues, to: section)
         }
 
         guard let travellers = travellersSection,
-              let entries = saved[travellers.section]?.entries,
+              let entries = saved[travellers.section.rawValue]?.entries,
               !entries.isEmpty else { return }
 
         if visitors.isEmpty {
@@ -266,7 +266,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     // MARK: - Values
 
     func key(_ section: DynamicFormSection, _ field: DynamicFormField) -> String {
-        "\(section.section).\(field.field)"
+        "\(section.section.rawValue).\(field.field)"
     }
 
     func value(_ section: DynamicFormSection, _ field: DynamicFormField) -> String {
@@ -475,7 +475,7 @@ final class VisitorDetailsFormModel: ObservableObject {
         guard let travellers = travellersSection else { return nil }
         let fields = isLead(visitor) ? travellers.fields : travellers.fields.filter { !isContactField($0) }
         return DynamicFormSection(
-            section: Constants.travellersSection + Constants.visitorSectionSeparator + visitor.id.uuidString,
+            section: .unknown(Constants.travellersSection.rawValue + Constants.visitorSectionSeparator + visitor.id.uuidString),
             title: nil,
             isMultiple: false,
             fields: fields
@@ -555,7 +555,7 @@ final class VisitorDetailsFormModel: ObservableObject {
 
     private func delete(_ removed: [Visitor]) {
         let ids = Set(removed.map(\.id))
-        let prefixes = removed.compactMap { section(for: $0)?.section }.map { $0 + "." }
+        let prefixes = removed.compactMap { section(for: $0)?.section.rawValue }.map { $0 + "." }
         visitors.removeAll { ids.contains($0.id) }
         expandedVisitorIds.subtract(ids)
         values = values.filter { key, _ in !prefixes.contains { key.hasPrefix($0) } }
@@ -656,7 +656,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     var submissionValues: [String: [String: String]] {
         var result: [String: [String: String]] = [:]
         for section in sections where !isTravellersSection(section) {
-            result[section.section] = fieldValues(section)
+            result[section.section.rawValue] = fieldValues(section)
         }
         return result
     }
@@ -677,7 +677,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     var validateInfoSections: [String: ValidateInfoRequest.Section] {
         var result = submissionValues.mapValues { ValidateInfoRequest.Section.single($0) }
         if let travellers = travellersSection {
-            result[travellers.section] = .multiple(visitorSubmissions)
+            result[travellers.section.rawValue] = .multiple(visitorSubmissions)
         }
         return result
     }

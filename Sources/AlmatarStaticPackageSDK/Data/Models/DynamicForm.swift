@@ -13,14 +13,58 @@ struct DynamicForm: Codable, Sendable, Hashable {
 }
 
 struct DynamicFormSection: Codable, Sendable, Hashable, Identifiable {
-    /// Section key, e.g. "departureCity", "departureDate" or "passenger".
-    let section: String
+    let section: DynamicFormSectionType
     let title: String?
     /// `true` when the fields are filled once per visitor, e.g. "passenger".
     let isMultiple: Bool?
     let fields: [DynamicFormField]
 
-    var id: String { section }
+    var id: String { section.rawValue }
+}
+
+/// Section key from the backend; any key not listed decodes as `.unknown` and keeps its raw value.
+enum DynamicFormSectionType: Codable, Sendable, Hashable {
+    case departureCity
+    case departureDate
+    case passenger
+    case unknown(String)
+
+    init(rawValue: String) {
+        switch rawValue {
+        case "departureCity": self = .departureCity
+        case "departureDate": self = .departureDate
+        case "passenger": self = .passenger
+        default: self = .unknown(rawValue)
+        }
+    }
+
+    var rawValue: String {
+        switch self {
+        case .departureCity: return "departureCity"
+        case .departureDate: return "departureDate"
+        case .passenger: return "passenger"
+        case .unknown(let value): return value
+        }
+    }
+
+    /// Display order: departure city, departure date, passenger, then any unknown section.
+    var sortOrder: Int {
+        switch self {
+        case .departureCity: return 0
+        case .departureDate: return 1
+        case .passenger: return 2
+        case .unknown: return 3
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        self.init(rawValue: try decoder.singleValueContainer().decode(String.self))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
 }
 
 struct DynamicFormField: Codable, Sendable, Hashable, Identifiable {

@@ -37,14 +37,14 @@ struct VisitorDetailsView: View {
     private struct SelectionTarget: Identifiable {
         let section: DynamicFormSection
         let field: DynamicFormField
-        var id: String { "\(section.section).\(field.field)" }
+        var id: String { "\(section.section.rawValue).\(field.field)" }
     }
 
     /// The free-date field whose picker sheet is open.
     private struct DateTarget: Identifiable {
         let section: DynamicFormSection
         let field: DynamicFormField
-        var id: String { "\(section.section).\(field.field)" }
+        var id: String { "\(section.section.rawValue).\(field.field)" }
     }
 
     @ObservedObject var form: VisitorDetailsFormModel
@@ -83,7 +83,7 @@ struct VisitorDetailsView: View {
             }
 
             VStack(spacing: Spacing.small) {
-                ForEach(form.sections) { section in
+                ForEach(orderedSections) { section in
                     if form.isPickerSection(section), let field = section.fields.first {
                         selectionRow(section, field)
                     } else {
@@ -100,6 +100,19 @@ struct VisitorDetailsView: View {
         .sheet(item: $dateTarget) { target in
             datePickerSheet(target)
         }
+    }
+
+    // MARK: - Ordering
+
+    /// Departure city, then departure date, then passenger, then any unknown sections in backend order.
+    private var orderedSections: [DynamicFormSection] {
+        form.sections.enumerated()
+            .sorted { lhs, rhs in
+                let lhsOrder = lhs.element.section.sortOrder
+                let rhsOrder = rhs.element.section.sortOrder
+                return lhsOrder == rhsOrder ? lhs.offset < rhs.offset : lhsOrder < rhsOrder
+            }
+            .map(\.element)
     }
 
     // MARK: - Selection row

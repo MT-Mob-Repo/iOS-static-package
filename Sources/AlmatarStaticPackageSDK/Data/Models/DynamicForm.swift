@@ -136,4 +136,25 @@ struct DynamicFormDateOption: Codable, Sendable, Hashable, Identifiable {
     let returnDate: String?
 
     var id: String { date }
+
+    init(date: String, returnDate: String?) {
+        self.date = date
+        self.returnDate = returnDate
+    }
+
+    /// The backend may send a full timestamp, e.g. "2026-11-21T00:00:00.000Z"; only the day is kept.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            date: Self.day(from: try container.decode(String.self, forKey: .date)),
+            returnDate: try container.decodeIfPresent(String.self, forKey: .returnDate).map(Self.day(from:))
+        )
+    }
+
+    private static func day(from value: String) -> String {
+        let dayLength = "yyyy-MM-dd".count
+        guard value.count > dayLength,
+              value[value.index(value.startIndex, offsetBy: dayLength)] == "T" else { return value }
+        return String(value.prefix(dayLength))
+    }
 }

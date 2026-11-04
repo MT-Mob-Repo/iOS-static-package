@@ -22,7 +22,7 @@ enum StaticPackagesEndpoint {
     /// `POST v1/packages/validate-info`
     static let validateInfo = "api/v1/packages/validate-info"
     /// `POST v1/packages/orders`
-    static let orders = "api/v1/packages/orders"
+    static let orders = "api/v1/packages/orders/checkout"
     static let packageCartPrefix = "api/v1/packages/carts/"
     /// `GET v1/packages/carts/{id}`
     static func packageCart(id: String) -> String { packageCartPrefix + id }

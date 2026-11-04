@@ -6,8 +6,8 @@
 import SwiftUI
 import AlmatarSystemDesignSDK
 
-/// Card listing the package highlights, two per row.
-/// With an odd number of items, the first one (usually the location) takes the whole row.
+/// Card listing the package highlights. The first item (usually the location) takes the whole row;
+/// the rest are two per row, and a last item on its own keeps half the width.
 struct JourneySnapshotView: View {
     private enum Layout {
         static let iconSize: CGFloat = 24
@@ -26,7 +26,7 @@ struct JourneySnapshotView: View {
 
             VStack(spacing: Spacing.small) {
                 ForEach(rows.indices, id: \.self) { index in
-                    rowView(rows[index])
+                    rowView(rows[index], isFirst: index == 0)
                 }
             }
         }
@@ -42,11 +42,11 @@ struct JourneySnapshotView: View {
 
     // MARK: - Rows
 
-    /// Groups items into pairs; the first item is alone when the count is odd.
+    /// The first item alone, then the rest in pairs.
     private var rows: [[JourneySnapshotItem]] {
         var remaining = items[...]
         var rows: [[JourneySnapshotItem]] = []
-        if remaining.count % 2 == 1, let first = remaining.popFirst() {
+        if let first = remaining.popFirst() {
             rows.append([first])
         }
         while !remaining.isEmpty {
@@ -57,12 +57,16 @@ struct JourneySnapshotView: View {
     }
 
     @ViewBuilder
-    private func rowView(_ row: [JourneySnapshotItem]) -> some View {
-        if row.count == 1, let item = row.first {
+    private func rowView(_ row: [JourneySnapshotItem], isFirst: Bool) -> some View {
+        if isFirst, let item = row.first {
             tile(item)
         } else {
             HStack(spacing: Spacing.small) {
                 ForEach(row) { tile($0) }
+                // Keeps a lone last item at half width.
+                if row.count == 1 {
+                    Color.clear.frame(maxWidth: .infinity)
+                }
             }
             // Both tiles in a row share the height of the taller one.
             .fixedSize(horizontal: false, vertical: true)

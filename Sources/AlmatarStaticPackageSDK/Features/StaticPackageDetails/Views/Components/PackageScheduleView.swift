@@ -32,6 +32,9 @@ struct PackageScheduleView: View {
         static let airlineLogoInset: CGFloat = 6
         static let flightIcon = "airplane"
         static let flightPathDotSize: CGFloat = 6
+        /// Hollow ring marking a layover on the flight path.
+        static let stopMarkerSize: CGFloat = 8
+        static let stopMarkerBorderWidth: CGFloat = 1.5
         /// Fixed so the departure and arrival columns split the remaining width evenly.
         static let flightPathWidth: CGFloat = 80
         static let locationLineLimit = 2
@@ -305,7 +308,7 @@ struct PackageScheduleView: View {
 
             HStack(alignment: .top, spacing: Spacing.small) {
                 flightEndpoint(time: leg.departureTime, location: leg.departureLocation, alignment: .leading)
-                flightPath(leg.durationInfo)
+                flightPath(leg.durationInfo, stopCodes: leg.stopCodes)
                 flightEndpoint(time: leg.arrivalTime, location: leg.arrivalLocation, alignment: .trailing)
             }
         }
@@ -367,8 +370,8 @@ struct PackageScheduleView: View {
         .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .top))
     }
 
-    /// "1h 45m • Direct" above a dot – line – dot route.
-    private func flightPath(_ durationInfo: String?) -> some View {
+    /// "1h 45m • 1 stop" above a dot – line – dot route, with a ring and its airport code for each stop.
+    private func flightPath(_ durationInfo: String?, stopCodes: [String]) -> some View {
         VStack(spacing: Spacing.xSmall) {
             if let durationInfo = durationInfo.nonEmpty {
                 Text(durationInfo)
@@ -379,11 +382,13 @@ struct PackageScheduleView: View {
                     .minimumScaleFactor(0.8)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            HStack(spacing: Spacing.zero) {
+            HStack(alignment: .top, spacing: Spacing.xxxSmall) {
                 flightPathDot
-                Rectangle()
-                    .fill(AlmatarColors.borderDefaultCard)
-                    .frame(height: Layout.borderWidth)
+                ForEach(stopCodes.indices, id: \.self) { index in
+                    flightPathLine
+                    stopMarker(stopCodes[index])
+                }
+                flightPathLine
                 flightPathDot
             }
         }
@@ -392,10 +397,37 @@ struct PackageScheduleView: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// Centred on the stop markers' row so the line stays straight with or without stops.
     private var flightPathDot: some View {
         Circle()
             .fill(AlmatarColors.textPrimaryInteractive)
             .frame(width: Layout.flightPathDotSize, height: Layout.flightPathDotSize)
+            .frame(height: Layout.stopMarkerSize)
+    }
+
+    private var flightPathLine: some View {
+        Rectangle()
+            .fill(AlmatarColors.borderDefaultCard)
+            .frame(height: Layout.borderWidth)
+            .frame(maxWidth: .infinity)
+            .frame(height: Layout.stopMarkerSize)
+    }
+
+    /// Hollow ring with the stop's airport code below, e.g. "RUH".
+    /// The code may be wider than the ring; it overflows centred without shortening the lines.
+    private func stopMarker(_ code: String) -> some View {
+        VStack(spacing: Spacing.xxSmall) {
+            Circle()
+                .strokeBorder(AlmatarColors.textPrimaryInteractive, lineWidth: Layout.stopMarkerBorderWidth)
+                .background(Circle().fill(AlmatarColors.surfaceCard))
+                .frame(width: Layout.stopMarkerSize, height: Layout.stopMarkerSize)
+            Text(code)
+                .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.regular))
+                .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .frame(width: Layout.stopMarkerSize)
     }
 
     private func changeUpgradeButton(title: String, action: @escaping () -> Void) -> some View {

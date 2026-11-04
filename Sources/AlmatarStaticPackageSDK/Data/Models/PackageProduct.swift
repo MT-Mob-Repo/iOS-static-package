@@ -123,7 +123,52 @@ struct FlightLeg: Codable, Sendable, Hashable {
     let cabinClass: String?
     /// Free text from the API, e.g. "1h 45m".
     let duration: String?
+    /// Number of stops; 0 for a direct flight.
     let stops: Int?
+    /// The layover airports, e.g. Jeddah (JED) for 40m.
+    let stopovers: [FlightStop]
+
+    private enum CodingKeys: String, CodingKey {
+        case departure, arrival, airline, flightNumber, cabinClass, duration, stops
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        departure = try container.decode(FlightPoint.self, forKey: .departure)
+        arrival = try container.decode(FlightPoint.self, forKey: .arrival)
+        airline = try container.decodeIfPresent(Airline.self, forKey: .airline)
+        flightNumber = try container.decodeIfPresent(String.self, forKey: .flightNumber)
+        cabinClass = try container.decodeIfPresent(String.self, forKey: .cabinClass)
+        duration = try container.decodeIfPresent(String.self, forKey: .duration)
+        // The cart API sends the stops as a list of airports; older responses send a count.
+        if let list = try? container.decodeIfPresent([FlightStop].self, forKey: .stops) {
+            stopovers = list
+            stops = list.count
+        } else {
+            stopovers = []
+            stops = try? container.decodeIfPresent(Int.self, forKey: .stops)
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(departure, forKey: .departure)
+        try container.encode(arrival, forKey: .arrival)
+        try container.encodeIfPresent(airline, forKey: .airline)
+        try container.encodeIfPresent(flightNumber, forKey: .flightNumber)
+        try container.encodeIfPresent(cabinClass, forKey: .cabinClass)
+        try container.encodeIfPresent(duration, forKey: .duration)
+        try container.encode(stopovers, forKey: .stops)
+    }
+}
+
+/// A layover between departure and arrival.
+struct FlightStop: Codable, Sendable, Hashable {
+    let airportCode: String?
+    let airportName: String?
+    let cityName: String?
+    /// e.g. "40m".
+    let layoverDuration: String?
 }
 
 struct FlightPoint: Codable, Sendable, Hashable {

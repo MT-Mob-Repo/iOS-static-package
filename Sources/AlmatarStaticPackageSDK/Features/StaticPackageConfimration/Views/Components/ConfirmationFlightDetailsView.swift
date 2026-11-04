@@ -12,6 +12,10 @@ struct ConfirmationFlightDetailsView: View {
         static let icon = "airplane"
         static let pathWidth: CGFloat = 90
         static let pathDotSize: CGFloat = 6
+        /// Hollow ring marking a layover on the flight path.
+        static let stopMarkerSize: CGFloat = 8
+        static let stopMarkerBorderWidth: CGFloat = 1.5
+        static let pathLineHeight: CGFloat = 1
         static let titleDotSize: CGFloat = 4
         static let titleSeparator = " · "
         static let locationLineLimit = 2
@@ -47,7 +51,7 @@ struct ConfirmationFlightDetailsView: View {
 
             HStack(alignment: .top, spacing: Spacing.small) {
                 endpoint(time: leg.departureTime, location: leg.departureLocation, alignment: .leading)
-                path(leg.durationInfo)
+                path(leg.durationInfo, stopCodes: leg.stopCodes)
                 endpoint(time: leg.arrivalTime, location: leg.arrivalLocation, alignment: .trailing)
             }
         }
@@ -91,8 +95,8 @@ struct ConfirmationFlightDetailsView: View {
         .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .top))
     }
 
-    /// "1h 45m • Direct" above a dot – line – dot route.
-    private func path(_ durationInfo: String?) -> some View {
+    /// "1h 45m • 1 stop" above a dot – line – dot route, with a ring and its airport code for each stop.
+    private func path(_ durationInfo: String?, stopCodes: [String]) -> some View {
         VStack(spacing: Spacing.xSmall) {
             if let durationInfo {
                 Text(durationInfo)
@@ -102,9 +106,13 @@ struct ConfirmationFlightDetailsView: View {
                     .lineLimit(Layout.locationLineLimit)
                     .minimumScaleFactor(0.8)
             }
-            HStack(spacing: Spacing.zero) {
+            HStack(alignment: .top, spacing: Spacing.xxxSmall) {
                 pathDot
-                ConfirmationDivider()
+                ForEach(stopCodes.indices, id: \.self) { index in
+                    pathLine
+                    stopMarker(stopCodes[index])
+                }
+                pathLine
                 pathDot
             }
         }
@@ -112,10 +120,35 @@ struct ConfirmationFlightDetailsView: View {
         .frame(width: Layout.pathWidth)
     }
 
+    /// Centred on the stop markers' row so the line stays straight with or without stops.
     private var pathDot: some View {
         Circle()
             .fill(AlmatarColors.iconOnSurfacePrimaryDisabled)
             .frame(width: Layout.pathDotSize, height: Layout.pathDotSize)
+            .frame(height: Layout.stopMarkerSize)
+    }
+
+    private var pathLine: some View {
+        Rectangle()
+            .fill(AlmatarColors.borderDefaultCard)
+            .frame(height: Layout.pathLineHeight)
+            .frame(maxWidth: .infinity)
+            .frame(height: Layout.stopMarkerSize)
+    }
+
+    private func stopMarker(_ code: String) -> some View {
+        VStack(spacing: Spacing.xxSmall) {
+            Circle()
+                .strokeBorder(AlmatarColors.textPrimaryInteractive, lineWidth: Layout.stopMarkerBorderWidth)
+                .background(Circle().fill(AlmatarColors.surfaceCard))
+                .frame(width: Layout.stopMarkerSize, height: Layout.stopMarkerSize)
+            Text(code)
+                .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.regular))
+                .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .frame(width: Layout.stopMarkerSize)
     }
 }
 

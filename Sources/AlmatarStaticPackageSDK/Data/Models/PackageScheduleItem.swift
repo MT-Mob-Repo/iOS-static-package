@@ -63,6 +63,8 @@ struct PackageScheduleFlightLeg: Codable, Sendable, Hashable {
     let arrivalLocation: String
     /// e.g. "1h 45m • Direct".
     let durationInfo: String?
+    /// Layover airport codes shown on the flight path, e.g. ["RUH"]; empty for a direct flight.
+    var stopCodes: [String] = []
 }
 
 struct PackageScheduleInfo: Codable, Sendable, Hashable {

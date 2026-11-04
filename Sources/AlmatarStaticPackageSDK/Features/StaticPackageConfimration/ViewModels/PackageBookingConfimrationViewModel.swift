@@ -209,7 +209,8 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
                 departureLocation: locationText(leg.departure),
                 arrivalTime: wallClockTime(leg.arrival.time),
                 arrivalLocation: locationText(leg.arrival),
-                durationInfo: durationInfo.isEmpty ? nil : durationInfo.joined(separator: Constants.separator)
+                durationInfo: durationInfo.isEmpty ? nil : durationInfo.joined(separator: Constants.separator),
+                stopCodes: leg.stopovers.compactMap { $0.airportCode.nonEmpty }
             )
         }
     }

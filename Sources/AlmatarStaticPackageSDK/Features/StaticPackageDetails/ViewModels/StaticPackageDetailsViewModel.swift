@@ -71,11 +71,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     var headerTags: [String] {
-        var tags: [String] = []
-        if let duration = packageInfo?.duration.nonEmpty {
-            tags.append(duration)
-        }
-        return tags
+       return packageInfo?.staticRibbons ?? []
     }
 
     /// Remote images for the header carousel; empty falls back to the bundled assets.

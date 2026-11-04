@@ -47,6 +47,7 @@ struct PackageInfo: Codable, Sendable {
     let includedServices: IncludedServices?
     /// Refund tiers, ordered from the earliest cancellation window.
     let cancellationPolicies: [CancellationPolicy]?
+    let staticRibbons: [String]?
 }
 
 // MARK: - Price

@@ -191,6 +191,13 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         observeTravellerCounts()
     }
 
+    /// Loads the package only the first time the screen appears, not when returning to it
+    /// (e.g. back from product options). Retries if the first load was cancelled.
+    func loadPackageDetailsIfNeeded() async {
+        guard case .idle = state else { return }
+        await loadPackageDetails()
+    }
+
     func loadPackageDetails() async {
         state = .loading
         do {

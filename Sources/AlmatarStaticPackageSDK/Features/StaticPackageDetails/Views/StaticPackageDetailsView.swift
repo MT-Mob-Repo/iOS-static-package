@@ -61,7 +61,7 @@ struct StaticPackageDetailsView: View {
             }
         }
         .task {
-            await viewModel.loadPackageDetails()
+            await viewModel.loadPackageDetailsIfNeeded()
         }
         .alert(viewModel.paymentErrorMessage ?? "", isPresented: isShowingPaymentError) {
             Button(viewModel.okTitle, role: .cancel) {}

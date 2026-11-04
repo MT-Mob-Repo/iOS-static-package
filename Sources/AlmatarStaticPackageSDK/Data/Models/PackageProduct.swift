@@ -120,7 +120,7 @@ struct FlightLeg: Codable, Sendable, Hashable {
     let arrival: FlightPoint
     let airline: Airline?
     let flightNumber: String?
-    let cabin: String?
+    let cabinClass: String?
     /// Free text from the API, e.g. "1h 45m".
     let duration: String?
     let stops: Int?

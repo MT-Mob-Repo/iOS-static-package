@@ -607,7 +607,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     }
 
     private func flightLeg(_ leg: FlightLeg, isUpgraded: Bool) -> PackageScheduleFlightLeg {
-        let subtitle = [leg.flightNumber.nonEmpty, leg.cabin.nonEmpty].compactMap { $0 }
+        let subtitle = [leg.flightNumber.nonEmpty, leg.cabinClass.nonEmpty].compactMap { $0 }
         let durationInfo = [leg.duration.nonEmpty, stopsText(leg.stops)].compactMap { $0 }
         return PackageScheduleFlightLeg(
             isUpgraded: isUpgraded,

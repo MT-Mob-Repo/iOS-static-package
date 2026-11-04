@@ -198,7 +198,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
             }
             let date = parseDateTime(leg.departure.time).map { fullDateFormatter.string(from: $0) }
             let title = [label, date].compactMap { $0 }.joined(separator: Constants.titleSeparator)
-            let subtitle = [leg.flightNumber.nonEmpty, leg.cabin.nonEmpty].compactMap { $0 }
+            let subtitle = [leg.flightNumber.nonEmpty, leg.cabinClass.nonEmpty].compactMap { $0 }
             let durationInfo = [leg.duration.nonEmpty, stopsText(leg.stops)].compactMap { $0 }
             return PackageScheduleFlightLeg(
                 isUpgraded: false,

@@ -274,7 +274,14 @@ final class VisitorDetailsFormModel: ObservableObject {
     }
 
     func setValue(_ value: String, _ section: DynamicFormSection, _ field: DynamicFormField) {
-        values[key(section, field)] = value
+        values[key(section, field)] = sanitized(value, for: field)
+    }
+
+    /// First and last names accept letters (Latin or Arabic) and spaces only;
+    /// digits and special characters are dropped as they are typed or pasted.
+    private func sanitized(_ value: String, for field: DynamicFormField) -> String {
+        guard [Constants.firstNameField, Constants.lastNameField].contains(field.field) else { return value }
+        return String(value.filter { $0.isLetter || $0 == " " })
     }
 
     /// e.g. "+966".

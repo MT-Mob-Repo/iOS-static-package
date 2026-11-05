@@ -102,17 +102,30 @@ final class VisitorDetailsFormModel: ObservableObject {
         visitors = []
         expandedVisitorIds = []
 
-        for section in form?.sections ?? [] where isPickerSection(section) {
-            guard let field = section.fields.first else { continue }
+        // Visitors' fields are preselected as each visitor is added.
+        for section in sections where !isTravellersSection(section) {
+            selectFirstOptions(in: section)
+        }
+    }
+
+    /// Selects the first choice of every choice field that has no value yet
+    /// (e.g. departure city, visit date, nationality, gender), as the API lists them.
+    private func selectFirstOptions(in section: DynamicFormSection) {
+        for field in section.fields where value(section, field).isEmpty {
             switch kind(of: field) {
             case .dropdown(let options), .segmented(let options):
-                values[key(section, field)] = options.first?.code
+                if let first = options.first { setValue(first.code, section, field) }
             case .dateList(let options):
-                values[key(section, field)] = options.first?.date
+                if let first = options.first { setValue(first.date, section, field) }
             default:
                 break
             }
         }
+    }
+
+    private func selectFirstOptions(for visitor: Visitor) {
+        guard let section = section(for: visitor) else { return }
+        selectFirstOptions(in: section)
     }
 
     /// Fills the form with the details already saved on the cart, e.g. `PackageDetails.sections`.
@@ -133,7 +146,9 @@ final class VisitorDetailsFormModel: ObservableObject {
 
         if visitors.isEmpty {
             for entry in entries.prefix(Constants.maxTravellers) {
-                visitors.append(Visitor(id: UUID(), type: savedType(entry) ?? .adults))
+                let visitor = Visitor(id: UUID(), type: savedType(entry) ?? .adults)
+                visitors.append(visitor)
+                selectFirstOptions(for: visitor)
             }
         }
 
@@ -616,6 +631,7 @@ final class VisitorDetailsFormModel: ObservableObject {
                 for _ in current.count..<target {
                     let visitor = Visitor(id: UUID(), type: traveller)
                     visitors.append(visitor)
+                    selectFirstOptions(for: visitor)
                     expandedVisitorIds.insert(visitor.id)
                 }
             }
@@ -627,6 +643,7 @@ final class VisitorDetailsFormModel: ObservableObject {
         guard canIncrement(traveller) else { return }
         let visitor = Visitor(id: UUID(), type: traveller)
         visitors.append(visitor)
+        selectFirstOptions(for: visitor)
         expandedVisitorIds.insert(visitor.id)
     }
 

@@ -40,8 +40,9 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// Number of cart allocations in flight; see `isUpdatingCart`.
     @Published private var pendingAllocations = 0
 
-    /// `true` while the cart is re-priced after a traveller or option change.
-    var isUpdatingCart: Bool { pendingAllocations > 0 }
+    /// `true` while the cart is re-priced after a traveller or option change,
+    /// from the first queued allocation until the last one finishes.
+    var isUpdatingCart: Bool { pendingAllocations > 0 || queuedAllocations > 0 }
 
     /// State of the "Visitor Details" form; observed directly by its view.
     let visitorForm = VisitorDetailsFormModel()
@@ -367,7 +368,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
     /// The last queued allocation; allocations run one after another, in the order they were made.
     private var allocationTask: Task<Bool, Never>?
     /// Allocations queued or running; the cart's travellers are applied when it drops to zero.
-    private var queuedAllocations = 0
+    @Published private var queuedAllocations = 0
     /// `true` when an allocation succeeded but the cart could not be reloaded, so `packageDetails` is out of date.
     private var cartNeedsReload = false
     private var cancellables = Set<AnyCancellable>()

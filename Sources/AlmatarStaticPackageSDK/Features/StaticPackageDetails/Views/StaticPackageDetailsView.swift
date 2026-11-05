@@ -142,7 +142,7 @@ struct StaticPackageDetailsView: View {
 
                     if viewModel.visitorForm.hasContent {
                         // Full-width band on the secondary background, reaching the bottom of the scroll content.
-                        VisitorDetailsView(form: viewModel.visitorForm)
+                        VisitorDetailsView(form: viewModel.visitorForm, isLoading: viewModel.isUpdatingCart || viewModel.isStartingPayment)
                             .padding(.horizontal, Spacing.screenHorizontal)
                             .padding(.top, Spacing.xLarge)
                             .padding(.bottom, Spacing.screenBottom)

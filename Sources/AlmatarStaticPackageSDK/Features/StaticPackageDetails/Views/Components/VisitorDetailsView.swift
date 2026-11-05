@@ -15,6 +15,9 @@ struct VisitorDetailsView: View {
         static let counterButtonSize: CGFloat = 28
         static let counterIconSize: CGFloat = 12
         static let counterValueWidth: CGFloat = 24
+        static let counterStrokeWidth: CGFloat = 2
+        /// The minus line's width at its narrowest, as a fraction of its full width.
+        static let minusCollapsedScale: CGFloat = 0.15
         static let datePickerHeight: CGFloat = 340
         static let departureIcon = "mappin.and.ellipse"
         static let dateIcon = "calendar"
@@ -47,6 +50,8 @@ struct VisitorDetailsView: View {
     }
 
     @ObservedObject var form: VisitorDetailsFormModel
+    /// `true` while the cart is being updated or payment is starting; the counters are locked meanwhile.
+    var isLoading = false
 
     /// Expandable cards start open.
     @State private var collapsedSections: Set<String> = []
@@ -57,6 +62,16 @@ struct VisitorDetailsView: View {
     @State private var visitorToRemove: VisitorDetailsFormModel.Visitor?
     /// "<name> removed." after a visitor is removed.
     @State private var toastMessage: ToastMessage?
+    /// The counter button animating until the cart allocation it caused finishes.
+    @State private var counterAnimation: CounterAnimationTarget?
+    /// Identifies the current run, so a stopped run's pending steps don't continue a newer one.
+    @State private var counterAnimationId = UUID()
+    /// How much of the stroke around the animating plus is drawn (0...1).
+    @State private var plusStrokeProgress: CGFloat = .zero
+    /// Whether the animating minus line is currently collapsed.
+    @State private var isMinusCollapsed = false
+    /// Whether loading started since the animation did; the animation stops when that loading ends.
+    @State private var hasSeenLoading = false
 
     private let completedTitle = LocalizedKey.completed.localized()
     private let incompleteTitle = LocalizedKey.incomplete.localized()
@@ -277,6 +292,14 @@ struct VisitorDetailsView: View {
         .popup(item: $visitorToRemove) { visitor in
             removeVisitorPopup(visitor)
         }
+        .onChange(of: isLoading) { loading in
+            if loading {
+                hasSeenLoading = true
+            } else {
+                // The allocation finished, successfully or not.
+                stopCounterAnimation()
+            }
+        }
     }
 
     /// One field per row; first and last name share a row, as in the Almatar app forms.
@@ -386,6 +409,8 @@ struct VisitorDetailsView: View {
                 // Read before the visitor and their details are removed.
                 let name = form.nameOrNumberTitle(visitor)
                 withAnimation(.easeInOut) { form.remove(visitor) }
+                // Animate this type's minus until the cart is updated.
+                startCounterAnimation(CounterAnimationTarget(traveller: visitor.type, button: .minus))
                 toastMessage = ToastMessage(text: LocalizedKey.visitorRemoved.localized(with: name))
             }
         ) {
@@ -429,12 +454,14 @@ struct VisitorDetailsView: View {
                 .minimumScaleFactor(0.8)
 
             HStack(spacing: Spacing.xxSmall) {
+                let minus = CounterAnimationTarget(traveller: traveller, button: .minus)
                 counterButton(
                     icon: Layout.minusIcon,
                     isEnabled: form.canDecrement(traveller),
-                    isPrimary: false
+                    isPrimary: false,
+                    iconWidthScale: counterAnimation == minus && isMinusCollapsed ? Layout.minusCollapsedScale : 1
                 ) {
-                    // Same confirmation as "Remove visitor", for the last visitor of this type.
+                    guard form.canDecrement(traveller), !isCounterLocked else { return }
                     visitorToRemove = form.lastRemovableVisitor(of: traveller)
                 }
 
@@ -443,11 +470,17 @@ struct VisitorDetailsView: View {
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .frame(minWidth: Layout.counterValueWidth)
 
+                let plus = CounterAnimationTarget(traveller: traveller, button: .plus)
                 counterButton(
                     icon: Layout.plusIcon,
                     isEnabled: form.canIncrement(traveller),
-                    isPrimary: true
-                ) { form.increment(traveller) }
+                    isPrimary: true,
+                    strokeProgress: counterAnimation == plus ? plusStrokeProgress : nil
+                ) {
+                    guard form.canIncrement(traveller), !isCounterLocked else { return }
+                    form.increment(traveller)
+                    startCounterAnimation(plus)
+                }
             }
 
             Text(traveller.ageHint)
@@ -468,7 +501,19 @@ struct VisitorDetailsView: View {
 
     /// Plus is purple and minus neutral; both turn grey when disabled,
     /// e.g. every plus once the group reaches the package's visitor limit.
-    private func counterButton(icon: String, isEnabled: Bool, isPrimary: Bool, action: @escaping () -> Void) -> some View {
+    /// While loading, every counter button is disabled and grey, except the one animating.
+    ///
+    /// - `isAnimating`: the button whose change is being allocated; it keeps its colors while loading.
+    /// - `strokeProgress`: how much of the animated stroke around the button is drawn; `nil` hides it.
+    /// - `iconWidthScale`: squeezes the icon horizontally, for the minus collapse animation.
+    private func counterButton(
+        icon: String,
+        isEnabled: Bool,
+        isPrimary: Bool,
+        strokeProgress: CGFloat? = nil,
+        iconWidthScale: CGFloat = 1,
+        action: @escaping () -> Void
+    ) -> some View {
         let foreground: Color = {
             guard isEnabled else { return AlmatarColors.iconDisabled }
             return isPrimary ? AlmatarColors.textPrimaryInteractive : AlmatarColors.textPrimaryStatic
@@ -479,12 +524,104 @@ struct VisitorDetailsView: View {
             Image(systemName: icon)
                 .font(.system(size: Layout.counterIconSize, weight: .semibold))
                 .foregroundStyle(foreground)
+                .scaleEffect(x: iconWidthScale, y: 1)
                 .frame(width: Layout.counterButtonSize, height: Layout.counterButtonSize)
                 .background(background)
                 .clipShape(Circle())
+                .overlay {
+                    if let strokeProgress {
+                        Circle()
+                            .inset(by: Layout.counterStrokeWidth / 2)
+                            .trim(from: .zero, to: strokeProgress)
+                            .stroke(AlmatarColors.textPrimaryInteractive, lineWidth: Layout.counterStrokeWidth)
+                            // Start drawing from the top.
+                            .rotationEffect(.degrees(-90))
+                            .transition(.opacity)
+                    }
+                }
         }
         .buttonStyle(.plain)
-        .disabled(!isEnabled)
+    }
+
+    // MARK: - Counter animations
+
+    /// Counter taps are ignored while loading or while a change is still being allocated.
+    private var isCounterLocked: Bool {
+        isLoading || counterAnimation != nil
+    }
+
+    private enum CounterAnimation {
+        /// One sweep of the stroke around the plus.
+        static let strokeDuration: Double = 0.6
+        /// Pause between sweeps.
+        static let strokePause: Double = 0.15
+        static let fadeDuration: Double = 0.2
+        /// One half of the minus pulse: collapsing or expanding.
+        static let minusPulseDuration: Double = 0.3
+        /// The allocation starts after the visitors form's sync delay; stop if no loading starts by then.
+        static let loadingStartTimeout: Double = 1.5
+    }
+
+    /// Animates `target` until the cart allocation finishes.
+    private func startCounterAnimation(_ target: CounterAnimationTarget) {
+        let runId = UUID()
+        counterAnimationId = runId
+        counterAnimation = target
+        hasSeenLoading = isLoading
+        switch target.button {
+        case .plus:
+            plusStrokeProgress = .zero
+            sweepPlusStroke(runId)
+        case .minus:
+            isMinusCollapsed = false
+            pulseMinus(runId)
+        }
+        // e.g. the change was undone before syncing, so there is nothing to allocate.
+        DispatchQueue.main.asyncAfter(deadline: .now() + CounterAnimation.loadingStartTimeout) {
+            guard isRunning(runId), !hasSeenLoading, !isLoading else { return }
+            stopCounterAnimation()
+        }
+    }
+
+    private func stopCounterAnimation() {
+        guard counterAnimation != nil else { return }
+        withAnimation(.easeOut(duration: CounterAnimation.fadeDuration)) {
+            counterAnimation = nil
+            isMinusCollapsed = false
+        }
+        plusStrokeProgress = .zero
+        hasSeenLoading = false
+    }
+
+    private func isRunning(_ runId: UUID) -> Bool {
+        counterAnimation != nil && counterAnimationId == runId
+    }
+
+    /// Draws the stroke around the plus from the top, then starts again while still animating.
+    private func sweepPlusStroke(_ runId: UUID) {
+        guard isRunning(runId) else { return }
+        plusStrokeProgress = .zero
+        // Animate on the next run loop so SwiftUI sees the reset first.
+        DispatchQueue.main.async {
+            guard isRunning(runId) else { return }
+            withAnimation(.easeInOut(duration: CounterAnimation.strokeDuration)) {
+                plusStrokeProgress = 1
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + CounterAnimation.strokeDuration + CounterAnimation.strokePause) {
+            sweepPlusStroke(runId)
+        }
+    }
+
+    /// Collapses and expands the minus line in turn while still animating.
+    private func pulseMinus(_ runId: UUID) {
+        guard isRunning(runId) else { return }
+        withAnimation(.easeInOut(duration: CounterAnimation.minusPulseDuration)) {
+            isMinusCollapsed.toggle()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + CounterAnimation.minusPulseDuration) {
+            pulseMinus(runId)
+        }
     }
 
     // MARK: - Fields
@@ -721,4 +858,16 @@ private extension VisitorDetailsFormModel.Traveller {
         case .infants: return LocalizedKey.infantsAgeHint.localized()
         }
     }
+}
+
+// MARK: - Counter animation target
+
+/// A counter button animating while its change is allocated, e.g. the adults' plus.
+private struct CounterAnimationTarget: Equatable {
+    enum Button {
+        case plus, minus
+    }
+
+    let traveller: VisitorDetailsFormModel.Traveller
+    let button: Button
 }

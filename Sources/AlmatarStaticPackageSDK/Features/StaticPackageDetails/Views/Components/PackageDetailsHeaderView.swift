@@ -154,11 +154,11 @@ struct PackageDetailsHeaderView: View {
         HStack(spacing: Spacing.xSmall) {
             ForEach(tags, id: \.self) { tag in
                 Text(tag)
-                    .modifier(AppTextModifier(size: Typography.Size.xSmall, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.semibold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .padding(.horizontal, Spacing.xSmall)
                     .padding(.vertical, Spacing.xxSmall)
-                    .background(AlmatarColors.surfaceCard)
+                    .background(AlmatarColors.backgroundSecondary)
                     .overlay(
                         Capsule()
                             .stroke(AlmatarColors.borderDefaultCard, lineWidth: Layout.borderWidth)

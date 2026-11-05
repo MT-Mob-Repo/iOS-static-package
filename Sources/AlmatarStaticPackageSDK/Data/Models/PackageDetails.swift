@@ -48,6 +48,7 @@ struct PackageInfo: Codable, Sendable {
     /// Refund tiers, ordered from the earliest cancellation window.
     let cancellationPolicies: [CancellationPolicy]?
     let staticRibbons: [String]?
+    let maxAllocationNumber: Int?
 }
 
 // MARK: - Price

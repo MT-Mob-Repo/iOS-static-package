@@ -70,6 +70,9 @@ final class VisitorDetailsFormModel: ObservableObject {
         /// Keeps Latin digits for Arabic dates, as in the design.
         static let latinDigitsSuffix = "@numbers=latn"
         static let rangeDash = " – "
+        /// Selection row dates, e.g. "Wed 30 Dec" and "Thu 31 Dec 2026".
+        static let rowDateFormat = "EEE d MMM"
+        static let rowDateWithYearFormat = "EEE d MMM yyyy"
         static let posixLocale = Locale(identifier: "en_US_POSIX")
         static let utc = TimeZone(identifier: "UTC")!
     }
@@ -387,15 +390,35 @@ final class VisitorDetailsFormModel: ObservableObject {
     }
 
     /// e.g. "Departure Riyadh" or "Visit Date: 16 Jul".
+    /// e.g. "Departure Riyadh", or for dates "Wed 30 Dec – Thu 31 Dec 2026" (date – return date).
+    /// Shows the field label while nothing is selected.
     func selectionRowTitle(_ section: DynamicFormSection, _ field: DynamicFormField) -> String {
-        guard let selected = selectedText(section, field) else { return field.label }
         switch kind(of: field) {
-        case .dateList, .date:
-            return "\(field.label): \(selected)"
+        case .dateList:
+            guard let option = selectedDateOption(section, field),
+                  let start = apiDateFormatter.date(from: option.date) else { return field.label }
+            let end = option.returnDate.nonEmpty.flatMap(apiDateFormatter.date(from:))
+            return rowDateRange(from: start, to: end, timeZone: Constants.utc)
+        case .date:
+            // Picked on the device, so shown in the device time zone.
+            guard let start = date(section, field) else { return field.label }
+            return rowDateRange(from: start, to: nil, timeZone: .current)
         default:
-            break
+            guard let selected = selectedText(section, field) else { return field.label }
+            return "\(field.label) \(selected)"
         }
-        return "\(field.label) \(selected)"
+    }
+
+    /// "Wed 30 Dec – Thu 31 Dec 2026"; the year shows once, or on both dates when they differ.
+    private func rowDateRange(from start: Date, to end: Date?, timeZone: TimeZone) -> String {
+        let withYear = displayFormatter(Constants.rowDateWithYearFormat, timeZone: timeZone)
+        guard let end else { return withYear.string(from: start) }
+
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let sameYear = calendar.component(.year, from: start) == calendar.component(.year, from: end)
+        let startFormatter = sameYear ? displayFormatter(Constants.rowDateFormat, timeZone: timeZone) : withYear
+        return startFormatter.string(from: start) + Constants.rangeDash + withYear.string(from: end)
     }
 
     /// e.g. "19 Jul – 21 Jul".

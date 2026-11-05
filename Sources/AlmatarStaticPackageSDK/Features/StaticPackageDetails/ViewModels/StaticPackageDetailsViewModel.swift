@@ -198,7 +198,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         state = .loading
         do {
             let details = try await repository.fetchPackageDetails(cartId: cartId)
-            visitorForm.configure(with: details.dynamicForm)
+            visitorForm.configure(with: details.dynamicForm, maxVisitors: details.packageInfo.maxAllocationNumber)
             // The form starts with the travellers the cart is priced for.
             if let travellers = details.travellers {
                 visitorForm.setTravellerCounts(Self.cartTravellerCounts(travellers))

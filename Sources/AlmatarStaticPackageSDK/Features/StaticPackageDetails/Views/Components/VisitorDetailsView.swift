@@ -15,7 +15,6 @@ struct VisitorDetailsView: View {
         static let counterButtonSize: CGFloat = 28
         static let counterIconSize: CGFloat = 12
         static let counterValueWidth: CGFloat = 24
-        static let disabledOpacity: Double = 0.4
         static let datePickerHeight: CGFloat = 340
         static let departureIcon = "mappin.and.ellipse"
         static let dateIcon = "calendar"
@@ -467,18 +466,25 @@ struct VisitorDetailsView: View {
         .accessibilityElement(children: .contain)
     }
 
+    /// Plus is purple and minus neutral; both turn grey when disabled,
+    /// e.g. every plus once the group reaches the package's visitor limit.
     private func counterButton(icon: String, isEnabled: Bool, isPrimary: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
+        let foreground: Color = {
+            guard isEnabled else { return AlmatarColors.iconDisabled }
+            return isPrimary ? AlmatarColors.textPrimaryInteractive : AlmatarColors.textPrimaryStatic
+        }()
+        let background = isEnabled && isPrimary ? AlmatarColors.surfaceSecondaryBase : AlmatarColors.surfaceCardSecondary
+
+        return Button(action: action) {
             Image(systemName: icon)
                 .font(.system(size: Layout.counterIconSize, weight: .semibold))
-                .foregroundStyle(isPrimary ? AlmatarColors.textPrimaryInteractive : AlmatarColors.textPrimaryStatic)
+                .foregroundStyle(foreground)
                 .frame(width: Layout.counterButtonSize, height: Layout.counterButtonSize)
-                .background(isPrimary ? AlmatarColors.surfaceSecondaryBase : AlmatarColors.surfaceCardSecondary)
+                .background(background)
                 .clipShape(Circle())
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : Layout.disabledOpacity)
     }
 
     // MARK: - Fields

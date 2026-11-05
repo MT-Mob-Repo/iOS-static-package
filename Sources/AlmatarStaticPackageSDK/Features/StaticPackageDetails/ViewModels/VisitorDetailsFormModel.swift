@@ -56,7 +56,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         /// Prefix of the per-visitor section keys, e.g. "travellers#<uuid>".
         static let visitorSectionSeparator = "#"
         static let visitorTypeKey = "type"
-        static let maxTravellers = 9
+        /// Used when the package does not set `maxAllocationNumber`.
+        static let maxTravellers = 8
         static let apiDateFormat = "yyyy-MM-dd"
         /// Appended to a listed date ("yyyy-MM-dd") to send it as a UTC date-time.
         static let apiDateTimeSuffix = "T00:00:00.000Z"
@@ -93,8 +94,13 @@ final class VisitorDetailsFormModel: ObservableObject {
     // MARK: - Setup
 
     /// Resets the state for a new form and preselects the first choice of each picker section.
-    func configure(with form: DynamicForm?) {
+    /// Most visitors in the group (all types together), from the package's `maxAllocationNumber`.
+    @Published private(set) var maxVisitors = Constants.maxTravellers
+
+    /// - Parameter maxVisitors: The package's `maxAllocationNumber`; missing or invalid uses the default.
+    func configure(with form: DynamicForm?, maxVisitors: Int? = nil) {
         self.form = form
+        self.maxVisitors = maxVisitors.flatMap { $0 > 0 ? $0 : nil } ?? Constants.maxTravellers
         values = [:]
         phoneCodes = [:]
         phoneCountryNames = [:]
@@ -145,7 +151,7 @@ final class VisitorDetailsFormModel: ObservableObject {
               !entries.isEmpty else { return }
 
         if visitors.isEmpty {
-            for entry in entries.prefix(Constants.maxTravellers) {
+            for entry in entries.prefix(maxVisitors) {
                 let visitor = Visitor(id: UUID(), type: savedType(entry) ?? .adults)
                 visitors.append(visitor)
                 selectFirstOptions(for: visitor)
@@ -608,13 +614,14 @@ final class VisitorDetailsFormModel: ObservableObject {
         lastRemovableVisitor(of: traveller) != nil
     }
 
+    /// The group stays within `maxVisitors` in total, with at most one infant per adult.
     func canIncrement(_ traveller: Traveller) -> Bool {
+        guard visitors.count < maxVisitors else { return false }
         switch traveller {
         case .infants:
-            // One infant per adult.
             return count(.infants) < count(.adults)
         case .adults, .children:
-            return count(.adults) + count(.children) < Constants.maxTravellers
+            return true
         }
     }
 

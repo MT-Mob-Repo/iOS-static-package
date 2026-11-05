@@ -15,6 +15,8 @@ struct VisitorDetailsView: View {
         static let counterButtonSize: CGFloat = 28
         static let counterIconSize: CGFloat = 12
         static let counterValueWidth: CGFloat = 24
+        static let nationalityChevronSize: CGFloat = 14
+        static let countryPickerHeightFraction: CGFloat = 0.98
         static let counterStrokeWidth: CGFloat = 2
         /// The minus line's width at its narrowest, as a fraction of its full width.
         static let minusCollapsedScale: CGFloat = 0.15
@@ -42,6 +44,13 @@ struct VisitorDetailsView: View {
         var id: String { "\(section.section.rawValue).\(field.field)" }
     }
 
+    /// The nationality field whose country picker is open.
+    private struct NationalityTarget: Identifiable {
+        let section: DynamicFormSection
+        let field: DynamicFormField
+        var id: String { "\(section.section.rawValue).\(field.field)" }
+    }
+
     /// The free-date field whose picker sheet is open.
     private struct DateTarget: Identifiable {
         let section: DynamicFormSection
@@ -57,6 +66,7 @@ struct VisitorDetailsView: View {
     @State private var collapsedSections: Set<String> = []
     @State private var dateTarget: DateTarget?
     @State private var selectionTarget: SelectionTarget?
+    @State private var nationalityTarget: NationalityTarget?
     @State private var pickerDate = Date()
     /// The visitor whose removal is waiting for confirmation.
     @State private var visitorToRemove: VisitorDetailsFormModel.Visitor?
@@ -627,14 +637,20 @@ struct VisitorDetailsView: View {
     // MARK: - Fields
 
     /// Label above the control, as in the Almatar app forms.
+    /// The nationality button shows its own title, so it gets no extra label.
+    @ViewBuilder
     private func fieldView(_ field: DynamicFormField, in section: DynamicFormSection) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.xSmall) {
-            Text(field.label)
-                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
-                .foregroundStyle(AlmatarColors.textPrimaryStatic)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        if form.kind(of: field) == .nationality {
+            nationalityField(section, field)
+        } else {
+            VStack(alignment: .leading, spacing: Spacing.xSmall) {
+                Text(field.label)
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
+                    .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            control(field, in: section)
+                control(field, in: section)
+            }
         }
     }
 
@@ -649,6 +665,8 @@ struct VisitorDetailsView: View {
             dateButton(section, field)
         case .phone:
             phoneField(section, field)
+        case .nationality:
+            nationalityField(section, field)
         case .email:
             textField(section, field, keyboard: .emailAddress)
         case .number:
@@ -694,6 +712,46 @@ struct VisitorDetailsView: View {
             shouldValidate: $form.shouldValidate,
             isTextFieldFocused: false
         )
+    }
+
+    /// Nationality button from the design system with the country's flag;
+    /// tapping it opens the design system's country picker.
+    private func nationalityField(_ section: DynamicFormSection, _ field: DynamicFormField) -> some View {
+        let target = NationalityTarget(section: section, field: field)
+        return SUINationalityTextAndImageButton(
+            title: field.label,
+            placeholder: field.label,
+            text: Binding(
+                get: { form.nationalityName(section, field) },
+                set: { _ in }
+            ),
+            validator: form.nationalityValidator(for: field),
+            background: AlmatarColors.surfaceCardSecondary,
+            shouldValidate: $form.shouldValidate,
+            contentImageView: {
+                Image(systemName: Layout.downChevron)
+                    .font(.system(size: Layout.nationalityChevronSize))
+                    .foregroundStyle(AlmatarColors.textSecondaryStatic)
+            },
+            leadingImageView: form.nationalityCountry(section, field)?.flag ?? UIImage()
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            nationalityTarget = target
+        }
+        .sheet(isPresented: Binding(
+            get: { nationalityTarget?.id == target.id },
+            set: { if !$0 { nationalityTarget = nil } }
+        )) {
+            CountryPickerView(viewModel: CountryPickerViewModel(
+                AlmatarStaticPackageSDK.shared.configuration.language == .arabic ? .arabic : .english,
+                didSelectCountry: { country in
+                    form.setNationality(country, section, field)
+                    nationalityTarget = nil
+                }
+            ))
+            .presentationDetents([.fraction(Layout.countryPickerHeightFraction)])
+        }
     }
 
     /// Short choices as pills, e.g. Male / Female or Mr / Ms / Mrs.

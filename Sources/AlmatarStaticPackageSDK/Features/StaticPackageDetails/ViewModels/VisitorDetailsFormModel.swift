@@ -14,8 +14,10 @@ final class VisitorDetailsFormModel: ObservableObject {
     enum FieldKind: Equatable {
         /// Short choices shown as pills, e.g. Mr / Ms / Mrs.
         case segmented([DynamicFormOption])
-        /// Choices shown in a dropdown, e.g. nationality.
+        /// Choices shown in a dropdown, e.g. a list of cities.
         case dropdown([DynamicFormOption])
+        /// Country picked from the design system's country list; the value is the ISO code, e.g. "SA".
+        case nationality
         /// Fixed list of dates shown in a dropdown.
         case dateList([DynamicFormDateOption])
         /// Free date, e.g. date of birth, optionally limited by the field's `from` / `to`.
@@ -48,6 +50,7 @@ final class VisitorDetailsFormModel: ObservableObject {
         static let lastNameField = "lastName"
         static let passportNumberField = "passportNumber"
         static let iqamaNumberField = "iqamaNumber"
+        static let nationalityField = "nationality"
         static let maleOption = "male"
         static let femaleOption = "female"
         /// Default dial code of phone fields, as in the design system phone field.
@@ -126,6 +129,9 @@ final class VisitorDetailsFormModel: ObservableObject {
                 if let first = options.first { setValue(first.code, section, field) }
             case .dateList(let options):
                 if let first = options.first { setValue(first.date, section, field) }
+            case .nationality:
+                // The API's first nationality, as for the other choices.
+                if let first = field.options?.first { setValue(first.code.uppercased(), section, field) }
             default:
                 break
             }
@@ -194,6 +200,8 @@ final class VisitorDetailsFormModel: ObservableObject {
             case .dropdown(let options), .segmented(let options):
                 let option = options.first { $0.code.caseInsensitiveCompare(saved) == .orderedSame }
                 setValue(option?.code ?? saved, section, field)
+            case .nationality:
+                setValue(saved.uppercased(), section, field)
             case .text, .email, .number:
                 setValue(saved, section, field)
             }
@@ -266,6 +274,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     }
 
     func kind(of field: DynamicFormField) -> FieldKind {
+        if field.field == Constants.nationalityField { return .nationality }
         let options = field.options ?? []
         switch field.dataType {
         case .phone:
@@ -344,6 +353,33 @@ final class VisitorDetailsFormModel: ObservableObject {
         }
     }
 
+    // MARK: - Nationality
+
+    /// The selected country from the design system's list, with its flag; `nil` while none is selected.
+    func nationalityCountry(_ section: DynamicFormSection, _ field: DynamicFormField) -> CountryModel? {
+        DesignSystemCountries.country(code: value(section, field))
+    }
+
+    /// Country name in the SDK language, e.g. "Saudi Arabia" / "المملكة العربية السعودية".
+    /// Codes missing from the design system's list fall back to the API's option name.
+    func nationalityName(_ section: DynamicFormSection, _ field: DynamicFormField) -> String? {
+        let code = value(section, field)
+        guard !code.isEmpty else { return nil }
+        if let country = DesignSystemCountries.country(code: code) {
+            return AlmatarStaticPackageSDK.shared.configuration.language == .arabic ? country.arName : country.enName
+        }
+        return field.options?.first { $0.code.caseInsensitiveCompare(code) == .orderedSame }?.name ?? code
+    }
+
+    func setNationality(_ country: CountryModel, _ section: DynamicFormSection, _ field: DynamicFormField) {
+        setValue(country.code.uppercased(), section, field)
+    }
+
+    /// Required nationalities must be picked; optional ones may stay empty.
+    func nationalityValidator(for field: DynamicFormField) -> Validator {
+        field.required ? RequiredValidator() : NonRequiredValidator()
+    }
+
     // MARK: - Validation rules
 
     /// The design-system validator for a text field, matching the Almatar app forms.
@@ -380,6 +416,8 @@ final class VisitorDetailsFormModel: ObservableObject {
         switch kind(of: field) {
         case .dropdown(let options), .segmented(let options):
             return options.first { $0.code == current }.map(optionName)
+        case .nationality:
+            return nationalityName(section, field)
         case .dateList:
             return apiDateFormatter.date(from: current).map { dayMonthFormatter.string(from: $0) }
         case .date:
@@ -860,3 +898,30 @@ private enum PhoneCallingCodes {
         return codes
     }()
 }
+
+// MARK: - Design system countries
+
+/// Looks up the design system's countries by ISO code, e.g. "SA".
+/// The design system keeps its country lookup internal, so this reads its public country list
+/// and lets its picker view model build the `CountryModel` (which carries the flag).
+@MainActor
+private enum DesignSystemCountries {
+    private static let list: [CountryCodeModel] = {
+        guard let data = try? JSONSerialization.data(withJSONObject: CountryCodeJson) else { return [] }
+        return (try? JSONDecoder().decode([CountryCodeModel].self, from: data)) ?? []
+    }()
+
+    private static var cache: [String: CountryModel] = [:]
+
+    static func country(code: String) -> CountryModel? {
+        let code = code.uppercased()
+        guard !code.isEmpty else { return nil }
+        if let cached = cache[code] { return cached }
+        guard let entry = list.first(where: { $0.locale.uppercased() == code }) else { return nil }
+        var country: CountryModel?
+        CountryPickerViewModel { country = $0 }.onTapAction(entry)
+        cache[code] = country
+        return country
+    }
+}
+

@@ -475,7 +475,7 @@ struct VisitorDetailsView: View {
                     visitorToRemove = form.lastRemovableVisitor(of: traveller)
                 }
 
-                Text("\(form.count(traveller))")
+                Text("\(form.count(traveller).formatWithForceEnDisplay())")
                     .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .frame(minWidth: Layout.counterValueWidth)

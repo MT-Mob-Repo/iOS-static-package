@@ -79,6 +79,7 @@ struct PackageBookingConfimrationView: View {
 
                     PaymentDetailsView(
                         title: viewModel.paymentDetailsTitle,
+                        includedProducts: viewModel.includedProducts(for: cart),
                         sections: viewModel.paymentSections(for: cart),
                         includedTitle: viewModel.includedAmountTitle,
                         amountText: { viewModel.formattedAmount($0, for: cart) },

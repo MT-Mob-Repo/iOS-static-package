@@ -135,7 +135,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
         }
         // The cart API has no destination / start-end dates, so derive them from the booked hotel stay.
         let hotelInfos = cart.packageProducts.filter { $0.productType == .hotel }.compactMap(\.hotelInfo)
-        if let destination = hotelInfos.first?.city.nonEmpty {
+        if let destination = cart.packageInfo?.journeySnapshot?.first?.label {
             rows.append(PackageSummaryRow(label: LocalizedKey.destination.localized(), value: destination))
         }
         let startDate = hotelInfos.compactMap(\.checkIn).min()
@@ -236,6 +236,16 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     }
 
     // MARK: - Payment
+
+    /// Titles of the mandatory package products (flight, hotel, included add-ons), shown as "Included".
+    func includedProducts(for cart: PackageCart) -> [String] {
+        cart.packageProducts
+            .filter(\.isMandatory)
+            .compactMap { product in
+                let addonTitle = product.productType == .addon ? (product.addonInfo?.title).nonEmpty : nil
+                return addonTitle ?? Optional(product.title).nonEmpty
+            }
+    }
 
     /// Priced items grouped by breakdown section, as returned by the API.
     func paymentSections(for cart: PackageCart) -> [PriceBreakdownSection] {

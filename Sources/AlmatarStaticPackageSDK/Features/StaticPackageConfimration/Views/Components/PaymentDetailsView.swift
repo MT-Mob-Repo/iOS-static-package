@@ -14,6 +14,9 @@ struct PaymentDetailsView: View {
     }
 
     let title: String
+    /// Titles of the products included in the package price, e.g. "Round-trip flight", "Radisson Blu Hotel".
+    /// Each is shown with `includedTitle` instead of an amount.
+    var includedProducts: [String] = []
     let sections: [PriceBreakdownSection]
     /// Shown instead of an amount of zero, e.g. "Included".
     let includedTitle: String
@@ -30,8 +33,11 @@ struct PaymentDetailsView: View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
             ConfirmationSectionTitle(title: title)
 
-            if !sections.isEmpty {
+            if !includedProducts.isEmpty || !sections.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.small) {
+                    ForEach(includedProducts.indices, id: \.self) { index in
+                        includedProductView(includedProducts[index])
+                    }
                     ForEach(sections.indices, id: \.self) { index in
                         // The first section is the package price itself and reads better without a heading.
                         sectionView(sections[index], showsTitle: index > 0)
@@ -67,7 +73,32 @@ struct PaymentDetailsView: View {
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
                 .padding(.top, Spacing.xxSmall)
         }
-        ForEach(section.items ?? [], id: \.self) { itemView($0) }
+        ForEach(visibleItems(of: section), id: \.self) { itemView($0) }
+    }
+
+    /// Zero-amount lines are package products; when those are listed as `includedProducts`, skip them here to avoid duplicates.
+    private func visibleItems(of section: PriceBreakdownSection) -> [PriceBreakdownItem] {
+        let items = section.items ?? []
+        return includedProducts.isEmpty ? items : items.filter { $0.amount != 0 }
+    }
+
+    /// e.g. "Radisson Blu Hotel ........ Included".
+    private func includedProductView(_ productTitle: String) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
+            Text(productTitle)
+                .modifier(AppTextModifier(size: Typography.Size.small))
+                .foregroundStyle(AlmatarColors.textSecondaryStatic)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Spacer(minLength: Spacing.small)
+
+            Text(includedTitle)
+                .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
+                .foregroundStyle(AlmatarColors.textPrimaryStatic)
+                .lineLimit(1)
+                .layoutPriority(1)
+        }
+        .accessibilityElement(children: .combine)
     }
 
     private func itemView(_ item: PriceBreakdownItem) -> some View {

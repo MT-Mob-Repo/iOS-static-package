@@ -254,23 +254,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     /// Fields grouped into rows; first and last name share a row wherever the first of them appears.
     func rows(for section: DynamicFormSection) -> [[DynamicFormField]] {
         let fields = section.fields
-        let firstName = fields.first { $0.field == Constants.firstNameField }
-        let lastName = fields.first { $0.field == Constants.lastNameField }
-        guard let firstName, let lastName else { return fields.map { [$0] } }
-
-        var rows: [[DynamicFormField]] = []
-        var didAddNames = false
-        for field in fields {
-            if field == firstName || field == lastName {
-                if !didAddNames {
-                    rows.append([firstName, lastName])
-                    didAddNames = true
-                }
-            } else {
-                rows.append([field])
-            }
-        }
-        return rows
+        return fields.map { [$0] }
     }
 
     func kind(of field: DynamicFormField) -> FieldKind {
@@ -310,11 +294,9 @@ final class VisitorDetailsFormModel: ObservableObject {
         values[key(section, field)] = sanitized(value, for: field)
     }
 
-    /// First and last names accept letters (Latin or Arabic) and spaces only;
-    /// digits and special characters are dropped as they are typed or pasted.
     private func sanitized(_ value: String, for field: DynamicFormField) -> String {
         guard [Constants.firstNameField, Constants.lastNameField].contains(field.field) else { return value }
-        return String(value.filter { $0.isLetter || $0 == " " })
+        return String(value.filter { ($0.isASCII && $0.isLetter) || $0 == " " })
     }
 
     /// e.g. "+966".
@@ -562,7 +544,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     /// so every field control works per visitor. Contact fields are asked of the lead visitor only.
     func section(for visitor: Visitor) -> DynamicFormSection? {
         guard let travellers = travellersSection else { return nil }
-        let fields = isLead(visitor) ? travellers.fields : travellers.fields.filter { !isContactField($0) }
+        let fields = travellers.fields
         return DynamicFormSection(
             section: .unknown(Constants.travellersSection.rawValue + Constants.visitorSectionSeparator + visitor.id.uuidString),
             title: nil,
@@ -625,7 +607,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     /// Whether the visitor's card offers "Remove visitor": every visitor except the lead.
     /// The lead is removed with the adults counter only, once they are the last adult.
     func canRemove(_ visitor: Visitor) -> Bool {
-        !isLead(visitor) && visitors.contains(visitor)
+        return visitors.contains(visitor)
     }
 
     /// Removes the visitor and their entered details. Removing the last adult also removes every infant.

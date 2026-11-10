@@ -133,7 +133,7 @@ struct ConfirmationHotelDetailsView: View {
                 if let value = trailing.1 {
                     ConfirmationLabeledValue(label: trailing.0, value: value)
                 } else {
-                    Spacer().frame(maxWidth: .infinity)
+                    Spacer().frame(maxWidth: Spacing.small)
                 }
             }
         }

@@ -544,7 +544,7 @@ final class VisitorDetailsFormModel: ObservableObject {
     /// so every field control works per visitor. Contact fields are asked of the lead visitor only.
     func section(for visitor: Visitor) -> DynamicFormSection? {
         guard let travellers = travellersSection else { return nil }
-        let fields = travellers.fields
+        let fields = (visitor.type == .adults) ? travellers.fields : travellers.fields.filter { !isContactField($0) }
         return DynamicFormSection(
             section: .unknown(Constants.travellersSection.rawValue + Constants.visitorSectionSeparator + visitor.id.uuidString),
             title: nil,

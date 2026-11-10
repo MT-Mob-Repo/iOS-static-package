@@ -150,20 +150,12 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     }
 
     func includes(for cart: PackageCart) -> [JourneySnapshotItem] {
-        cart.packageInfo?.journeySnapshot ?? []
+        Array(cart.packageInfo?.journeySnapshot?.dropFirst() ?? [])
     }
 
     /// Optional add-ons the customer picked, e.g. "Fast Pass — Skip the Line • 2 visitors".
     func addons(for cart: PackageCart) -> [JourneySnapshotItem] {
-        cart.packageProducts
-            .filter { $0.productType == .addon }
-            .map { product in
-                let title = product.addonInfo?.title ?? product.title
-                let quantity = product.quantity ?? bookedQuantity(of: product, in: cart)
-                let label = [title, visitorsCountText(quantity)].compactMap { $0 }.joined(separator: Constants.separator)
-                let icon = product.tags?.first?.icon.nonEmpty ?? Constants.addonIcon
-                return JourneySnapshotItem(icon: icon, label: label)
-            }
+       return []
     }
 
     /// Quantity booked for `product`, matched by add-on id in `cart.products`.
@@ -240,10 +232,8 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
     /// Titles of the mandatory package products (flight, hotel, included add-ons), shown as "Included".
     func includedProducts(for cart: PackageCart) -> [String] {
         cart.packageProducts
-            .filter(\.isMandatory)
             .compactMap { product in
-                let addonTitle = product.productType == .addon ? (product.addonInfo?.title).nonEmpty : nil
-                return addonTitle ?? Optional(product.title).nonEmpty
+                return product.title ?? ""
             }
     }
 

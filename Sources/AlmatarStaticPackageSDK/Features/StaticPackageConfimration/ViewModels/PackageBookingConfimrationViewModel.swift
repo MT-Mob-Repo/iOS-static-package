@@ -133,13 +133,13 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
         if let name = (cart.packageInfo?.name).nonEmpty {
             rows.append(PackageSummaryRow(label: LocalizedKey.package.localized(), value: name))
         }
-        // The cart API has no destination / start-end dates, so derive them from the booked hotel stay.
-        let hotelInfos = cart.packageProducts.filter { $0.productType == .hotel }.compactMap(\.hotelInfo)
         if let destination = cart.packageInfo?.journeySnapshot?.first?.label {
             rows.append(PackageSummaryRow(label: LocalizedKey.destination.localized(), value: destination))
         }
-        let startDate = hotelInfos.compactMap(\.checkIn).min()
-        let endDate = hotelInfos.compactMap(\.checkOut).max()
+        // Dates the customer picked in the booking form; each may be "yyyy-MM-dd" or an ISO 8601 date-time.
+        let selectedDates = cart.sections?.departureDate
+        let startDate = selectedDates?.departureDate
+        let endDate = selectedDates?.returnDate
         if let dates = formattedDateRange(from: startDate, to: endDate) {
             rows.append(PackageSummaryRow(label: LocalizedKey.dates.localized(), value: dates))
         }
@@ -381,7 +381,8 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
         parser.locale = Constants.posixLocale
         parser.timeZone = Constants.utc
         parser.dateFormat = Constants.apiDateFormat
-        return parser.date(from: value)
+        // Accept both "2026-11-18" and "2026-11-18T00:00:00.000Z".
+        return parser.date(from: value) ?? parseDateTime(value)
     }
 
     private func parseDateTime(_ value: String) -> Date? {

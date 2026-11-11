@@ -23,6 +23,8 @@ struct PackageCart: Codable, Sendable, Identifiable {
     let payment: CartPayment?
     /// Refund tiers, ordered from the earliest cancellation window.
     let cancellationPolicies: [CancellationPolicy]?
+    /// Booking form sections submitted with the order (only `departureDate` is decoded).
+    let sections: CartSections?
 
     var id: String { orderId ?? "" }
 
@@ -54,6 +56,20 @@ struct CartProductAddonInfo: Codable, Sendable, Hashable {
     let price: Double?
     let currency: String?
     let quantity: Int?
+}
+
+// MARK: - Sections
+
+/// The `sections` object of the cart. Other keys (`passenger`, `departureCity`) are ignored.
+struct CartSections: Codable, Sendable, Hashable {
+    let departureDate: CartDepartureDate?
+}
+
+struct CartDepartureDate: Codable, Sendable, Hashable {
+    /// ISO 8601 date-time, e.g. "2026-11-18T00:00:00.000Z".
+    let departureDate: String?
+    /// Date only, e.g. "2026-11-18".
+    let returnDate: String?
 }
 
 // MARK: - Travellers

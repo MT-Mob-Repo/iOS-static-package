@@ -1,0 +1,96 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "bold_font" : {
+      "comment" : "Font",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SFArabic-Bold"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rubik-Bold"
+          }
+        }
+      }
+    },
+    "light_font" : {
+      "comment" : "Font",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SFArabic-Light"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rubik-Light"
+          }
+        }
+      }
+    },
+    "medium-font" : {
+      "comment" : "Font",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SFArabic-Semibold"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rubik-Medium"
+          }
+        }
+      }
+    },
+    "regular_font" : {
+      "comment" : "Font",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SFArabic-Regular"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rubik-Regular"
+          }
+        }
+      }
+    },
+    "semibold_font" : {
+      "comment" : "Font",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SFArabic-Semibold"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rubik-SemiBold"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

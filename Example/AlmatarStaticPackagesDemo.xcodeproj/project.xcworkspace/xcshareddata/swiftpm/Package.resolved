@@ -1,0 +1,15 @@
+{
+  "originHash" : "1902200a8aebf2a6d1755d5891dbaddd5184c81f600349cdb294ef8d4a02ac82",
+  "pins" : [
+    {
+      "identity" : "ios-almatar-system-design-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MT-Mob-Repo/iOS-Almatar-System-Design-SDK",
+      "state" : {
+        "revision" : "c6912975fa9721bd83c93b07026fa9882a69c35c",
+        "version" : "1.0.9"
+      }
+    }
+  ],
+  "version" : 3
+}

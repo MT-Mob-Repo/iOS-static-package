@@ -221,7 +221,7 @@ final class PackageBookingConfimrationViewModel: ObservableObject {
                 checkIn: formattedDate(hotel.checkIn),
                 checkOut: formattedDate(hotel.checkOut),
                 roomType: (hotel.room?.name).nonEmpty,
-                boardBasis: hotel.boardBasis.nonEmpty,
+                boardBasis: hotel.room?.beds ?? "",
                 amenities: (hotel.tags ?? []).map { JourneySnapshotItem(icon: $0.icon ?? "", label: $0.label) }
             )
         }

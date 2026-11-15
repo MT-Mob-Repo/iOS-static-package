@@ -21,6 +21,8 @@ struct PaddedAppButton: View {
     let isLoading: Bool
     let isDisabled: Bool
     let fullWidth: Bool
+    let cornerRadiusOverride: CGFloat?
+    let hidesBorder: Bool
     let action: () -> Void
 
     @FocusState private var isFocused: Bool
@@ -28,6 +30,8 @@ struct PaddedAppButton: View {
     /// - Parameters:
     ///   - horizontalPadding: Defaults to the padding `AppButton` uses for `size`.
     ///   - verticalPadding: Defaults to the padding `AppButton` uses for `size`.
+    ///   - cornerRadiusOverride: As in `AppButton`: replaces the corner radius of `size`, and the round shape on iOS 26.
+    ///   - hidesBorder: As in `AppButton`: removes the style's border.
     init(
         _ title: String,
         icon: Image? = nil,
@@ -38,6 +42,8 @@ struct PaddedAppButton: View {
         isLoading: Bool = false,
         isDisabled: Bool = false,
         fullWidth: Bool = false,
+        cornerRadiusOverride: CGFloat? = nil,
+        hidesBorder: Bool = false,
         action: @escaping () -> Void
     ) {
         self.title = title
@@ -49,6 +55,8 @@ struct PaddedAppButton: View {
         self.isLoading = isLoading
         self.isDisabled = isDisabled
         self.fullWidth = fullWidth
+        self.cornerRadiusOverride = cornerRadiusOverride
+        self.hidesBorder = hidesBorder
         self.action = action
     }
 
@@ -78,7 +86,9 @@ struct PaddedAppButton: View {
             size: size,
             horizontalPadding: horizontalPadding,
             verticalPadding: verticalPadding,
-            fullWidth: fullWidth
+            fullWidth: fullWidth,
+            cornerRadiusOverride: cornerRadiusOverride,
+            hidesBorder: hidesBorder
         ))
         // As in `AppButton`: a loading button keeps its look but ignores taps.
         .allowsHitTesting(!isLoading)
@@ -96,8 +106,18 @@ private struct PaddedButtonStyle: ButtonStyle {
     let horizontalPadding: CGFloat
     let verticalPadding: CGFloat
     let fullWidth: Bool
+    let cornerRadiusOverride: CGFloat?
+    let hidesBorder: Bool
 
     @Environment(\.isEnabled) private var isEnabled
+
+    private var cornerRadius: CGFloat {
+        cornerRadiusOverride ?? size.cornerRadius
+    }
+
+    private var iOS26CornerRadius: CGFloat {
+        cornerRadiusOverride ?? CornerRadius.round
+    }
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -106,7 +126,7 @@ private struct PaddedButtonStyle: ButtonStyle {
             .frame(maxWidth: fullWidth ? .infinity : nil)
             .foregroundStyle(isEnabled ? style.textColor : style.textDisabledColor)
             .background(backgroundColor(isPressed: configuration.isPressed))
-            .applyEffectToButton(cornerRadius: size.cornerRadius, borderColor: borderColor)
+            .applyEffectToButton(cornerRadius: cornerRadius, iOS26CornerRadius: iOS26CornerRadius, borderColor: borderColor)
             .scaleEffect(configuration.isPressed ? Self.pressedScale : 1)
             .animation(.spring(), value: isFocused)
     }
@@ -117,6 +137,7 @@ private struct PaddedButtonStyle: ButtonStyle {
     }
 
     private var borderColor: Color {
-        (isEnabled ? style.borderColor : style.disabledBorderColor) ?? .clear
+        guard !hidesBorder else { return .clear }
+        return (isEnabled ? style.borderColor : style.disabledBorderColor) ?? .clear
     }
 }

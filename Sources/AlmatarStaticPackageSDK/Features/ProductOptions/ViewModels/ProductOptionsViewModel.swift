@@ -131,6 +131,6 @@ final class ProductOptionsViewModel: ObservableObject {
     }
 
     private static func isIncluded(_ option: ProductOption) -> Bool {
-        (option.price ?? 0) == 0
+        option.isDefault
     }
 }

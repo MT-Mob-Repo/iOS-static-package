@@ -175,19 +175,19 @@ struct ProductOptionsView: View {
                 Text(viewModel.includedTitle)
                     .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
             }
-            .foregroundStyle(AlmatarColors.textComplementaryGreen)
+            .foregroundStyle(Color("#15803C"))
         } else {
             VStack(alignment: .trailing, spacing: Spacing.xxxSmall) {
                 SUITextPrice(
                     text: viewModel.priceText(option),
-                    modifier: AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold)
+                    modifier: AppTextModifier(size: 14, fontWeight: Typography.Weight.semibold)
                 )
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .lineLimit(1)
                 .fixedSize()
 
                 Text(viewModel.perVisitorTitle)
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                    .modifier(AppTextModifier(size: 11, fontWeight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.textSecondaryStatic)
             }
         }

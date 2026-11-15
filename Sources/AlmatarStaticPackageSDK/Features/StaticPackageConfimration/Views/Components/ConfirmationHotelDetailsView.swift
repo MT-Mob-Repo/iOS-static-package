@@ -25,7 +25,7 @@ struct ConfirmationHotel: Identifiable, Hashable {
 /// Hotel photo, name, rating, stay dates, room and the amenities included.
 struct ConfirmationHotelDetailsView: View {
     private enum Layout {
-        static let icon = "building.2"
+        static let icon = "building"
         static let imageHeight: CGFloat = 160
         static let starIcon = "star.fill"
         static let starSize: CGFloat = 12
@@ -88,26 +88,22 @@ struct ConfirmationHotelDetailsView: View {
     }
 
     private func image(_ url: URL) -> some View {
-        // Fixed-size container so a filled image never widens the card.
-        Color.clear
-            .frame(maxWidth: .infinity)
-            .frame(height: Layout.imageHeight)
-            .overlay(
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    default:
-                        AlmatarColors.surfaceCardSecondary
-                    }
-                }
-            )
-            .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
-            .accessibilityHidden(true)
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+            default:
+                AlmatarColors.surfaceCardSecondary
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .aspectRatio(1.76, contentMode: .fit)
+        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
+        .accessibilityHidden(true)
     }
-
+    
     private var stars: some View {
         HStack(spacing: Spacing.xxxSmall) {
             ForEach(0..<hotel.stars, id: \.self) { _ in

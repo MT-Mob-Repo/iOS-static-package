@@ -49,7 +49,7 @@ struct ConfirmationSectionTitle: View {
                     .accessibilityHidden(true)
             }
             Text(title)
-                .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
         }
         .accessibilityAddTraits(.isHeader)

@@ -15,7 +15,8 @@ struct PackageDetailsHeaderView: View {
         static let cardHorizontalInset: CGFloat = 16
         static let cardCornerRadius: CGFloat = CornerRadius.xxxLarge
         static let borderWidth: CGFloat = 1
-        static let pageDotSize: CGFloat = 7
+        static let pageDotSize: CGFloat = 6
+        static let selectedPageDotSize: CGFloat = 8
         static let pageDotSpacing: CGFloat = 6
         static let pageDotsBottomPadding: CGFloat = 12
         static let shadowColor = Color(red: 24 / 255, green: 39 / 255, blue: 75 / 255).opacity(0.12)
@@ -120,7 +121,7 @@ struct PackageDetailsHeaderView: View {
             ForEach(0..<slideCount, id: \.self) { index in
                 Circle()
                     .fill(index == currentPage ? Color.white : Color.white.opacity(0.45))
-                    .frame(width: Layout.pageDotSize, height: Layout.pageDotSize)
+                    .frame(width: index == currentPage ? Layout.selectedPageDotSize : Layout.pageDotSize, height: index == currentPage ? Layout.selectedPageDotSize : Layout.pageDotSize)
                     .animation(.easeInOut(duration: 0.2), value: currentPage)
             }
         }

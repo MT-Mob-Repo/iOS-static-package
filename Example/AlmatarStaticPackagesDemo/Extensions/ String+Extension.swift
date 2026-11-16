@@ -61,7 +61,7 @@ extension String {
         if inGMT {
             dateFormatter.timeZone = TimeZone(identifier: "GMT")
         }
-        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         let date = dateFormatter.date(from: self)
         return  date
     }

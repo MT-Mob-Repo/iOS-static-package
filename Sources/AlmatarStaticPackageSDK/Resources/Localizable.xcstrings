@@ -1771,6 +1771,23 @@
         }
       }
     },
+    "static_package_details.two_stops" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "توقفان"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 stops"
+          }
+        }
+      }
+    },
     "static_package_details.until" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -648,6 +648,7 @@ final class StaticPackageDetailsViewModel: ObservableObject {
         switch stops {
         case ..<1: return directFlightTitle
         case 1: return LocalizedKey.flightOneStop.localized()
+        case 2: return LocalizedKey.flightTwoStops.localized()
         default: return LocalizedKey.flightStops.localized(with: stops)
         }
     }

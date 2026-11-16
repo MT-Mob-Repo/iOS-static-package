@@ -125,6 +125,7 @@ enum LocalizedKey: String {
     case selectOptions = "product_options.select_options"
     case perVisitor = "product_options.per_visitor"
     case continueTitle = "common.continue"
+    case confirm = "common.confirm"
     case remove = "common.remove"
     case cancel = "common.cancel"
     case enterFieldPlaceholder = "visitor_details.enter_field_placeholder"

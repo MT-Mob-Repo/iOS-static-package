@@ -62,6 +62,24 @@
         }
       }
     },
+    "common.confirm" : {
+      "comment" : "Button that confirms the chosen product option and goes back",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأكيد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        }
+      }
+    },
     "common.continue" : {
       "comment" : "Button that confirms and goes back or forward",
       "extractionState" : "manual",

@@ -26,7 +26,7 @@ struct PackageScheduleView: View {
         static let titleLineLimit = 2
         static let ratingFractionDigits = 1
         // TODO: Replace with the design-system success color once available.
-        static let ratingTint = AlmatarColors.iconComplementaryGreen
+        static let ratingTint = AlmatarColors.textComplementaryGreen
         static let ratingBackgroundOpacity: Double = 0.05
         static let airlineLogoSize: CGFloat = 46
         static let airlineLogoInset: CGFloat = 6
@@ -63,7 +63,7 @@ struct PackageScheduleView: View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 Text(title)
-                    .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: Typography.Size.xSemiLarge, fontWeight: Typography.Weight.semibold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 
                 if let subTitle = subTitle.nonEmpty {
@@ -100,7 +100,7 @@ struct PackageScheduleView: View {
                         .accessibilityHidden(true)
 
                     Text(fixedPriceTitle)
-                        .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
+                        .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
                         .foregroundStyle(AlmatarColors.textPrimaryStatic)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -149,13 +149,19 @@ struct PackageScheduleView: View {
 
     private var marker: some View {
         Circle()
-            .stroke(AlmatarColors.textPrimaryStatic, lineWidth: Layout.markerBorderWidth)
+            .strokeBorder(
+                AlmatarColors.textPrimaryStatic,
+                lineWidth: Layout.markerBorderWidth
+            )
             .frame(width: Layout.markerSize, height: Layout.markerSize)
-            .overlay(
+            .overlay {
                 Circle()
                     .fill(AlmatarColors.textPrimaryStatic)
-                    .frame(width: Layout.markerDotSize, height: Layout.markerDotSize)
-            )
+                    .frame(
+                        width: Layout.markerDotSize,
+                        height: Layout.markerDotSize
+                    )
+            }
             .accessibilityHidden(true)
     }
 
@@ -228,7 +234,7 @@ struct PackageScheduleView: View {
         let isMediaCard = imageURL != nil && description != nil
         let hasFooter = card.room != nil || status != nil
 
-        return VStack(alignment: .leading, spacing: Spacing.small) {
+        return VStack(alignment: .leading, spacing: Spacing.xSmall) {
             if let imageURL {
                 cardImage(imageURL)
             }
@@ -266,7 +272,7 @@ struct PackageScheduleView: View {
 
     /// One block per leg separated by dividers, then the optional "Change upgrade" button.
     private func flightCardView(_ flight: PackageScheduleFlight, onChangeUpgrade: @escaping () -> Void) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.medium) {
+        VStack(alignment: .leading, spacing: Spacing.small) {
             ForEach(Array(flight.legs.enumerated()), id: \.offset) { index, leg in
                 if index > 0 {
                     cardDivider
@@ -346,7 +352,7 @@ struct PackageScheduleView: View {
         .clipShape(Circle())
         .overlay(
             Circle()
-                .stroke(AlmatarColors.borderDefaultCard, lineWidth: Layout.borderWidth)
+                .stroke(AlmatarColors.borderDefaultCard, lineWidth: 0.2)
         )
         .accessibilityHidden(true)
     }
@@ -470,8 +476,8 @@ struct PackageScheduleView: View {
         HStack(alignment: .top, spacing: Spacing.small) {
             Text(card.title)
                 .modifier(AppTextModifier(
-                    size: isMediaCard ? Typography.Size.medium : Typography.Size.large,
-                    fontWeight: isMediaCard ? Typography.Weight.semibold : Typography.Weight.medium
+                    size: Typography.Size.medium,
+                    fontWeight: Typography.Weight.medium
                 ))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .lineLimit(Layout.titleLineLimit)
@@ -498,7 +504,7 @@ struct PackageScheduleView: View {
     }
 
     private func infoRow(_ info: PackageScheduleInfo) -> some View {
-        HStack(spacing: Spacing.xSmall) {
+        HStack(spacing: Spacing.xxxSmall) {
             RemoteIconView(icon: info.icon, size: Layout.smallIconSize, tint: AlmatarColors.textSecondaryStatic)
             Text(info.text)
                 .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
@@ -513,11 +519,11 @@ struct PackageScheduleView: View {
             if let room {
                 VStack(alignment: .leading, spacing: Spacing.xSmall) {
                     Text(room.title)
-                        .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.regular))
+                        .modifier(AppTextModifier(size: Typography.Size.regular))
                         .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     if let subtitle = room.subtitle.nonEmpty {
                         Text(subtitle)
-                            .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                            .modifier(AppTextModifier(size: Typography.Size.small))
                             .foregroundStyle(AlmatarColors.textSecondaryStatic)
                     }
                 }

@@ -12,6 +12,8 @@ struct PackageBookingConfimrationView: View {
         static let receiptIcon = "doc.text"
         static let shareIcon = "square.and.arrow.up"
         static let actionIconSize: CGFloat = 14
+        static let actionButtonIconWidth: CGFloat = 20
+        static let actionButtonIconHeight: CGFloat = 16
     }
 
     @StateObject private var viewModel: PackageBookingConfimrationViewModel
@@ -172,10 +174,32 @@ struct PackageBookingConfimrationView: View {
     // The booking is already confirmed, so both actions stay enabled even if the cart fails to load.
     private var actions: some View {
         VStack(spacing: Spacing.small) {
-            PrimaryButton(viewModel.goToMyTripsTitle, isDisabled: false) {
+            Button {
                 viewModel.goToMyTripsTapped()
+            } label: {
+                HStack(spacing: Spacing.xSmall) {
+                    Image(PackageAsset.goToMyTripsIcon, bundle: .module)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: Layout.actionButtonIconWidth, height: Layout.actionButtonIconHeight)
+                    
+                    Text(viewModel.goToMyTripsTitle)
+                        .modifier(
+                            AppTextModifier(
+                                size: Typography.Size.regular,
+                                fontWeight: Typography.Weight.semibold
+                            )
+                        )
+                }
+                .foregroundStyle(AlmatarColors.textOnSurfacePrimary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, Spacing.medium)
+                .background(AlmatarColors.textPrimaryInteractive)
+                .clipShape(Capsule())
             }
-
+            .buttonStyle(.plain)
+            .padding(.horizontal, Spacing.screenHorizontal)
+            
             Button {
                 viewModel.backToHomeTapped()
             } label: {

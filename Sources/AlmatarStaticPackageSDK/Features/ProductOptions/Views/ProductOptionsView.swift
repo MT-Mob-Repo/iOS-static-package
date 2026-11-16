@@ -58,7 +58,7 @@ struct ProductOptionsView: View {
                 priceDetailsTitle: viewModel.priceDetailsTitle,
                 includedTitle: viewModel.includedTitle,
                 breakdownSections: viewModel.breakdownSections,
-                buttonTitle: viewModel.continueTitle,
+                buttonTitle: viewModel.confirmTitle,
                 // The choice is already in the cart; wait for it to be re-priced before going back.
                 isLoading: viewModel.isUpdatingCart
             ) {
@@ -66,7 +66,10 @@ struct ProductOptionsView: View {
             }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
-        .defaultToolbar(title: "")
+        // Back discards the choices made here; Continue keeps them.
+        .defaultToolbar(title: "", onBack: {  Task {
+            await viewModel.discardChanges()
+        }})
         .alert(viewModel.errorMessage ?? "", isPresented: isShowingError) {
             Button(viewModel.okTitle, role: .cancel) {}
         }

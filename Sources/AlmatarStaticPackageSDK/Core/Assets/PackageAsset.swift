@@ -10,4 +10,6 @@ import Foundation
 enum PackageAsset {
     /// Illustration of the "Remove visitor" confirmation.
     static let removeVisitorIcon = "remove-visitor-icon"
+    static let confimredPackageIcon = "static_package_confimred"
+    static let goToMyTripsIcon = "back-to-trips-icon"
 }

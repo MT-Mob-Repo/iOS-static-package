@@ -11,7 +11,7 @@ struct ItineraryView: View {
     private enum Layout {
         static let imageHeight: CGFloat = 144
         static let descriptionLineLimit = 4
-        static let chevronSize: CGFloat = 14
+        static let chevronSize: CGFloat = 12
         static let actionIconSize: CGFloat = 14
         static let borderWidth: CGFloat = 1
         static let sectionLabelKerning: CGFloat = 1
@@ -123,7 +123,7 @@ struct ItineraryView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Image(systemName: isExpanded ? Layout.chevronUpIcon : Layout.chevronDownIcon)
-                    .font(.system(size: Layout.chevronSize, weight: Typography.Weight.semibold))
+                    .font(.system(size: Layout.chevronSize, weight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.iconPrimaryStatic)
             }
             .contentShape(Rectangle())

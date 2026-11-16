@@ -26,6 +26,8 @@ final class ProductOptionsViewModel: ObservableObject {
 
     /// The option the cart currently holds; the selection returns to it when an allocation fails.
     private var allocatedOption: ProductOption?
+    /// The option the cart held when the screen opened; going back restores it.
+    private let initialOption: ProductOption?
     /// Allocates the option in the cart and reloads it; returns the error message, or `nil` on success.
     private let allocateOption: (ProductOption?) async -> String?
     /// The cart price after a reload.
@@ -48,6 +50,7 @@ final class ProductOptionsViewModel: ObservableObject {
             ?? section.options?.first(where: \.isDefault)
         self.selectedOption = initial
         self.allocatedOption = initial
+        self.initialOption = initial
     }
 
     // MARK: - Strings
@@ -56,7 +59,7 @@ final class ProductOptionsViewModel: ObservableObject {
     var note: String? { section.note.nonEmpty }
     var includedTitle: String { LocalizedKey.itineraryIncluded.localized() }
     var perVisitorTitle: String { LocalizedKey.perVisitor.localized() }
-    var continueTitle: String { LocalizedKey.continueTitle.localized() }
+    var confirmTitle: String { LocalizedKey.confirm.localized() }
     var priceDetailsTitle: String { LocalizedKey.priceDetails.localized() }
     var okTitle: String { LocalizedKey.ok.localized() }
 
@@ -98,6 +101,21 @@ final class ProductOptionsViewModel: ObservableObject {
         }
     }
 
+    /// Called when the user goes back without continuing: re-allocates the option the cart
+    /// held when the screen opened, so the choices made here are discarded.
+    /// The allocation is queued after any still in flight, so it is the one the cart ends with.
+    func discardChanges() async {
+        guard selectedOption != initialOption ||
+              allocatedOption != initialOption ||
+              isUpdatingCart else {
+            return
+        }
+
+        let option = initialOption
+        let allocateOption = allocateOption
+        _ = await allocateOption(option)
+    }
+    
     /// e.g. "+840 SAR", converted to the selected currency.
     func priceText(_ option: ProductOption) -> String {
         CurrencyManager.shared.formatPrice(value: option.price ?? 0, currencyCode: option.currency ?? cartPrice?.currency)

@@ -62,6 +62,24 @@
         }
       }
     },
+    "common.confirm" : {
+      "comment" : "Button that confirms the chosen product option and goes back",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأكيد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        }
+      }
+    },
     "common.continue" : {
       "comment" : "Button that confirms and goes back or forward",
       "extractionState" : "manual",
@@ -1220,7 +1238,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مباشر"
+            "value" : "مباشرة"
           }
         },
         "en" : {
@@ -1298,7 +1316,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Package Upgrade"
+            "value" : "Upgraded"
           }
         }
       }
@@ -1724,7 +1742,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "السعر الإجمالي • زائر واحد"
+            "value" : "المبلغ الإجمالي • زائر واحد"
           }
         },
         "en" : {
@@ -1742,13 +1760,30 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "السعر الإجمالي • %d زوار"
+            "value" : "المبلغ الإجمالي • %d زوار"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total price • %d visitors"
+          }
+        }
+      }
+    },
+    "static_package_details.two_stops" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "توقفان"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 stops"
           }
         }
       }

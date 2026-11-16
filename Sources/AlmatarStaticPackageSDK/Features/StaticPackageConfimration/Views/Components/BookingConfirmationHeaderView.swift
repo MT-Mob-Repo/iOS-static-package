@@ -10,7 +10,7 @@ import AlmatarSystemDesignSDK
 struct BookingConfirmationHeaderView: View {
     private enum Layout {
         static let badgeSize: CGFloat = 72
-        static let badgeHaloSize: CGFloat = 84
+        static let badgeHaloSize: CGFloat = 114
         static let badgeIconSize: CGFloat = 32
         static let badgeIcon = "checkmark"
         static let haloOpacity: Double = 0.12
@@ -61,41 +61,10 @@ struct BookingConfirmationHeaderView: View {
     }
 
     private var successBadge: some View {
-        ZStack {
-            Circle()
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.43, green: 0.88, blue: 0.59),
-                            Color(red: 0.43, green: 0.88, blue: 0.59).opacity(0.8)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-
-            CheckmarkShape()
-                .stroke(
-                    LinearGradient(
-                        colors: [
-                            Color.white,
-                            Color(red: 0.88, green: 1.0, blue: 0.92)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    style: StrokeStyle(
-                        lineWidth:  Layout.badgeHaloSize * 0.115,
-                        lineCap: .round,
-                        lineJoin: .round
-                    )
-                )
-                .frame(
-                    width: Layout.badgeHaloSize * 0.52,
-                    height: Layout.badgeHaloSize * 0.40
-                )
-        }
-        .frame(width: Layout.badgeHaloSize, height: Layout.badgeHaloSize)
+        Image(PackageAsset.confimredPackageIcon, bundle: .module)
+            .resizable()
+            .scaledToFit()
+            .frame(width: Layout.badgeHaloSize, height: Layout.badgeHaloSize)
     }
 
     private struct CheckmarkShape: Shape {

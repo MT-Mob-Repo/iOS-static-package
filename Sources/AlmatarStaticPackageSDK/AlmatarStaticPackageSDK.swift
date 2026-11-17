@@ -57,6 +57,16 @@ public final class AlmatarStaticPackageSDK {
         syncNetworkClient()
     }
 
+    /// Where the SDK loads its data from: the backend or the bundled mock JSON.
+    /// Starts from `StaticPackageConfiguration.useMockData`.
+    public var dataSource: StaticPackageDataSource { configuration.useMockData ? .mock : .remote }
+
+    /// Switches between the backend (`.remote`) and the bundled mock JSON (`.mock`).
+    /// Applies to every request made after the call, including screens opened afterwards.
+    public func setDataSource(_ dataSource: StaticPackageDataSource) {
+        configuration.useMockData = dataSource == .mock
+    }
+
     // MARK: - Currency
 
     /// The user's selected currency code, e.g. "SAR".
@@ -244,7 +254,7 @@ public final class AlmatarStaticPackageSDK {
     func makeStaticPackagesRepository() -> StaticPackagesRepositoryProtocol {
         StaticPackagesRepository(
             baseURL: configuration.baseURL,
-            networkClient: configuration.useMockData ? .mock : .shared
+            networkClient: dataSource == .mock ? .mock : .shared
         )
     }
 

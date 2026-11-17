@@ -18,6 +18,7 @@ struct HomeView: View {
     @State private var showMyTrips = false
     @State private var showSampleTripsList = false
     @State private var showLandingPages = false
+    @State private var dataSource = AlmatarStaticPackageSDK.shared.dataSource
 
     var body: some View {
         
@@ -25,6 +26,18 @@ struct HomeView: View {
             LanguageMenuButton(
                 languageManager: languageManager
             )
+
+            // The parent app decides where the SDK loads data from.
+            Picker("Data source", selection: $dataSource) {
+                Text("Remote").tag(StaticPackageDataSource.remote)
+                Text("Mock").tag(StaticPackageDataSource.mock)
+            }
+            .pickerStyle(.segmented)
+            .frame(maxWidth: 240)
+            .onChange(of: dataSource) { newValue in
+                AlmatarStaticPackageSDK.shared.setDataSource(newValue)
+            }
+
             Button("Open packages list") {
                 showPackagesSection = true
             }

@@ -27,7 +27,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             language: .english,
             brand: AppConstants.brand,
             deviceId: UIDevice.current.identifierForVendor?.uuidString,
-            useMockData: false   // set to false once the API is ready
+            useMockData: AppConstants.useMockData
         ))
 
         sdk.setTokenProvider {
@@ -41,4 +41,6 @@ enum AppConstants {
     static let baseURL = "https://alpha.alm6ar.com"
     static let brand = "Almatar"
     static let tokenKey = "access_token"
+    /// `false` calls `baseURL`; `true` serves the SDK's bundled JSON. It can also be switched on the Home screen.
+    static let useMockData = false
 }

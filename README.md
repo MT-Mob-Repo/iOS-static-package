@@ -61,7 +61,9 @@ sdk.setTokenProvider { await session.accessToken }
 sdk.setHeadersProvider { ["x-app-version": appVersion] }
 ```
 
-Settings can be changed later with `setLanguage(_:)`, `setCurrency(_:)`, `setAvailableCurrencies(_:)` and `setBaseURL(_:)`.
+Settings can be changed later with `setLanguage(_:)`, `setCurrency(_:)`, `setAvailableCurrencies(_:)`, `setBaseURL(_:)` and `setDataSource(_:)`.
+
+`setDataSource(_:)` switches where **all** data comes from at runtime: `.remote` calls the backend at `baseURL`, and `.mock` serves the bundled JSON in `Resources/Mocks` for every endpoint, with no network calls. It starts from `useMockData` and applies to every request made afterwards. Read the current value with `dataSource`.
 
 ### 2. Show the screens
 
@@ -104,7 +106,7 @@ It shows how to:
 - present the Booking Confirmation;
 - provide the colors (`AlmatarColors.xcassets`) and register the fonts (`Extensions/AlmatarFonts.swift`).
 
-To try the screens without the API, set `useMockData: true` in `AppDelegate.swift`.
+To try the screens without the API, pick **Mock** in the data source switch on the Home screen, or set `useMockData: true` in `AppDelegate.swift`.
 
 ---
 

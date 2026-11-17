@@ -163,7 +163,7 @@ Response:
 }
 ```
 
-With `useMockData: true`, the request is served from `Resources/Mocks/package_trips.json`.
+With mock data (`useMockData: true` or `setDataSource(.mock)`), the request is served from `Resources/Mocks/package_trips.json`.
 
 ---
 

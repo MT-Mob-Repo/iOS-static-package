@@ -28,10 +28,28 @@ struct PackageDetailsHeaderView: View {
     /// Remote carousel images; when empty, `imageNames` are shown instead.
     var imageURLs: [URL] = []
 
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    /// Visual (left-to-right) position of the visible page. The carousel and the
+    /// dots are both laid out LTR, so this index is shared by both of them.
     @State private var currentPage = 0
 
     private var slideCount: Int {
         imageURLs.count
+    }
+
+    private var isRTL: Bool {
+        layoutDirection == .rightToLeft
+    }
+
+    /// Maps a visual position to the logical slide index (mirrored in RTL so the
+    /// first image sits on the right and the user swipes right to advance).
+    private func slideIndex(forPosition position: Int) -> Int {
+        isRTL ? slideCount - 1 - position : position
+    }
+
+    private var firstPosition: Int {
+        isRTL ? max(slideCount - 1, 0) : 0
     }
     
     var body: some View {
@@ -54,6 +72,9 @@ struct PackageDetailsHeaderView: View {
             summaryCard
                 .padding(.horizontal, Layout.cardHorizontalInset)
         }
+        .onAppear { currentPage = firstPosition }
+        .onChange(of: slideCount) { _ in currentPage = firstPosition }
+        .onChange(of: layoutDirection) { _ in currentPage = firstPosition }
     }
 
     // MARK: - Carousel
@@ -61,14 +82,17 @@ struct PackageDetailsHeaderView: View {
     private var carousel: some View {
         GeometryReader { proxy in
             TabView(selection: $currentPage) {
-                ForEach(0..<slideCount, id: \.self) { index in
-                    slide(at: index)
+                ForEach(0..<slideCount, id: \.self) { position in
+                    slide(at: slideIndex(forPosition: position))
                         .frame(width: proxy.size.width, height: Layout.headerHeight)
                         .clipped()
-                        .tag(index)
+                        .tag(position)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            // Paged TabView misbehaves under RTL (reversed swipes / wrong selection).
+            // Force LTR and mirror the slide order manually instead.
+            .environment(\.layoutDirection, .leftToRight)
         }
         .frame(height: Layout.headerHeight)
         .clipped()
@@ -118,15 +142,21 @@ struct PackageDetailsHeaderView: View {
 
     private var pageDots: some View {
         HStack(spacing: Layout.pageDotSpacing) {
-            ForEach(0..<slideCount, id: \.self) { index in
+            ForEach(0..<slideCount, id: \.self) { position in
+                let isSelected = position == currentPage
                 Circle()
-                    .fill(index == currentPage ? Color.white : Color.white.opacity(0.45))
-                    .frame(width: index == currentPage ? Layout.selectedPageDotSize : Layout.pageDotSize, height: index == currentPage ? Layout.selectedPageDotSize : Layout.pageDotSize)
+                    .fill(isSelected ? Color.white : Color.white.opacity(0.45))
+                    .frame(
+                        width: isSelected ? Layout.selectedPageDotSize : Layout.pageDotSize,
+                        height: isSelected ? Layout.selectedPageDotSize : Layout.pageDotSize
+                    )
                     .animation(.easeInOut(duration: 0.2), value: currentPage)
             }
         }
+        // Same LTR space as the carousel so dot positions always match the swipe.
+        .environment(\.layoutDirection, .leftToRight)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("\(currentPage + 1) of \(slideCount)"))
+        .accessibilityLabel(Text("\(slideIndex(forPosition: currentPage) + 1) of \(slideCount)"))
     }
 
     // MARK: - Expandable summary card

@@ -1,7 +1,8 @@
 {
-  "status": 200,
   "data": {
-    "cartId": "68d7f1c4a9e2b30f5c1a77de",
-    "expiresAt": "2026-07-01T14:32:00.000Z"
-  }
+    "cartId": "6afc3b87901caf7235613b9b",
+    "expiresAt": "2026-11-17T11:48:27.563Z"
+  },
+  "status": 201,
+  "errors": null
 }

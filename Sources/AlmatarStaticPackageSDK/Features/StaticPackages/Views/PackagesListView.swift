@@ -209,15 +209,18 @@ public struct PackagesListView: View {
 
             Spacer(minLength: Spacing.zero)
 
-            AppButton(
+            PaddedAppButton(
                 viewModel.bookTitle,
                 style: .primary,
                 size: .small,
+                horizontalPadding: Spacing.medium,
+                verticalPadding: Spacing.xSmall,
                 isLoading: viewModel.isBooking(package),
                 isDisabled: viewModel.isBooking && !viewModel.isBooking(package)
             ) {
                 Task { await viewModel.bookTapped(package) }
             }
+            .clipShape(Capsule())
         }
     }
 }

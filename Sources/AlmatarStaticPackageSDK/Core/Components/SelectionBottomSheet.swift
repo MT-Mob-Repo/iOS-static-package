@@ -90,6 +90,7 @@ struct SelectionBottomSheet<Item: Identifiable & Hashable, Row: View>: View {
             }
         }
         .background(AlmatarColors.surfaceCard.ignoresSafeArea())
+        .environment(\.layoutDirection, AlmatarStaticPackageSDK.shared.configuration.language.layoutDirection)
         .presentationDetents([.height(contentHeight)])
         .presentationDragIndicator(.visible)
     }
@@ -106,7 +107,7 @@ struct SelectionBottomSheet<Item: Identifiable & Hashable, Row: View>: View {
     private var header: some View {
         HStack(spacing: Spacing.small) {
             Text(title)
-                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.semibold))
+                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.medium))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -162,7 +163,7 @@ struct SelectionBottomSheet<Item: Identifiable & Hashable, Row: View>: View {
             row(item, isSelected)
                 .padding(Spacing.medium)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(isSelected ? AlmatarColors.surfaceSecondaryBase : AlmatarColors.surfaceCard)
+                .background(isSelected ? AlmatarColors.surfaceBrandSecondary : AlmatarColors.surfaceCard)
                 .clipShape(RoundedRectangle(cornerRadius: CornerRadius.large))
                 .overlay(
                     RoundedRectangle(cornerRadius: CornerRadius.large)
@@ -192,7 +193,7 @@ struct SelectionBottomSheet<Item: Identifiable & Hashable, Row: View>: View {
                 dismiss()
             }
             .padding(.horizontal, Spacing.screenHorizontal)
-            .padding(.vertical, Spacing.medium)
+            .padding(.top, Spacing.medium)
         }
     }
 

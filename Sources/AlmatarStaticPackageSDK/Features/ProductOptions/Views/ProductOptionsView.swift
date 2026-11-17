@@ -58,7 +58,7 @@ struct ProductOptionsView: View {
                 priceDetailsTitle: viewModel.priceDetailsTitle,
                 includedTitle: viewModel.includedTitle,
                 breakdownSections: viewModel.breakdownSections,
-                buttonTitle: viewModel.continueTitle,
+                buttonTitle: viewModel.confirmTitle,
                 // The choice is already in the cart; wait for it to be re-priced before going back.
                 isLoading: viewModel.isUpdatingCart
             ) {
@@ -66,7 +66,10 @@ struct ProductOptionsView: View {
             }
         }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
-        .defaultToolbar(title: "")
+        // Back discards the choices made here; Continue keeps them.
+        .defaultToolbar(title: "", onBack: {  Task {
+            await viewModel.discardChanges()
+        }})
         .alert(viewModel.errorMessage ?? "", isPresented: isShowingError) {
             Button(viewModel.okTitle, role: .cancel) {}
         }
@@ -175,19 +178,19 @@ struct ProductOptionsView: View {
                 Text(viewModel.includedTitle)
                     .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.medium))
             }
-            .foregroundStyle(AlmatarColors.textComplementaryGreen)
+            .foregroundStyle(Color("#15803C"))
         } else {
             VStack(alignment: .trailing, spacing: Spacing.xxxSmall) {
                 SUITextPrice(
                     text: viewModel.priceText(option),
-                    modifier: AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold)
+                    modifier: AppTextModifier(size: 14, fontWeight: Typography.Weight.semibold)
                 )
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .lineLimit(1)
                 .fixedSize()
 
                 Text(viewModel.perVisitorTitle)
-                    .modifier(AppTextModifier(size: Typography.Size.small, fontWeight: Typography.Weight.regular))
+                    .modifier(AppTextModifier(size: 11, fontWeight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.textSecondaryStatic)
             }
         }

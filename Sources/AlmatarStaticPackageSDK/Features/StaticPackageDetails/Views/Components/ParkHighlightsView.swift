@@ -28,11 +28,8 @@ struct ParkHighlightsView: View {
             VStack(spacing: Spacing.small) {
                 ForEach(rows.indices, id: \.self) { index in
                     HStack(spacing: Spacing.small) {
+                        // With an odd item count, the last card spans the full width.
                         ForEach(rows[index]) { card($0) }
-                        // Keep a lone card at half width.
-                        if rows[index].count < Layout.columnsCount {
-                            Color.clear.frame(maxWidth: .infinity)
-                        }
                     }
                     // Both cards in a row share the height of the taller one.
                     .fixedSize(horizontal: false, vertical: true)

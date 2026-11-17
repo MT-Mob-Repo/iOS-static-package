@@ -58,10 +58,11 @@ struct ConfirmationPopup<Illustration: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: CornerRadius.xxLarge))
 
             HStack(spacing: Spacing.small) {
-                AppButton(
+                PaddedAppButton(
                     cancelTitle,
                     style: .tertiary,
                     size: .medium,
+                    verticalPadding: ConfirmationPopupLayout.buttonVerticalPadding,
                     fullWidth: true,
                     cornerRadiusOverride: CornerRadius.round
                 ) {
@@ -70,8 +71,7 @@ struct ConfirmationPopup<Illustration: View>: View {
 
                 confirmButton
             }
-            // As in the design, Cancel stays on the left and the action on the right in both languages.
-            .environment(\.layoutDirection, .leftToRight)
+            .environment(\.layoutDirection, AlmatarStaticPackageSDK.shared.configuration.language.layoutDirection)
         }
         .padding(Spacing.medium)
         .popupCardBackground()
@@ -83,7 +83,7 @@ struct ConfirmationPopup<Illustration: View>: View {
     private var header: some View {
         ZStack {
             Text(title)
-                .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.medium))
+                .modifier(AppTextModifier(size: Typography.Size.large, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textPrimaryStatic)
                 .lineLimit(1)
                 .padding(.horizontal, ConfirmationPopupLayout.closeButtonSize + Spacing.small)
@@ -92,7 +92,7 @@ struct ConfirmationPopup<Illustration: View>: View {
                 dismiss()
             } label: {
                 Image(systemName: ConfirmationPopupLayout.closeIcon)
-                    .font(.system(size: ConfirmationPopupLayout.closeIconSize, weight: Typography.Weight.medium))
+                    .font(.system(size: ConfirmationPopupLayout.closeIconSize, weight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.iconPrimaryStatic)
                     .frame(width: ConfirmationPopupLayout.closeButtonSize, height: ConfirmationPopupLayout.closeButtonSize)
                     .background(AlmatarColors.surfaceCard)
@@ -100,9 +100,7 @@ struct ConfirmationPopup<Illustration: View>: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(LocalizedKey.close.localized())
-            .frame(maxWidth: .infinity, alignment: .leading)
-            // As in the design, the close button stays on the left in both languages.
-            .environment(\.layoutDirection, .leftToRight)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
@@ -112,8 +110,8 @@ struct ConfirmationPopup<Illustration: View>: View {
     /// because a custom font does not pick up Markdown emphasis on its own.
     private var attributedMessage: AttributedString {
         var text = (try? AttributedString(markdown: message)) ?? AttributedString(message)
-        let regular = AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular).font
-        let bold = AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.bold).font
+        let regular = AppTextModifier(size: 14, fontWeight: Typography.Weight.regular).font
+        let bold = AppTextModifier(size: 14, fontWeight: Typography.Weight.bold).font
         for run in text.runs {
             let isBold = run.inlinePresentationIntent?.contains(.stronglyEmphasized) == true
             text[run.range].font = isBold ? bold : regular
@@ -136,7 +134,7 @@ struct ConfirmationPopup<Illustration: View>: View {
                     .modifier(ButtonSize.medium.font)
                     .foregroundStyle(AlmatarColors.textComplementaryRed)
                     .padding(.horizontal, ButtonSize.medium.horizontalPadding)
-                    .padding(.vertical, ButtonSize.medium.verticalPadding)
+                    .padding(.vertical, ConfirmationPopupLayout.buttonVerticalPadding)
                     .frame(maxWidth: .infinity)
                     .background(AlmatarColors.surfaceComplementaryRed)
                     .clipShape(Capsule())
@@ -144,10 +142,11 @@ struct ConfirmationPopup<Illustration: View>: View {
             }
             .buttonStyle(.plain)
         } else {
-            AppButton(
+            PaddedAppButton(
                 confirmTitle,
                 style: .primary,
                 size: .medium,
+                verticalPadding: ConfirmationPopupLayout.buttonVerticalPadding,
                 fullWidth: true,
                 cornerRadiusOverride: CornerRadius.round
             ) {
@@ -180,7 +179,8 @@ private extension View {
 /// Static constants cannot live inside the generic popup types.
 private enum ConfirmationPopupLayout {
     static let closeButtonSize: CGFloat = 44
-    static let closeIconSize: CGFloat = 16
+    static let buttonVerticalPadding: CGFloat = 14
+    static let closeIconSize: CGFloat = 18
     static let closeIcon = "xmark"
     static let shadowColor = Color.black.opacity(0.12)
     static let shadowRadius: CGFloat = 24

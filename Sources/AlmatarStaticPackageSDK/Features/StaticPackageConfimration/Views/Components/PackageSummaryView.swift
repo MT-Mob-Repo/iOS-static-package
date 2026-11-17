@@ -60,7 +60,7 @@ struct PackageSummaryView: View {
                 ConfirmationSuccessBadge(title: row.value, showsCheckmark: true)
             } else {
                 Text(row.value)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .multilineTextAlignment(.trailing)
                     .fixedSize(horizontal: false, vertical: true)

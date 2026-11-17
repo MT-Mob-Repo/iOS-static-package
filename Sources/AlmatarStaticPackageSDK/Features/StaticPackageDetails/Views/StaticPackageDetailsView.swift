@@ -49,6 +49,14 @@ struct StaticPackageDetailsView: View {
                 }
             }
         }
+        .overlay(alignment: .top) {
+            GeometryReader { proxy in
+                toolbarBlurBackground
+                    .frame(height: proxy.safeAreaInsets.top)
+                    .offset(y: -proxy.safeAreaInsets.top)
+            }
+            .allowsHitTesting(false)
+        }
         .background(AlmatarColors.backgroundPrimary.ignoresSafeArea())
         .defaultToolbar(title: viewModel.headerTitle)
         .toolbarBackground(.hidden, for: .navigationBar)
@@ -66,6 +74,22 @@ struct StaticPackageDetailsView: View {
         .alert(viewModel.paymentErrorMessage ?? "", isPresented: isShowingPaymentError) {
             Button(viewModel.okTitle, role: .cancel) {}
         }
+    }
+
+    /// Gradient (transparent at the bottom → 80% white at the top) blurred behind the toolbar.
+    private var toolbarBlurBackground: some View {
+        Color.clear
+            .background(
+                LinearGradient(
+                    stops: [
+                        Gradient.Stop(color: .white.opacity(0), location: 0.00),
+                        Gradient.Stop(color: .white.opacity(0.8), location: 1.00),
+                    ],
+                    startPoint: UnitPoint(x: 0.47, y: 1),
+                    endPoint: UnitPoint(x: 0.47, y: 0)
+                )
+            )
+            .blur(radius: 3)
     }
 
     private var isShowingPaymentError: Binding<Bool> {

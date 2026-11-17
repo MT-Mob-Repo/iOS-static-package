@@ -1,0 +1,298 @@
+{
+  "status": 200,
+  "errors": null,
+  "data": {
+    "data": [
+      {
+        "orderId": "68d80a19c4f7e2113b09d5aa",
+        "bookingReference": "SFQ-6S0333333U3",
+        "status": "confirmed",
+        "bookedAt": "2026-06-20T09:12:00.000Z",
+        "package": {
+          "packageId": "six-flags-qiddiya",
+          "title": "Six Flags Qiddiya Escape",
+          "destination": "Riyadh",
+          "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/hero.jpg",
+          "startDate": "2026-07-16",
+          "endDate": "2026-07-24",
+          "products": [
+            {
+              "title": "Round trip flight",
+              "description": "Return flights between Jeddah and Riyadh, economy class.",
+              "productType": "flight",
+              "inventoryType": "static",
+              "tags": [
+                {
+                  "icon": "flight",
+                  "label": "Flight"
+                }
+              ],
+              "status": "confirmed",
+              "isMandatory": true,
+              "flightInfo": {
+                "isCabinUpgradeAvailable": true,
+                "legs": [
+                  {
+                    "departure": {
+                      "time": "2026-07-16T08:30:00Z",
+                      "airportCode": "JED",
+                      "airportName": "King Abdulaziz International Airport",
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia"
+                    },
+                    "arrival": {
+                      "time": "2026-07-16T10:15:00Z",
+                      "airportCode": "RUH",
+                      "airportName": "King Khalid International Airport",
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia"
+                    },
+                    "airline": {
+                      "code": "SV",
+                      "name": "Saudia",
+                      "logoUrl": "https://cdn.almatar.com/airlines/SV.png"
+                    },
+                    "flightNumber": "SV-1430",
+                    "cabin": "Economy",
+                    "duration": "1h 45m",
+                    "stops": 0
+                  },
+                  {
+                    "departure": {
+                      "time": "2026-07-24T18:45:00Z",
+                      "airportCode": "RUH",
+                      "airportName": "King Khalid International Airport",
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia"
+                    },
+                    "arrival": {
+                      "time": "2026-07-24T20:30:00Z",
+                      "airportCode": "JED",
+                      "airportName": "King Abdulaziz International Airport",
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia"
+                    },
+                    "airline": {
+                      "code": "SV",
+                      "name": "Saudia",
+                      "logoUrl": "https://cdn.almatar.com/airlines/SV.png"
+                    },
+                    "flightNumber": "SV-1431",
+                    "cabin": "Economy",
+                    "duration": "3h 10m",
+                    "stops": [
+                      {
+                        "airportCode": "DMM",
+                        "airportName": "King Fahd International Airport",
+                        "cityName": "Dammam",
+                        "layoverDuration": "40m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "productId": "round-trip-f"
+            },
+            {
+              "title": "The Ritz-Carlton, Riyadh",
+              "description": "Palace-style luxury in the heart of Riyadh.",
+              "productType": "hotel",
+              "inventoryType": "static",
+              "tags": [
+                {
+                  "icon": "hotel",
+                  "label": "Stay"
+                }
+              ],
+              "status": "confirmed",
+              "isMandatory": true,
+              "hotelInfo": {
+                "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/ritz-carlton.jpg",
+                "starRating": 4.9,
+                "tagline": "Palace-style luxury",
+                "city": "Riyadh",
+                "checkIn": "2026-07-16",
+                "checkOut": "2026-07-21",
+                "nights": 5,
+                "room": {
+                  "name": "Deluxe City View",
+                  "beds": "1 king bed",
+                  "sleeps": 2
+                },
+                "boardBasis": "Half Board",
+                "amenities": [
+                  {
+                    "icon": "meal",
+                    "label": "Breakfast"
+                  },
+                  {
+                    "icon": "transfer",
+                    "label": "Transfer to the hotel"
+                  },
+                  {
+                    "icon": "wifi",
+                    "label": "Wifi"
+                  }
+                ]
+              },
+              "productId": "the-ritz-car"
+            },
+            {
+              "title": "Splash Island & Kids' Play",
+              "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+              "productType": "addon",
+              "inventoryType": "static",
+              "tags": [
+                {
+                  "icon": "ticket",
+                  "label": "Ticket"
+                }
+              ],
+              "status": "confirmed",
+              "isMandatory": true,
+              "addonInfo": {
+                "id": 813,
+                "key": "splash-island-kids-play",
+                "title": "Splash Island & Kids' Play",
+                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+                "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
+              },
+              "productId": "splash-islan"
+            },
+            {
+              "title": "Fast Pass — Skip the Line",
+              "description": "Skip the regular queues on the main rides.",
+              "productType": "addon",
+              "inventoryType": "static",
+              "tags": [
+                {
+                  "icon": "ticket",
+                  "label": "Ticket"
+                }
+              ],
+              "status": "confirmed",
+              "isMandatory": false,
+              "quantity": 2,
+              "addonInfo": {
+                "id": 901,
+                "key": "fast-pass",
+                "title": "Fast Pass — Skip the Line",
+                "description": "Skip the regular queues on the main rides.",
+                "image": null
+              },
+              "productId": "fast-pass-—-"
+            }
+          ]
+        },
+        "travellersCount": 2,
+        "price": {
+          "amount": 8450,
+          "currency": "SAR"
+        },
+        "paymentStatus": "paid",
+        "sections": {
+          "departureDate": {
+            "departureDate": "2026-07-16T00:00:00.000Z"
+          }
+        }
+      },
+      {
+        "orderId": "6ae339325da1f0139361b8f7",
+        "bookingReference": "SFQ-7K1928374Q1",
+        "status": "pending",
+        "bookedAt": "2026-10-02T14:40:00.000Z",
+        "package": {
+          "packageId": "alula-weekend",
+          "title": "AlUla Weekend",
+          "destination": "AlUla",
+          "imageUrl": null,
+          "startDate": "2026-12-03",
+          "endDate": "2026-12-05",
+          "products": [
+            {
+              "title": "The Ritz-Carlton, Riyadh",
+              "description": "Palace-style luxury in the heart of Riyadh.",
+              "productType": "hotel",
+              "inventoryType": "static",
+              "tags": [
+                {
+                  "icon": "hotel",
+                  "label": "Stay"
+                }
+              ],
+              "status": "confirmed",
+              "isMandatory": true,
+              "hotelInfo": {
+                "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/ritz-carlton.jpg",
+                "starRating": 4.9,
+                "tagline": "Palace-style luxury",
+                "city": "Riyadh",
+                "checkIn": "2026-07-16",
+                "checkOut": "2026-07-21",
+                "nights": 5,
+                "room": {
+                  "name": "Deluxe City View",
+                  "beds": "1 king bed",
+                  "sleeps": 2
+                },
+                "boardBasis": "Half Board",
+                "amenities": [
+                  {
+                    "icon": "meal",
+                    "label": "Breakfast"
+                  },
+                  {
+                    "icon": "transfer",
+                    "label": "Transfer to the hotel"
+                  },
+                  {
+                    "icon": "wifi",
+                    "label": "Wifi"
+                  }
+                ]
+              },
+              "productId": "the-ritz-car"
+            },
+            {
+              "title": "Splash Island & Kids' Play",
+              "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+              "productType": "addon",
+              "inventoryType": "static",
+              "tags": [
+                {
+                  "icon": "ticket",
+                  "label": "Ticket"
+                }
+              ],
+              "status": "confirmed",
+              "isMandatory": true,
+              "addonInfo": {
+                "id": 813,
+                "key": "splash-island-kids-play",
+                "title": "Splash Island & Kids' Play",
+                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
+                "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
+              },
+              "productId": "splash-islan"
+            }
+          ]
+        },
+        "travellersCount": 1,
+        "price": {
+          "amount": 3200,
+          "currency": "SAR"
+        },
+        "paymentStatus": "pending",
+        "sections": {
+          "departureDate": {
+            "departureDate": "2026-12-03T00:00:00.000Z"
+          }
+        }
+      }
+    ],
+    "total": 2,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 1
+  }
+}

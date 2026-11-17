@@ -148,7 +148,7 @@ public final class AlmatarStaticPackageSDK {
         confirmationController = nil
     }
 
-    private func makeBookingConfirmationView(
+    func makeBookingConfirmationView(
         id: String,
         onGoToMyTrips: @escaping () -> Void,
         onBackToHome: @escaping () -> Void
@@ -171,6 +171,72 @@ public final class AlmatarStaticPackageSDK {
     public func getPackagesListView(section: PackagesSection) -> some View {
         PackagesListView(section: section)
             .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
+    // MARK: - My Trips
+
+    /// Fetches one page of the user's package bookings (`GET api/v1/packages/orders`),
+    /// for host apps that merge package trips into their own My Trips list.
+    /// - Parameters:
+    ///   - timeframe: Upcoming or previous bookings.
+    ///   - offset: Number of trips already loaded.
+    ///   - limit: Page size.
+    ///   - years: For previous bookings only, the booking years to filter by.
+    /// Throws when the SDK is not configured, the request fails, or the response cannot be decoded.
+    public func fetchPackageTrips(
+        timeframe: PackageTripTimeframe,
+        offset: Int = 0,
+        limit: Int = 10,
+        years: [Int]? = nil
+    ) async throws -> PackageTripsPage {
+        try await makeStaticPackagesRepository().fetchPackageTrips(
+            timeframe: timeframe, offset: offset, limit: limit, years: years
+        )
+    }
+
+    /// Returns the package My Trips screen: Upcoming / Past tabs with the user's bookings.
+    /// Tapping a trip pushes its booking confirmation, so the view must be shown inside a `NavigationStack`.
+    /// The back button uses the shared SDK toolbar and dismisses the screen.
+    public func getPackageTripsView() -> some View {
+        let repository = makeStaticPackagesRepository()
+        return PackageTripsView(viewModel: PackageTripsViewModel(repository: repository))
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
+    /// Returns the My Trips card for one package booking, in the configured language.
+    /// - Parameters:
+    ///   - trip: A trip from `fetchPackageTrips(timeframe:offset:limit:years:)`.
+    ///   - isPast: `true` in the past-trips list; the badge then reads "Past".
+    ///   - onTap: Called when the card is tapped, e.g. to open `getPackageTripConfirmationView(orderId:onBack:)`.
+    public func getPackageTripCardView(trip: PackageTrip, isPast: Bool, onTap: @escaping () -> Void) -> some View {
+        PackageTripCardView(trip: trip, isPast: isPast, onTap: onTap)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
+    /// Returns the booking confirmation for a trip opened from My Trips, with the shared SDK toolbar
+    /// (title and back button). "Go to My Trips" goes back; "Back to Home" calls `onBackToHome`.
+    /// - Parameter onBack: Called on back / "Go to My Trips". When `nil`, the screen dismisses itself,
+    ///   which pops it from a SwiftUI `NavigationStack`. Pass it when the host pushes the view with UIKit.
+    public func getPackageTripConfirmationView(orderId: String, onBack: (() -> Void)? = nil) -> some View {
+        PackageTripConfirmationView(orderId: orderId, onBack: onBack)
+            .environment(\.layoutDirection, configuration.language.layoutDirection)
+    }
+
+    // MARK: - Landing Pages
+
+    /// Fetches the landing pages (`GET api/v1/user-recommendation/landing-pages`).
+    /// A page that can't be decoded is skipped. Use `LandingPage.imageURL` for the card image
+    /// and `isHero` / `heroImageURL` for the hero banner.
+    /// Throws when the SDK is not configured, the request fails, or the response cannot be decoded.
+    public func fetchLandingPages() async throws -> [LandingPage] {
+        try await makeStaticPackagesRepository().fetchLandingPages()
+    }
+
+    /// Fetches one landing page with its sections (`GET api/v1/user-recommendation/landing-pages/{id}`).
+    /// Pass any of `page.packagesSections` to `getPackagesListView(section:)` to show its packages.
+    /// Throws when the SDK is not configured, the request fails, or the response cannot be decoded.
+    public func fetchLandingPage(id: String) async throws -> LandingPage {
+        try await makeStaticPackagesRepository().fetchLandingPage(id: id)
     }
 
     // MARK: - Repositories

@@ -1,0 +1,132 @@
+{
+  "status": 200,
+  "errors": null,
+  "data": [
+    {
+      "id": "6ac39c84cbebea74cfc19e7c",
+      "slug": "test-full-landing-page",
+      "title": "test full landing page",
+      "description": "test full landing page",
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/mickeyy-1791204006669.png"
+      },
+      "mobileImage": null,
+      "isHero": true,
+      "heroMedia": {
+        "webImage": {
+          "type": "image",
+          "url": "https://cdn.alpha.alm6ar.com/landing-pages/mickeyy-1791376598289.png"
+        },
+        "mobileImage": null
+      },
+      "seo": null,
+      "sections": []
+    },
+    {
+      "id": "6ae9db140991be701cfc4493",
+      "slug": "umrah-packages-2026",
+      "title": "Discover Our Umrah Packages",
+      "description": "Book your Umrah journey with our exclusive pa",
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/36-1793709926533.png"
+      },
+      "mobileImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/36-1793709941989.png"
+      },
+      "isHero": false,
+      "heroMedia": null,
+      "seo": null,
+      "sections": []
+    },
+    {
+      "id": "6ad4b45875fcf228d1021f7e",
+      "slug": "saudia-airlines-snd-2026",
+      "title": "The celebrations continue with Saudia Airlines",
+      "description": "7 destinations, one perfect getaway",
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/landing_page_1-1792323106478.png"
+      },
+      "mobileImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/landing_page_1-1792323114301.png"
+      },
+      "isHero": false,
+      "heroMedia": null,
+      "seo": null,
+      "sections": []
+    },
+    {
+      "id": "6ad86ccca3e0c89da9bbb3aa",
+      "slug": "static-packages-1792568523436",
+      "title": "Static Packages Alpha Flow",
+      "description": null,
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/packages/static/hero.jpg"
+      },
+      "mobileImage": null,
+      "isHero": false,
+      "heroMedia": null,
+      "seo": null,
+      "sections": []
+    },
+    {
+      "id": "6ad9dc048d087af3b1e555c5",
+      "slug": "spiritual-journeys",
+      "title": "Spiritual Journeys",
+      "description": "Umrah and ziyarah packages with flights and hotels",
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/landing-spiritual-web-1792662384864.jpg"
+      },
+      "mobileImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/landing-spiritual-mobile-1792662385883.jpg"
+      },
+      "isHero": false,
+      "heroMedia": null,
+      "seo": null,
+      "sections": []
+    },
+    {
+      "id": "6ad9dc058d087af3b1e555cc",
+      "slug": "discover-saudi",
+      "title": "Discover Saudi",
+      "description": "City breaks and getaways across the Kingdom",
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/landing-saudi-web-1792662386306.jpg"
+      },
+      "mobileImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/landing-saudi-mobile-1792662387641.jpg"
+      },
+      "isHero": false,
+      "heroMedia": null,
+      "seo": null,
+      "sections": []
+    },
+    {
+      "id": "6addf64592b1ffb993aa51d5",
+      "slug": "test-regression",
+      "title": "test regression",
+      "description": "test regression",
+      "mainImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/3 in 1 protection-1792931138835.png"
+      },
+      "mobileImage": {
+        "type": "image",
+        "url": "https://cdn.alpha.alm6ar.com/landing-pages/3 in 1 protection-1792931150296.png"
+      },
+      "isHero": false,
+      "heroMedia": null,
+      "seo": null,
+      "sections": []
+    }
+  ]
+}

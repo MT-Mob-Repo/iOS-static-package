@@ -222,6 +222,23 @@ public final class AlmatarStaticPackageSDK {
             .environment(\.layoutDirection, configuration.language.layoutDirection)
     }
 
+    // MARK: - Landing Pages
+
+    /// Fetches the landing pages (`GET api/v1/user-recommendation/landing-pages`).
+    /// A page that can't be decoded is skipped. Use `LandingPage.imageURL` for the card image
+    /// and `isHero` / `heroImageURL` for the hero banner.
+    /// Throws when the SDK is not configured, the request fails, or the response cannot be decoded.
+    public func fetchLandingPages() async throws -> [LandingPage] {
+        try await makeStaticPackagesRepository().fetchLandingPages()
+    }
+
+    /// Fetches one landing page with its sections (`GET api/v1/user-recommendation/landing-pages/{id}`).
+    /// Pass any of `page.packagesSections` to `getPackagesListView(section:)` to show its packages.
+    /// Throws when the SDK is not configured, the request fails, or the response cannot be decoded.
+    public func fetchLandingPage(id: String) async throws -> LandingPage {
+        try await makeStaticPackagesRepository().fetchLandingPage(id: id)
+    }
+
     // MARK: - Repositories
 
     func makeStaticPackagesRepository() -> StaticPackagesRepositoryProtocol {

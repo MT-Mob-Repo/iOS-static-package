@@ -18,6 +18,11 @@ protocol StaticPackagesRepositoryProtocol: Sendable {
 
     /// `GET v1/packages/orders?timeframe=upcoming|previous&limit&offset[&year]`
     func fetchPackageTrips(timeframe: PackageTripTimeframe, offset: Int, limit: Int, years: [Int]?) async throws -> PackageTripsPage
+
+    /// `GET v1/user-recommendation/landing-pages`
+    func fetchLandingPages() async throws -> [LandingPage]
+    /// `GET v1/user-recommendation/landing-pages/{id}`
+    func fetchLandingPage(id: String) async throws -> LandingPage
 }
 
 enum StaticPackagesEndpoint {
@@ -39,6 +44,12 @@ enum StaticPackagesEndpoint {
 
     /// `GET v1/packages/orders` — the user's package bookings for My Trips.
     static let packageTrips = "api/v1/packages/orders"
+
+    /// `GET v1/user-recommendation/landing-pages`
+    static let landingPages = "api/v1/user-recommendation/landing-pages"
+    static let landingPagePrefix = landingPages + "/"
+    /// `GET v1/user-recommendation/landing-pages/{id}`
+    static func landingPage(id: String) -> String { landingPagePrefix + id }
 }
 
 /// `GET v1/packages/orders` wraps the page in `data`.
@@ -139,6 +150,28 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
             baseURL: baseURL,
             path: StaticPackagesEndpoint.packageTrips,
             queryItems: queryItems
+        )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
+    }
+
+    func fetchLandingPages() async throws -> [LandingPage] {
+        let response: LandingPagesResponse = try await networkClient.get(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.landingPages
+        )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
+    }
+
+    func fetchLandingPage(id: String) async throws -> LandingPage {
+        let response: LandingPageResponse = try await networkClient.get(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.landingPage(id: id)
         )
         guard let data = response.data else {
             throw NetworkError.noData

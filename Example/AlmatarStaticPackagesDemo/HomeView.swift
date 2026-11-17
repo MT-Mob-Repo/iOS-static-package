@@ -16,6 +16,8 @@ struct HomeView: View {
     @State private var showPackageDetails = false
     @State private var showPayment = false
     @State private var showMyTrips = false
+    @State private var showSampleTripsList = false
+    @State private var showLandingPages = false
 
     var body: some View {
         
@@ -29,6 +31,10 @@ struct HomeView: View {
             
             Button("Open My Trips (packages)") {
                 showMyTrips = true
+            }
+
+            Button("Landing pages (fetchLandingPages)") {
+                showLandingPages = true
             }
 
             Button("show confirmatino") {
@@ -52,6 +58,9 @@ struct HomeView: View {
         }
         .navigationDestination(isPresented: $showMyTrips) {
             AlmatarStaticPackageSDK.shared.getPackageTripsView()
+        }
+        .navigationDestination(isPresented: $showLandingPages) {
+            SampleLandingPagesView()
         }
         .navigationDestination(isPresented: $showPayment) {
             Text("Payment")

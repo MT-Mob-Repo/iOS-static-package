@@ -15,6 +15,9 @@ protocol StaticPackagesRepositoryProtocol: Sendable {
     func createOrder(cartId: String) async throws -> PackageOrder
     
     func fetchCart(id: String) async throws -> PackageCart
+
+    /// `GET v1/packages/orders?timeframe=upcoming|previous&limit&offset[&year]`
+    func fetchPackageTrips(timeframe: PackageTripTimeframe, offset: Int, limit: Int, years: [Int]?) async throws -> PackageTripsPage
 }
 
 enum StaticPackagesEndpoint {
@@ -33,6 +36,14 @@ enum StaticPackagesEndpoint {
 
     static let orderPrefix = "api/v1/packages/orders/"
     static func cart(id: String) -> String { orderPrefix + id }
+
+    /// `GET v1/packages/orders` — the user's package bookings for My Trips.
+    static let packageTrips = "api/v1/packages/orders"
+}
+
+/// `GET v1/packages/orders` wraps the page in `data`.
+private struct PackageTripsResponse: Decodable {
+    let data: PackageTripsPage?
 }
 
 final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @unchecked Sendable {
@@ -107,6 +118,27 @@ final class StaticPackagesRepository: StaticPackagesRepositoryProtocol, @uncheck
         let response: BaseNetworkResponse<PackageCart> = try await networkClient.get(
             baseURL: baseURL,
             path: StaticPackagesEndpoint.cart(id: id)
+        )
+        guard let data = response.data else {
+            throw NetworkError.noData
+        }
+        return data
+    }
+
+    func fetchPackageTrips(timeframe: PackageTripTimeframe, offset: Int, limit: Int, years: [Int]?) async throws -> PackageTripsPage {
+        var queryItems = [
+            URLQueryItem(name: "timeframe", value: timeframe.rawValue),
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset))
+        ]
+        if timeframe == .previous, let years, !years.isEmpty {
+            let joined = years.sorted().map(String.init).joined(separator: ",")
+            queryItems.append(URLQueryItem(name: "year", value: joined))
+        }
+        let response: PackageTripsResponse = try await networkClient.get(
+            baseURL: baseURL,
+            path: StaticPackagesEndpoint.packageTrips,
+            queryItems: queryItems
         )
         guard let data = response.data else {
             throw NetworkError.noData

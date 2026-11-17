@@ -15,6 +15,7 @@ struct HomeView: View {
     @State private var showPackagesSection = false
     @State private var showPackageDetails = false
     @State private var showPayment = false
+    @State private var showMyTrips = false
 
     var body: some View {
         
@@ -26,6 +27,10 @@ struct HomeView: View {
                 showPackagesSection = true
             }
             
+            Button("Open My Trips (packages)") {
+                showMyTrips = true
+            }
+
             Button("show confirmatino") {
                 AlmatarStaticPackageSDK.shared.presentPackageBookingConfirmation(id: "6ae339325da1f0139361b8f7")
             }
@@ -44,6 +49,9 @@ struct HomeView: View {
                         .padding(16)
                 }
             }
+        }
+        .navigationDestination(isPresented: $showMyTrips) {
+            AlmatarStaticPackageSDK.shared.getPackageTripsView()
         }
         .navigationDestination(isPresented: $showPayment) {
             Text("Payment")

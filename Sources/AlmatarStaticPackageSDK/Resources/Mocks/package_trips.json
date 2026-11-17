@@ -1,298 +1,2283 @@
 {
   "status": 200,
-  "errors": null,
   "data": {
+    "limit": 10,
     "data": [
       {
-        "orderId": "68d80a19c4f7e2113b09d5aa",
-        "bookingReference": "SFQ-6S0333333U3",
         "status": "confirmed",
-        "bookedAt": "2026-06-20T09:12:00.000Z",
+        "orderId": "6af47041e0f816326c82ac34",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "JED"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-18T00:00:00.000Z",
+            "returnDate": "2026-11-18"
+          },
+          "passenger": [
+            {
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "passportNumber": "A0000001",
+              "email": "traveller1@example.com",
+              "nationality": "EG",
+              "title": "mr",
+              "type": "adult",
+              "lastName": "Traveller 1"
+            }
+          ]
+        },
+        "price": {
+          "amount": 2512,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 2512,
+                  "totalAmount": 2512
+                }
+              ],
+              "type": "package_price",
+              "total": 2512
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T13:40:17.573Z",
         "package": {
-          "packageId": "six-flags-qiddiya",
-          "title": "Six Flags Qiddiya Escape",
           "destination": "Riyadh",
-          "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/hero.jpg",
-          "startDate": "2026-07-16",
-          "endDate": "2026-07-24",
+          "endDate": null,
+          "startDate": "2026-12-10",
           "products": [
             {
-              "title": "Round trip flight",
-              "description": "Return flights between Jeddah and Riyadh, economy class.",
+              "status": null,
               "productType": "flight",
               "inventoryType": "static",
-              "tags": [
-                {
-                  "icon": "flight",
-                  "label": "Flight"
-                }
-              ],
-              "status": "confirmed",
-              "isMandatory": true,
+              "productId": "2908650",
+              "title": "Riyadh to Riyadh Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908650,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908651,
+                    "price": 500,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
               "flightInfo": {
-                "isCabinUpgradeAvailable": true,
                 "legs": [
                   {
-                    "departure": {
-                      "time": "2026-07-16T08:30:00Z",
-                      "airportCode": "JED",
-                      "airportName": "King Abdulaziz International Airport",
-                      "cityName": "Jeddah",
-                      "countryName": "Saudi Arabia"
-                    },
+                    "cabinClass": "Economy",
                     "arrival": {
-                      "time": "2026-07-16T10:15:00Z",
-                      "airportCode": "RUH",
-                      "airportName": "King Khalid International Airport",
-                      "cityName": "Riyadh",
-                      "countryName": "Saudi Arabia"
-                    },
-                    "airline": {
-                      "code": "SV",
-                      "name": "Saudia",
-                      "logoUrl": "https://cdn.almatar.com/airlines/SV.png"
-                    },
-                    "flightNumber": "SV-1430",
-                    "cabin": "Economy",
-                    "duration": "1h 45m",
-                    "stops": 0
-                  },
-                  {
-                    "departure": {
-                      "time": "2026-07-24T18:45:00Z",
-                      "airportCode": "RUH",
-                      "airportName": "King Khalid International Airport",
-                      "cityName": "Riyadh",
-                      "countryName": "Saudi Arabia"
-                    },
-                    "arrival": {
-                      "time": "2026-07-24T20:30:00Z",
-                      "airportCode": "JED",
-                      "airportName": "King Abdulaziz International Airport",
                       "cityName": "Jeddah",
-                      "countryName": "Saudi Arabia"
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-12-10T12:00:00.000Z",
+                      "airportName": "King Abdulaziz International"
                     },
-                    "airline": {
-                      "code": "SV",
-                      "name": "Saudia",
-                      "logoUrl": "https://cdn.almatar.com/airlines/SV.png"
+                    "departure": {
+                      "cityName": "Cairo",
+                      "countryName": "Egypt",
+                      "airportCode": "CAI",
+                      "time": "2026-12-10T10:12:00.000Z",
+                      "airportName": "Cairo International Airport"
                     },
-                    "flightNumber": "SV-1431",
-                    "cabin": "Economy",
-                    "duration": "3h 10m",
+                    "duration": "1h 48m",
+                    "flightNumber": "SV120540",
                     "stops": [
                       {
-                        "airportCode": "DMM",
-                        "airportName": "King Fahd International Airport",
-                        "cityName": "Dammam",
-                        "layoverDuration": "40m"
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "20m"
                       }
-                    ]
+                    ],
+                    "airline": {
+                      "name": "EgyptAir",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/MS.png",
+                      "code": "MS"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Hurghada",
+                      "countryName": "Egypt",
+                      "airportCode": "HRG",
+                      "time": "2026-12-11T08:10:00.000Z",
+                      "airportName": "Hurghada, Egypt"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-12-10T18:10:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "14h",
+                    "flightNumber": "OA15808",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Oman Air",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/WY.png",
+                      "code": "WY"
+                    }
                   }
                 ]
               },
-              "productId": "round-trip-f"
+              "tags": [],
+              "isMandatory": true
             },
             {
-              "title": "The Ritz-Carlton, Riyadh",
-              "description": "Palace-style luxury in the heart of Riyadh.",
+              "status": null,
               "productType": "hotel",
               "inventoryType": "static",
-              "tags": [
-                {
-                  "icon": "hotel",
-                  "label": "Stay"
-                }
-              ],
-              "status": "confirmed",
-              "isMandatory": true,
+              "productId": "2908654",
+              "title": "Egypt hotel Hurghada Pyramid title",
+              "optionsSection": null,
               "hotelInfo": {
-                "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/ritz-carlton.jpg",
-                "starRating": 4.9,
-                "tagline": "Palace-style luxury",
-                "city": "Riyadh",
-                "checkIn": "2026-07-16",
-                "checkOut": "2026-07-21",
-                "nights": 5,
+                "nights": 2,
+                "city": "Cairo",
                 "room": {
-                  "name": "Deluxe City View",
-                  "beds": "1 king bed",
-                  "sleeps": 2
+                  "name": "Duplex Room in Egypt",
+                  "beds": "Normal bed",
+                  "sleeps": 1
                 },
-                "boardBasis": "Half Board",
-                "amenities": [
+                "checkOut": "2026-12-12",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/3-1794318493561.jpg",
+                "starRating": 2,
+                "tagline": "Tagline Here",
+                "checkIn": "2026-12-10"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908655",
+              "addonInfo": {
+                "id": 2908655,
+                "key": "d6fe2bf6-495e-4699-a684-754444ea2a4b",
+                "title": "ESIM title u will find 3 options",
+                "description": "Car Esim Addon with 500 Selling price in EUR and 0 Net Price",
+                "image": "https://cdn.alpha.alm6ar.com/packages/image(1)-1794318598385.jpg"
+              },
+              "title": "ESIM title u will find 3 options",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908653",
+              "title": "Cairo to Hurghada Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
                   {
-                    "icon": "meal",
-                    "label": "Breakfast"
+                    "id": 2908652,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
                   },
                   {
-                    "icon": "transfer",
-                    "label": "Transfer to the hotel"
-                  },
+                    "id": 2908653,
+                    "price": 0,
+                    "title": "Business",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
                   {
-                    "icon": "wifi",
-                    "label": "Wifi"
+                    "cabinClass": "Business",
+                    "arrival": {
+                      "cityName": "Hurghada",
+                      "countryName": "Egypt",
+                      "airportCode": "HRG",
+                      "time": "2026-12-10T08:09:00.000Z",
+                      "airportName": "Hurghada, Egypt"
+                    },
+                    "departure": {
+                      "cityName": "Cairo",
+                      "countryName": "Egypt",
+                      "airportCode": "SPX",
+                      "time": "2026-12-10T05:03:00.000Z",
+                      "airportName": "Sphinx International Airport"
+                    },
+                    "duration": "3h 6m",
+                    "flightNumber": "GF1500",
+                    "stops": [
+                      {
+                        "cityName": "Luxor",
+                        "airportCode": "LXR",
+                        "airportName": "Luxor, Egypt",
+                        "layoverDuration": "20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Gulf Air",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/GF.png",
+                      "code": "GF"
+                    }
                   }
                 ]
               },
-              "productId": "the-ritz-car"
-            },
-            {
-              "title": "Splash Island & Kids' Play",
-              "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-              "productType": "addon",
-              "inventoryType": "static",
-              "tags": [
-                {
-                  "icon": "ticket",
-                  "label": "Ticket"
-                }
-              ],
-              "status": "confirmed",
-              "isMandatory": true,
-              "addonInfo": {
-                "id": 813,
-                "key": "splash-island-kids-play",
-                "title": "Splash Island & Kids' Play",
-                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-                "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
-              },
-              "productId": "splash-islan"
-            },
-            {
-              "title": "Fast Pass — Skip the Line",
-              "description": "Skip the regular queues on the main rides.",
-              "productType": "addon",
-              "inventoryType": "static",
-              "tags": [
-                {
-                  "icon": "ticket",
-                  "label": "Ticket"
-                }
-              ],
-              "status": "confirmed",
-              "isMandatory": false,
-              "quantity": 2,
-              "addonInfo": {
-                "id": 901,
-                "key": "fast-pass",
-                "title": "Fast Pass — Skip the Line",
-                "description": "Skip the regular queues on the main rides.",
-                "image": null
-              },
-              "productId": "fast-pass-—-"
+              "tags": [],
+              "isMandatory": true
             }
-          ]
+          ],
+          "title": "Package name for testing Third round",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/preset-makkah-sunset-1793211634988.jpg",
+          "packageId": "6af374da0f3ecb44298491a3"
         },
-        "travellersCount": 2,
-        "price": {
-          "amount": 8450,
-          "currency": "SAR"
-        },
-        "paymentStatus": "paid",
-        "sections": {
-          "departureDate": {
-            "departureDate": "2026-07-16T00:00:00.000Z"
-          }
-        }
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001050"
       },
       {
-        "orderId": "6ae339325da1f0139361b8f7",
-        "bookingReference": "SFQ-7K1928374Q1",
-        "status": "pending",
-        "bookedAt": "2026-10-02T14:40:00.000Z",
-        "package": {
-          "packageId": "alula-weekend",
-          "title": "AlUla Weekend",
-          "destination": "AlUla",
-          "imageUrl": null,
-          "startDate": "2026-12-03",
-          "endDate": "2026-12-05",
-          "products": [
+        "status": "confirmed",
+        "orderId": "6af70c476aeade4463bc5a39",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "BAR"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-21T00:00:00.000Z",
+            "returnDate": "2026-11-23T00:00:00.000Z"
+          },
+          "passenger": [
             {
-              "title": "The Ritz-Carlton, Riyadh",
-              "description": "Palace-style luxury in the heart of Riyadh.",
-              "productType": "hotel",
-              "inventoryType": "static",
-              "tags": [
-                {
-                  "icon": "hotel",
-                  "label": "Stay"
-                }
-              ],
-              "status": "confirmed",
-              "isMandatory": true,
-              "hotelInfo": {
-                "imageUrl": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/ritz-carlton.jpg",
-                "starRating": 4.9,
-                "tagline": "Palace-style luxury",
-                "city": "Riyadh",
-                "checkIn": "2026-07-16",
-                "checkOut": "2026-07-21",
-                "nights": 5,
-                "room": {
-                  "name": "Deluxe City View",
-                  "beds": "1 king bed",
-                  "sleeps": 2
-                },
-                "boardBasis": "Half Board",
-                "amenities": [
-                  {
-                    "icon": "meal",
-                    "label": "Breakfast"
-                  },
-                  {
-                    "icon": "transfer",
-                    "label": "Transfer to the hotel"
-                  },
-                  {
-                    "icon": "wifi",
-                    "label": "Wifi"
-                  }
-                ]
-              },
-              "productId": "the-ritz-car"
-            },
-            {
-              "title": "Splash Island & Kids' Play",
-              "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-              "productType": "addon",
-              "inventoryType": "static",
-              "tags": [
-                {
-                  "icon": "ticket",
-                  "label": "Ticket"
-                }
-              ],
-              "status": "confirmed",
-              "isMandatory": true,
-              "addonInfo": {
-                "id": 813,
-                "key": "splash-island-kids-play",
-                "title": "Splash Island & Kids' Play",
-                "description": "Cool off at the water park or explore the interactive play zones designed for younger adventurers.",
-                "image": "https://cdn.almatar.com/packages/six-flags-qiddiya/products/splash-island.jpg"
-              },
-              "productId": "splash-islan"
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "passportNumber": "A0000002",
+              "email": "traveller2@example.com",
+              "nationality": "IN",
+              "title": "mr",
+              "type": "adult",
+              "lastName": "Traveller 2"
             }
           ]
         },
-        "travellersCount": 1,
         "price": {
-          "amount": 3200,
-          "currency": "SAR"
+          "amount": 3000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            }
+          ]
         },
-        "paymentStatus": "pending",
+        "bookedAt": "2026-11-13T13:10:31.224Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-15",
+          "startDate": "2026-11-13",
+          "products": [
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908851",
+              "title": "Premium Travel",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908850,
+                    "price": 1200,
+                    "title": "Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908851,
+                    "price": 0,
+                    "title": "Business",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908852,
+                    "price": 1400,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "40Kg checked baggage and free seats",
+                    "cabinClass": "Premium Economy"
+                  },
+                  {
+                    "id": 2908853,
+                    "price": 1500,
+                    "title": "First Class",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "Free langue",
+                    "cabinClass": "First Class"
+                  },
+                  {
+                    "id": 2908854,
+                    "price": 1399,
+                    "title": "Customised cabin class",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "Private jet",
+                    "cabinClass": "Customised cabin class"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Business",
+                    "arrival": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-20T21:03:00.000Z",
+                      "airportName": "Dubai Intl Airport"
+                    },
+                    "departure": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-15T20:02:00.000Z",
+                      "airportName": "King Khaled International Airport"
+                    },
+                    "duration": "121h 1m",
+                    "flightNumber": "F2677",
+                    "stops": [
+                      {
+                        "cityName": "JED",
+                        "airportCode": "JED",
+                        "airportName": "JED",
+                        "layoverDuration": "1h 30m"
+                      },
+                      {
+                        "cityName": "Dammam",
+                        "airportCode": "DMM",
+                        "airportName": "DMM",
+                        "layoverDuration": "1h 40m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Flyadeal",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/F3.png",
+                      "code": "F3"
+                    }
+                  },
+                  {
+                    "cabinClass": "Business",
+                    "arrival": {
+                      "cityName": "RUH",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-25T06:00:00.000Z",
+                      "airportName": "King Khaled International Airport"
+                    },
+                    "departure": {
+                      "cityName": "DXB",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-22T06:00:00.000Z",
+                      "airportName": "Dubai Intl Airport"
+                    },
+                    "duration": "72h",
+                    "flightNumber": "MS899",
+                    "stops": [],
+                    "airline": {
+                      "name": "EgyptAir",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/MS.png",
+                      "code": "MS"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908855",
+              "title": "Sofitel down town",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908855,
+                    "price": 0,
+                    "title": "Standard room",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "King bed for two guests"
+                  },
+                  {
+                    "id": 2908856,
+                    "price": 400,
+                    "title": "Extra deluxe room",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "Water bed"
+                  },
+                  {
+                    "id": 2908857,
+                    "price": 600,
+                    "title": "Premium room",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "Kingdom bed"
+                  },
+                  {
+                    "id": 2908858,
+                    "price": 1200,
+                    "title": "Full floor",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "All rooms"
+                  }
+                ],
+                "type": "ROOM_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "hotelInfo": {
+                "nights": 5,
+                "city": "Dubai",
+                "room": {
+                  "name": "Deluxe Double Room",
+                  "beds": "King bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-11-20",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794506150454.jpg",
+                "starRating": 5,
+                "tagline": "A comfortable base for exploring",
+                "checkIn": "2026-11-15"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908859",
+              "addonInfo": {
+                "id": 2908859,
+                "key": "911cb6eb-0c31-4153-afb8-0653805964de",
+                "title": "International Transfer",
+                "description": "Airport transfer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/3in1protection-1794572521314.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Tours Discovery  3 Days",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/images_static_packages-1794507249452.jpg",
+          "packageId": "6af6032c8ca90c81583f728c"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001102"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af59fffc3160f16690854c7",
+        "travellersCount": 2,
         "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
           "departureDate": {
-            "departureDate": "2026-12-03T00:00:00.000Z"
-          }
-        }
+            "departureDate": "2026-11-26T00:00:00.000Z",
+            "returnDate": "2026-11-29T00:00:00.000Z"
+          },
+          "passenger": [
+            {
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "title": "mr",
+              "nationality": "IN",
+              "passportNumber": "A0000003",
+              "type": "adult",
+              "email": "traveller3@example.com",
+              "lastName": "Traveller 3"
+            },
+            {
+              "gender": "male",
+              "firstName": "Test",
+              "dateOfBirth": "2018-01-01",
+              "passportNumber": "A0000004",
+              "nationality": "IN",
+              "title": "mr",
+              "type": "child",
+              "lastName": "Traveller 4"
+            }
+          ]
+        },
+        "price": {
+          "amount": 5000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                },
+                {
+                  "quantity": 1,
+                  "label": "1x Child",
+                  "unitAmount": 2000,
+                  "totalAmount": 2000
+                }
+              ],
+              "type": "package_price",
+              "total": 5000
+            }
+          ]
+        },
+        "bookedAt": "2026-11-12T11:16:15.776Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-15",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": "confirmed",
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908609",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908609,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908610,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908611,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T05:10:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-13T20:05:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "9h 5m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-27T19:03:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-19T01:02:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "210h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": "confirmed",
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908612",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 8,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-11-20",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-12"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": "confirmed",
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908613",
+              "addonInfo": {
+                "id": 2908613,
+                "key": "0cb05848-0c4d-4362-b4e6-d70f2920cff7",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af31c2e9d4e3191c8cfa852"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001080"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af59a9598d7a6526a63f2c8",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-26T00:00:00.000Z",
+            "returnDate": "2026-11-29T00:00:00.000Z"
+          },
+          "passenger": [
+            {
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "passportNumber": "A0000005",
+              "email": "traveller5@example.com",
+              "nationality": "IN",
+              "title": "mr",
+              "type": "adult",
+              "lastName": "Traveller 5"
+            }
+          ]
+        },
+        "price": {
+          "amount": 3000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            }
+          ]
+        },
+        "bookedAt": "2026-11-12T10:53:09.398Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-15",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": "confirmed",
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908609",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908609,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908610,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908611,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T05:10:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-13T20:05:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "9h 5m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-27T19:03:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-19T01:02:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "210h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": "confirmed",
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908612",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 8,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-11-20",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-12"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": "confirmed",
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908613",
+              "addonInfo": {
+                "id": 2908613,
+                "key": "0cb05848-0c4d-4362-b4e6-d70f2920cff7",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af31c2e9d4e3191c8cfa852"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001072"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af48fc27c301fcb55e2c4bd",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-26T00:00:00.000Z",
+            "returnDate": "2026-11-30"
+          },
+          "passenger": [
+            {
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "passportNumber": "A0000006",
+              "email": "traveller6@example.com",
+              "nationality": "IN",
+              "title": "mr",
+              "type": "adult",
+              "lastName": "Traveller 6"
+            }
+          ]
+        },
+        "price": {
+          "amount": 3000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T15:54:42.222Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-16",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908661",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908661,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908662,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908663,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T15:16:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-12T05:01:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "58h 15m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-25T08:04:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-24T02:03:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "30h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908664",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 9,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-12-09",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-30"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908665",
+              "addonInfo": {
+                "id": 2908665,
+                "key": "d8d4690d-0f4c-4ef8-b2a9-441c7447ea51",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package copy",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af40dd2d73522decc1ec3fa"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001058"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af48f18e0f816326c82ac3d",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-26T00:00:00.000Z",
+            "returnDate": "2026-11-30"
+          },
+          "passenger": [
+            {
+              "lastName": "Traveller 7",
+              "gender": "male",
+              "firstName": "Test",
+              "title": "mr",
+              "passportNumber": "A0000007",
+              "nationality": "IN",
+              "email": "traveller7@example.com",
+              "type": "adult",
+              "dateOfBirth": "1990-01-01",
+              "phoneNumber": "+966500000000"
+            }
+          ]
+        },
+        "price": {
+          "amount": 3000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T15:51:52.518Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-16",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908661",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908661,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908662,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908663,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T15:16:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-12T05:01:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "58h 15m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-25T08:04:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-24T02:03:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "30h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908664",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 9,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-12-09",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-30"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908665",
+              "addonInfo": {
+                "id": 2908665,
+                "key": "d8d4690d-0f4c-4ef8-b2a9-441c7447ea51",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package copy",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af40dd2d73522decc1ec3fa"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001057"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af46f4e7c301fcb55e2c4b1",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-26T00:00:00.000Z",
+            "returnDate": "2026-11-29"
+          },
+          "passenger": [
+            {
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "passportNumber": "A0000008",
+              "email": "traveller8@example.com",
+              "nationality": "IN",
+              "title": "mr",
+              "type": "adult",
+              "lastName": "Traveller 8"
+            }
+          ]
+        },
+        "price": {
+          "amount": 3000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T13:36:14.663Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-15",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": "confirmed",
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908609",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908609,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908610,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908611,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T05:10:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-13T20:05:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "9h 5m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-27T19:03:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-19T01:02:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "210h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": "confirmed",
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908612",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 8,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-11-20",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-12"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": "confirmed",
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908613",
+              "addonInfo": {
+                "id": 2908613,
+                "key": "0cb05848-0c4d-4362-b4e6-d70f2920cff7",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af31c2e9d4e3191c8cfa852"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001049"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af46eea7c301fcb55e2c4ae",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-26T00:00:00.000Z",
+            "returnDate": "2026-11-30"
+          },
+          "passenger": [
+            {
+              "phoneNumber": "+966500000000",
+              "gender": "male",
+              "firstName": "Test",
+              "title": "mr",
+              "dateOfBirth": "1990-01-01",
+              "nationality": "IN",
+              "passportNumber": "A0000009",
+              "type": "adult",
+              "email": "traveller9@example.com",
+              "lastName": "Traveller 9"
+            }
+          ]
+        },
+        "price": {
+          "amount": 3000,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T13:34:34.543Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-16",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908661",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908661,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908662,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908663,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T15:16:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-12T05:01:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "58h 15m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-25T08:04:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-24T02:03:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "30h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908664",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 9,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-12-09",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-30"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908665",
+              "addonInfo": {
+                "id": 2908665,
+                "key": "d8d4690d-0f4c-4ef8-b2a9-441c7447ea51",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package copy",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af40dd2d73522decc1ec3fa"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001048"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af494cf7c301fcb55e2c4c3",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-30T00:00:00.000Z",
+            "returnDate": "2026-12-04"
+          },
+          "passenger": [
+            {
+              "phoneNumber": "+966500000000",
+              "gender": "male",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "title": "mr",
+              "passportNumber": "A0000010",
+              "nationality": "IN",
+              "type": "adult",
+              "email": "traveller10@example.com",
+              "lastName": "Traveller 10"
+            }
+          ]
+        },
+        "price": {
+          "amount": 5300,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            },
+            {
+              "title": "Cabin Upgrade",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "Premium Economy",
+                  "unitAmount": 2300,
+                  "totalAmount": 2300
+                }
+              ],
+              "type": "cabin_upgrade",
+              "total": 2300
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T16:16:15.480Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-16",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908661",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908661,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908662,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908663,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T15:16:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-12T05:01:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "58h 15m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-25T08:04:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-24T02:03:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "30h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908664",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 9,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-12-09",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-30"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908665",
+              "addonInfo": {
+                "id": 2908665,
+                "key": "d8d4690d-0f4c-4ef8-b2a9-441c7447ea51",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package copy",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af40dd2d73522decc1ec3fa"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001060"
+      },
+      {
+        "status": "confirmed",
+        "orderId": "6af494cde0f816326c82ac43",
+        "travellersCount": 1,
+        "sections": {
+          "departureCity": {
+            "departureCity": "RUH"
+          },
+          "departureDate": {
+            "departureDate": "2026-11-30T00:00:00.000Z",
+            "returnDate": "2026-12-04"
+          },
+          "passenger": [
+            {
+              "gender": "male",
+              "phoneNumber": "+966500000000",
+              "firstName": "Test",
+              "dateOfBirth": "1990-01-01",
+              "passportNumber": "A0000011",
+              "email": "traveller11@example.com",
+              "nationality": "IN",
+              "title": "mr",
+              "type": "adult",
+              "lastName": "Traveller 11"
+            }
+          ]
+        },
+        "price": {
+          "amount": 5300,
+          "currency": "SAR",
+          "breakdown": [
+            {
+              "title": "Package price",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "1x Adult",
+                  "unitAmount": 3000,
+                  "totalAmount": 3000
+                }
+              ],
+              "type": "package_price",
+              "total": 3000
+            },
+            {
+              "title": "Cabin Upgrade",
+              "items": [
+                {
+                  "quantity": 1,
+                  "label": "Premium Economy",
+                  "unitAmount": 2300,
+                  "totalAmount": 2300
+                }
+              ],
+              "type": "cabin_upgrade",
+              "total": 2300
+            }
+          ]
+        },
+        "bookedAt": "2026-11-11T16:16:13.220Z",
+        "package": {
+          "destination": "Dubai",
+          "endDate": "2026-11-16",
+          "startDate": "2026-11-12",
+          "products": [
+            {
+              "status": null,
+              "productType": "flight",
+              "inventoryType": "static",
+              "productId": "2908661",
+              "title": "Dubai to Jeddah Flight",
+              "optionsSection": {
+                "title": "Options",
+                "options": [
+                  {
+                    "id": 2908661,
+                    "price": 0,
+                    "title": "Economy",
+                    "selected": true,
+                    "isDefault": true,
+                    "currency": "SAR",
+                    "subTitle": "1 checked bag, 23 kg.",
+                    "cabinClass": "Economy"
+                  },
+                  {
+                    "id": 2908662,
+                    "price": 1200,
+                    "title": "Business",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "2 checked bags and lounge access.",
+                    "cabinClass": "Business"
+                  },
+                  {
+                    "id": 2908663,
+                    "price": 2300,
+                    "title": "Premium Economy",
+                    "selected": false,
+                    "isDefault": false,
+                    "currency": "SAR",
+                    "subTitle": "50 kg checked baggage",
+                    "cabinClass": "Premium Economy"
+                  }
+                ],
+                "type": "CABIN_UPGRADE",
+                "ctaText": "Select Options",
+                "note": "Select your preferred options."
+              },
+              "flightInfo": {
+                "legs": [
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-14T15:16:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "departure": {
+                      "cityName": "Dubai",
+                      "countryName": "United Arab Emirates",
+                      "airportCode": "DXB",
+                      "time": "2026-11-12T05:01:00.000Z",
+                      "airportName": "Dubai International Airport"
+                    },
+                    "duration": "58h 15m",
+                    "flightNumber": "SV1020",
+                    "stops": [
+                      {
+                        "cityName": "Riyadh",
+                        "airportCode": "RUH",
+                        "airportName": "King Khalid International",
+                        "layoverDuration": "1h 20m"
+                      }
+                    ],
+                    "airline": {
+                      "name": "Saudia",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/SV.png",
+                      "code": "SV"
+                    }
+                  },
+                  {
+                    "cabinClass": "Economy",
+                    "arrival": {
+                      "cityName": "Riyadh",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "RUH",
+                      "time": "2026-11-25T08:04:00.000Z",
+                      "airportName": "King Khalid International"
+                    },
+                    "departure": {
+                      "cityName": "Jeddah",
+                      "countryName": "Saudi Arabia",
+                      "airportCode": "JED",
+                      "time": "2026-11-24T02:03:00.000Z",
+                      "airportName": "King Abdulaziz International"
+                    },
+                    "duration": "30h 1m",
+                    "flightNumber": "XY789",
+                    "stops": [],
+                    "airline": {
+                      "name": "Flynas",
+                      "logoUrl": "https://s3.eu-west-1.amazonaws.com/almatar-backend-uploads/airlines-logos/XY.png",
+                      "code": "XY"
+                    }
+                  }
+                ]
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "hotel",
+              "inventoryType": "static",
+              "productId": "2908664",
+              "title": "Sofitel",
+              "optionsSection": null,
+              "hotelInfo": {
+                "nights": 9,
+                "city": "riyadh",
+                "room": {
+                  "name": "Deluxe room",
+                  "beds": "Kind bed",
+                  "sleeps": 2
+                },
+                "checkOut": "2026-12-09",
+                "imageUrl": "https://cdn.alpha.alm6ar.com/packages/hotel-1794316761766.jpg",
+                "starRating": 5,
+                "tagline": "explore jedddahe",
+                "checkIn": "2026-11-30"
+              },
+              "tags": [],
+              "isMandatory": true
+            },
+            {
+              "status": null,
+              "productType": "addon",
+              "inventoryType": "static",
+              "productId": "2908665",
+              "addonInfo": {
+                "id": 2908665,
+                "key": "d8d4690d-0f4c-4ef8-b2a9-441c7447ea51",
+                "title": "International Transfer",
+                "description": "international airtport transffer",
+                "image": "https://cdn.alpha.alm6ar.com/packages/Screenshot2026-10-28at6.37.10PM-1794316978868.png"
+              },
+              "title": "International Transfer",
+              "optionsSection": null,
+              "tags": [],
+              "isMandatory": true
+            }
+          ],
+          "title": "Static package copy",
+          "imageUrl": "https://cdn.alpha.alm6ar.com/packages/HeroBanner(1)-1794315625862.png",
+          "packageId": "6af40dd2d73522decc1ec3fa"
+        },
+        "paymentStatus": "Succeeded",
+        "bookingReference": "300001059"
       }
     ],
-    "total": 2,
-    "page": 1,
-    "limit": 10,
-    "totalPages": 1
-  }
+    "totalPages": 1,
+    "total": 10,
+    "page": 1
+  },
+  "errors": null
 }

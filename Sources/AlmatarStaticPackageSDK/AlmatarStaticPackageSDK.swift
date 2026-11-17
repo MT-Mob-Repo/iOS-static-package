@@ -67,6 +67,16 @@ public final class AlmatarStaticPackageSDK {
         configuration.useMockData = dataSource == .mock
     }
 
+    /// The bundled mock response the SDK serves for an endpoint in mock mode, as raw JSON.
+    /// For host apps that call a package endpoint themselves (e.g. My Trips calling
+    /// `api/v1/packages/orders`) and want the same mock data when `dataSource == .mock`.
+    /// - Parameter path: The endpoint path, e.g. `"api/v1/packages/orders"`, or a full URL.
+    ///   The host, a leading `/` and any query string are ignored.
+    /// - Returns: The JSON, or `nil` when the SDK has no mock for that path.
+    public func mockResponseData(forPath path: String) -> Data? {
+        MockURLProtocol.mockData(forPath: path)
+    }
+
     // MARK: - Currency
 
     /// The user's selected currency code, e.g. "SAR".

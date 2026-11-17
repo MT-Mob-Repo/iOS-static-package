@@ -66,7 +66,16 @@ final class MockURLProtocol: URLProtocol {
     }
 
     private static func mockData(for url: URL) -> Data? {
-        let path = url.path.hasPrefix("/") ? String(url.path.dropFirst()) : url.path
+        mockData(forPath: url.path)
+    }
+
+    /// The bundled mock JSON for an endpoint path such as `api/v1/packages/orders`.
+    /// Also accepts a full URL; the host, a leading `/` and any query string are ignored.
+    static func mockData(forPath rawPath: String) -> Data? {
+        var path = rawPath
+        if rawPath.contains("://"), let url = URL(string: rawPath) { path = url.path }
+        path = path.split(separator: "?", maxSplits: 1).first.map(String.init) ?? path
+        if path.hasPrefix("/") { path.removeFirst() }
         guard let route = routes.first(where: { $0.matches(path) }),
               let fileURL = Bundle.module.url(forResource: route.fileName, withExtension: Constants.fileExtension) else {
             return nil

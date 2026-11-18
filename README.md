@@ -47,6 +47,7 @@ let sdk = AlmatarStaticPackageSDK.shared
 sdk.configure(StaticPackageConfiguration(
     baseURL: "https://…",
     language: .english,            // .english or .arabic; the screens follow it, including RTL
+    theme: .light,                 // the app's theme mode: .light or .dark
     brand: "Almatar",              // sent as the `x-brand` header
     deviceId: UIDevice.current.identifierForVendor?.uuidString,
     currency: "SAR",               // the user's selected currency
@@ -61,7 +62,7 @@ sdk.setTokenProvider { await session.accessToken }
 sdk.setHeadersProvider { ["x-app-version": appVersion] }
 ```
 
-Settings can be changed later with `setLanguage(_:)`, `setCurrency(_:)`, `setAvailableCurrencies(_:)`, `setBaseURL(_:)` and `setDataSource(_:)`.
+Settings can be changed later with `setLanguage(_:)`, `setTheme(_:)`, `setCurrency(_:)`, `setAvailableCurrencies(_:)`, `setBaseURL(_:)` and `setDataSource(_:)`.
 
 `setDataSource(_:)` switches where **all** data comes from at runtime: `.remote` calls the backend at `baseURL`, and `.mock` serves the bundled JSON in `Resources/Mocks` for every endpoint, with no network calls. It starts from `useMockData` and applies to every request made afterwards. Read the current value with `dataSource`.
 

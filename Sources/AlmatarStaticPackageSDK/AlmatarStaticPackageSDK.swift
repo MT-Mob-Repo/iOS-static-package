@@ -57,6 +57,11 @@ public final class AlmatarStaticPackageSDK {
         syncNetworkClient()
     }
 
+    /// Call when the user changes the theme mode in the host app.
+    public func setTheme(_ theme: StaticPackageTheme) {
+        configuration.theme = theme
+    }
+
     /// Where the SDK loads its data from: the backend or the bundled mock JSON.
     /// Starts from `StaticPackageConfiguration.useMockData`.
     public var dataSource: StaticPackageDataSource { configuration.useMockData ? .mock : .remote }

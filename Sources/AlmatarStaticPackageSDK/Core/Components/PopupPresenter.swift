@@ -89,6 +89,9 @@ private final class PopupWindowPresenter {
 
         let window = UIWindow(windowScene: scene)
         window.windowLevel = .alert
+        // A new window doesn't get the theme the host app set on its own windows, so the
+        // design system's light/dark colors would follow the system appearance instead.
+        window.overrideUserInterfaceStyle = AlmatarStaticPackageSDK.shared.configuration.theme.userInterfaceStyle
         window.backgroundColor = .clear
         window.rootViewController = host
         window.isHidden = false
@@ -132,9 +135,7 @@ private struct PopupContainer<Popup: View>: View {
         ZStack {
             // Dark blur, kept see-through so the screen behind stays readable.
             Rectangle()
-                .fill(.ultraThinMaterial)
-//                .fill(.black)
-//                .environment(\.colorScheme, .dark)
+                .fill(.black)
                 .opacity(PopupLayout.backdropOpacity)
                 .ignoresSafeArea()
 
@@ -148,7 +149,7 @@ private struct PopupContainer<Popup: View>: View {
 }
 
 private enum PopupLayout {
-    static let backdropOpacity: Double = 0.6
+    static let backdropOpacity: Double = 0.1
     static let appearScale: CGFloat = 0.95
     static let animationDuration: Double = 0.2
 }

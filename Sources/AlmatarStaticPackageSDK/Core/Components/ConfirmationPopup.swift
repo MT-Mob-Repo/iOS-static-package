@@ -54,7 +54,7 @@ struct ConfirmationPopup<Illustration: View>: View {
             }
             .padding(Spacing.large)
             .frame(maxWidth: .infinity)
-            .mediumSheetContainerBackground()
+            .background(AlmatarColors.surfaceCard)
             .clipShape(RoundedRectangle(cornerRadius: CornerRadius.xxLarge))
 
             HStack(spacing: Spacing.small) {
@@ -158,21 +158,24 @@ struct ConfirmationPopup<Illustration: View>: View {
 }
 
 private extension View {
-    /// Glass card on iOS 26; a white card with a soft shadow on earlier versions.
-    @ViewBuilder
+    /// A white card in light mode and a black card in dark mode, with a soft shadow.
     func popupCardBackground() -> some View {
-        if #available(iOS 26.0, *) {
-            self.glassEffect(.regular, in: .rect(cornerRadius: CornerRadius.huge))
-        } else {
-            self
-                .background(AlmatarColors.surfaceCard)
-                .clipShape(RoundedRectangle(cornerRadius: CornerRadius.huge))
-                .shadow(
-                    color: ConfirmationPopupLayout.shadowColor,
-                    radius: ConfirmationPopupLayout.shadowRadius,
-                    y: ConfirmationPopupLayout.shadowYOffset
-                )
-        }
+        modifier(PopupCardBackground())
+    }
+}
+
+/// The card's background follows the host app's theme from `StaticPackageConfiguration.theme`.
+private struct PopupCardBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(AlmatarStaticPackageSDK.shared.configuration.theme.isDark ? Color.black : Color.white)
+            .opacity(ConfirmationPopupLayout.backdropOpacity)
+            .clipShape(RoundedRectangle(cornerRadius: CornerRadius.huge))
+            .shadow(
+                color: ConfirmationPopupLayout.shadowColor,
+                radius: ConfirmationPopupLayout.shadowRadius,
+                y: ConfirmationPopupLayout.shadowYOffset
+            )
     }
 }
 
@@ -185,4 +188,5 @@ private enum ConfirmationPopupLayout {
     static let shadowColor = Color.black.opacity(0.12)
     static let shadowRadius: CGFloat = 24
     static let shadowYOffset: CGFloat = 8
+    static let backdropOpacity: Double = 0.9
 }

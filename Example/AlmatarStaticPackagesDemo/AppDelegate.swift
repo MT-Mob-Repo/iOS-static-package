@@ -25,6 +25,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         sdk.configure(StaticPackageConfiguration(
             baseURL: AppConstants.baseURL,
             language: .english,
+            theme: .light,
             brand: AppConstants.brand,
             deviceId: UIDevice.current.identifierForVendor?.uuidString,
             useMockData: AppConstants.useMockData

@@ -11,6 +11,8 @@ public struct StaticPackageConfiguration: Sendable {
     public var baseURL: String
     /// UI language; also sent as the `Accept-Language` header.
     public var language: AppLanguage
+    /// The host app's theme mode (light or dark).
+    public var theme: StaticPackageTheme
     /// Sent as the `x-brand` header when provided.
     public var brand: String?
     /// Sent as the `device-id` header when provided.
@@ -25,6 +27,7 @@ public struct StaticPackageConfiguration: Sendable {
     public init(
         baseURL: String,
         language: AppLanguage = .english,
+        theme: StaticPackageTheme = .light,
         brand: String? = nil,
         deviceId: String? = nil,
         currency: String = StaticPackageConfiguration.defaultCurrency,
@@ -33,6 +36,7 @@ public struct StaticPackageConfiguration: Sendable {
     ) {
         self.baseURL = baseURL
         self.language = language
+        self.theme = theme
         self.brand = brand
         self.deviceId = deviceId
         self.currency = currency

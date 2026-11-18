@@ -168,7 +168,7 @@ struct VisitorDetailsView: View {
                     .accessibilityHidden(true)
 
                 Text(form.selectionRowTitle(section, field))
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -276,7 +276,7 @@ struct VisitorDetailsView: View {
                         .foregroundStyle(AlmatarColors.iconPrimaryStatic)
                         .accessibilityHidden(true)
                     Text(form.cardTitle(for: section))
-                        .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                        .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.medium))
                         .foregroundStyle(AlmatarColors.textPrimaryStatic)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     chevron(isExpanded ? Layout.upChevron : Layout.downChevron)
@@ -363,7 +363,7 @@ struct VisitorDetailsView: View {
 
             VStack(alignment: .leading, spacing: Spacing.xxxSmall) {
                 Text(form.displayName(visitor))
-                    .modifier(AppTextModifier(size: Typography.Size.medium, fontWeight: Typography.Weight.semibold))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.semibold))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .lineLimit(1)
                 Text(form.roleTitle(visitor))

@@ -53,13 +53,13 @@ struct IncludedServicesView: View {
                 RemoteIconView(icon: item.icon, size: Layout.iconSize, tint: AlmatarColors.iconPrimaryStatic)
 
                 Text(item.title)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
             }
 
             if let description = item.description, !description.isEmpty {
                 Text(description)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.regular))
                     .foregroundStyle(AlmatarColors.textSecondaryStatic)
                     .fixedSize(horizontal: false, vertical: true)
             }

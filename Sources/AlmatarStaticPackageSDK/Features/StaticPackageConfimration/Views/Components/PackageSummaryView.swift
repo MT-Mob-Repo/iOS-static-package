@@ -51,7 +51,7 @@ struct PackageSummaryView: View {
     private func rowView(_ row: PackageSummaryRow) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
             Text(row.label)
-                .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.regular))
+                .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.regular))
                 .foregroundStyle(AlmatarColors.textSecondaryStatic)
 
             Spacer(minLength: Spacing.small)
@@ -60,7 +60,7 @@ struct PackageSummaryView: View {
                 ConfirmationSuccessBadge(title: row.value, showsCheckmark: true)
             } else {
                 Text(row.value)
-                    .modifier(AppTextModifier(size: Typography.Size.regular, fontWeight: Typography.Weight.medium))
+                    .modifier(AppTextModifier(size: 14, fontWeight: Typography.Weight.medium))
                     .foregroundStyle(AlmatarColors.textPrimaryStatic)
                     .multilineTextAlignment(.trailing)
                     .fixedSize(horizontal: false, vertical: true)
